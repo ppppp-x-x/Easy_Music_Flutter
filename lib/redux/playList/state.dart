@@ -1,12 +1,12 @@
-class WishMoviesState {
-  List _wishMoviesList;
-  Map _wishMoviesIds;
-  get wishMoviesList => _wishMoviesList;
-  get wishMoviesIds => _wishMoviesIds;
+class PlayListState {
+  var _currentSong;
+  List _playList;
+  get playList => _playList;
+  get currentSong => _currentSong;
 
-  WishMoviesState(this._wishMoviesList, this._wishMoviesIds);
-  WishMoviesState.initState() {
-    _wishMoviesList = [];
-    _wishMoviesIds = new Map();
+  PlayListState(this._playList);
+  PlayListState.initState() {
+    _playList = [];
+    _currentSong = null;
   } 
 }
