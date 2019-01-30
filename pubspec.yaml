@@ -44,6 +44,20 @@ flutter:
    - assets/images/musicBox.png
    - assets/images/rank.png
    - assets/images/date.png
+   - assets/images/download.png
+   - assets/images/shoucang.png
+   - assets/images/phone.png
+   - assets/images/clock.png
+   - assets/images/like_playList.png
+   - assets/images/retweet_playList.png
+   - assets/images/comment_playList.png
+   - assets/images/download_playList.png
+   - assets/images/more_playList.png
+   - assets/images/album_avatar_default.png
+   - assets/images/bottomNagivationBar_next.png
+   - assets/images/bottomNagivationBar_prev.png
+   - assets/images/bottomNagivationBar_stop.png
+   - assets/images/bottomNagivationBar_play.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

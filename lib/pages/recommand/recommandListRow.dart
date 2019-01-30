@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'dart:ui' as ui;
+
+import './../SongList/playList.dart';
 
 class RecommandList extends StatelessWidget {
   var recommandList;
@@ -59,62 +60,72 @@ class RecommandList extends StatelessWidget {
             padding: EdgeInsets.all(10),
             itemCount: recommandList.length,
             itemBuilder: (BuildContext context, int index) {
-              return Container(
-                margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: Column(
-                  children: <Widget>[
-                    Stack(
-                      children: <Widget>[
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: CachedNetworkImage(
-                            imageUrl: recommandList[index]['coverImgUrl'],
-                            width: 120,
-                            height: 120,
-                            fit: BoxFit.cover,
-                            placeholder: Container(
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PlayList(id: recommandList[index]['id'])
+                    )
+                  );
+                },
+                child: Container(
+                  margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: Column(
+                    children: <Widget>[
+                      Stack(
+                        children: <Widget>[
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: CachedNetworkImage(
+                              imageUrl: recommandList[index]['coverImgUrl'],
                               width: 120,
                               height: 120,
-                              color: Colors.grey,
+                              fit: BoxFit.cover,
+                              placeholder: Container(
+                                width: 120,
+                                height: 120,
+                                color: Colors.grey,
+                              ),
                             ),
                           ),
-                        ),
-                        Container(
-                          width: 120,
-                          height: 120,
-                          padding: EdgeInsets.fromLTRB(0, 5, 5, 5),
-                          alignment: Alignment.topRight,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [Colors.black26, Colors.white24]
+                          Container(
+                            width: 120,
+                            height: 120,
+                            padding: EdgeInsets.fromLTRB(0, 5, 5, 5),
+                            alignment: Alignment.topRight,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [Colors.black26, Colors.white24]
+                              ),
+                              borderRadius: BorderRadius.circular(10)
                             ),
-                            borderRadius: BorderRadius.circular(10)
-                          ),
-                          child: Text(
-                            computePlayCount(recommandList[index]['playCount']) + '万',
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                              color: Colors.grey[200]
+                            child: Text(
+                              computePlayCount(recommandList[index]['playCount']) + '万',
+                              textAlign: TextAlign.right,
+                              style: TextStyle(
+                                color: Colors.grey[200]
+                              ),
                             ),
-                          ),
-                        )
-                      ],
-                    ),
-                    Container(
-                      width: 120,
-                      margin: EdgeInsets.only(top: 5),
-                      child: Text(
-                        recommandList[index]['name'],
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
+                          )
+                        ],
                       ),
-                    )
-                  ],
-                ),
+                      Container(
+                        width: 120,
+                        margin: EdgeInsets.only(top: 5),
+                        child: Text(
+                          recommandList[index]['name'],
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
+                      )
+                    ],
+                  ),
+                )
               );
             },
           ),

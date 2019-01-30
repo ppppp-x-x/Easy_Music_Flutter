@@ -5,21 +5,24 @@ import 'package:flutter_redux/flutter_redux.dart';
 import './pages/recommand/index.dart';
 import './pages/songList/index.dart';
 import './pages/rank/index.dart';
+import './pages/MySong/index.dart';
 import './redux/playList/state.dart';
+import './components/customBottomNavigationBar.dart';
 
 class MyApp extends StatefulWidget{
-  final Store<PlayListState> store;
+  final Store<PlayListModelState> store;
   MyApp(this.store);
   @override
   MyAppState createState() => new MyAppState(this.store);
 }
 
 class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
-  final Store<PlayListState> store;
+  final Store<PlayListModelState> store;
   MyAppState(this.store);
   TabController _tabController;
   List<Widget> _body = [
     new Recommand(),
+    new MySong(),
     new SongList(),
     new Rank()
   ];
@@ -34,7 +37,7 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Autom
   void initState() {
     super.initState();
     _tabController = new TabController(
-      length: 3,
+      length: 4,
       vsync: this
     );
   }
@@ -79,6 +82,9 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Autom
                   text: '个性推荐',
                 ),
                 Tab(
+                  text: '我的音乐',
+                ),
+                Tab(
                   text: '歌单',
                 ),
                 Tab(
@@ -87,29 +93,11 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Autom
               ],
             ),
           ),
-          body: Builder(
-            builder: (BuildContext context) => 
-            Stack(
-              children: <Widget>[
-                TabBarView(
-                  controller: _tabController,
-                  children: _body,
-                ),
-                Container(
-                  margin: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height - 100
-                  ),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 100,
-                    child: Row(
-                      
-                    ),
-                  ),
-                )
-              ],
-            ),
-          )
+          body: TabBarView(
+            controller: _tabController,
+            children: _body,
+          ),
+          bottomNavigationBar: CustomBottomNavigationBar()
         ),
       )
     );

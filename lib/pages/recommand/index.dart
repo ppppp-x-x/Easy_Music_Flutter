@@ -22,16 +22,20 @@ class RecommandState extends State<Recommand> with AutomaticKeepAliveClientMixin
 
   void fetchBannner() async {
     var _bannerList = await fetchData('http://xinpeng.natapp1.cc/banner');
-    setState(() {
-     bannerList = _bannerList['banners']; 
-    });
+    if(this.mounted) {
+      setState(() {
+      bannerList = _bannerList['banners']; 
+      });
+    }
   }
 
   void fetchRecommandList() async {
     var _recommandList = await fetchData('http://xinpeng.natapp1.cc/top/playlist?limit=10&order=hot');
-    setState(() {
-     recommandList = _recommandList['playlists']; 
-    });
+    if(this.mounted) {
+      setState(() {
+      recommandList = _recommandList['playlists']; 
+      });
+    }
   }
 
   @override
