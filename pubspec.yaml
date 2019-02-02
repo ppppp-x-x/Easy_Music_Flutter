@@ -23,6 +23,7 @@ dependencies:
   cached_network_image: ^0.5.1
   redux:  ^3.0.0
   flutter_redux: ^0.5.3
+  audioplayers: ^0.8.0
 
 dev_dependencies:
   flutter_test:
@@ -58,6 +59,11 @@ flutter:
    - assets/images/bottomNagivationBar_prev.png
    - assets/images/bottomNagivationBar_stop.png
    - assets/images/bottomNagivationBar_play.png
+   - assets/images/bottomNagivationBar_pause.png
+   - assets/images/play_prev.png
+   - assets/images/play_play.png
+   - assets/images/play_next.png
+   - assets/images/play_pause.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

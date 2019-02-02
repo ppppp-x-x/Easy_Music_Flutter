@@ -3,17 +3,26 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:ui' as ui;
 
-import './../../redux/playList/state.dart';
+import './../../redux/index.dart';
+import './../../utils/request.dart';
+import './../../redux/audioController/action.dart';
 
 class Play extends StatefulWidget {
+  int songId;
+  Play(this.songId);
   @override
-  PlayState createState() => new PlayState();
+  PlayState createState() => new PlayState(songId);
 }
 
 class PlayState extends State<Play> {
+  int songId;
+  PlayState(this.songId);
+  dynamic songDetail;
+
   @override
   void initState() {
     super.initState();
+    getSongDetail(songId);
   }
 
   @override
@@ -21,9 +30,18 @@ class PlayState extends State<Play> {
     super.dispose();
   }
 
+  dynamic getSongDetail(int id) async {
+    dynamic _songDetail = await fetchData('http://xinpeng.natapp1.cc/song/detail?ids=' + id.toString());
+    if(this.mounted) {
+      setState(() {
+      songDetail = _songDetail['playList']; 
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<PlayListModelState, dynamic>(
+    return StoreConnector<AppState, dynamic>(
       converter: (store) => store.state,
       builder: (BuildContext context, state) {
         return Material(
@@ -33,7 +51,7 @@ class PlayState extends State<Play> {
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
                 child: Image.network(
-                  state.playList[state.currentIndex - 1]['albumBg'],
+                  state.playListModelState.playList[state.playListModelState.currentIndex - 1]['albumBg'],
                   fit: BoxFit.cover,
                 ),
               ),
@@ -65,7 +83,7 @@ class PlayState extends State<Play> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          state.playList[state.currentIndex - 1]['name'],
+                          state.playListModelState.playList[state.playListModelState.currentIndex - 1]['name'],
                           style: TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.bold,
@@ -73,7 +91,7 @@ class PlayState extends State<Play> {
                           ),
                         ),
                         Text(
-                          state.playList[state.currentIndex - 1]['singer'],
+                          state.playListModelState.playList[state.playListModelState.currentIndex - 1]['singer'],
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.white
@@ -99,7 +117,7 @@ class PlayState extends State<Play> {
                   Stack(
                     children: <Widget>[
                       Container(
-                        margin: EdgeInsets.only(top: 200),
+                        margin: EdgeInsets.only(top: 150),
                         width: MediaQuery.of(context).size.width * 0.6,
                         height: MediaQuery.of(context).size.width * 0.6,
                         decoration: BoxDecoration(
@@ -118,10 +136,10 @@ class PlayState extends State<Play> {
                       Container(
                         width: MediaQuery.of(context).size.width * 0.6 - 20,
                         height: MediaQuery.of(context).size.width * 0.6 - 20,
-                        margin: EdgeInsets.fromLTRB(10, 210, 0, 0),
+                        margin: EdgeInsets.fromLTRB(10, 160, 0, 0),
                         child: ClipOval(
                           child: CachedNetworkImage(
-                            imageUrl: state.playList[state.currentIndex - 1]['albumBg'],
+                            imageUrl: state.playListModelState.playList[state.playListModelState.currentIndex - 1]['albumBg'],
                             placeholder: Container(
                               width: MediaQuery.of(context).size.width * 0.6 - 20,
                               height: MediaQuery.of(context).size.width * 0.6 - 20,
@@ -135,7 +153,7 @@ class PlayState extends State<Play> {
                 ],
               ),
               Container(
-                margin: EdgeInsets.fromLTRB(40, MediaQuery.of(context).size.width * 0.6 + 240, 40, 0),
+                margin: EdgeInsets.fromLTRB(40, MediaQuery.of(context).size.width * 0.6 + 210, 40, 0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
@@ -185,11 +203,114 @@ class PlayState extends State<Play> {
                     )
                   ],
                 ),
-              )
+              ),
+              PlayController(songId, state)
             ],
           )
         );
       }
     );
+  }
+}
+
+class PlayController extends StatelessWidget {
+  int songId;
+  dynamic state;
+  PlayController(this.songId, this.state);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        width: MediaQuery.of(context).size.width,
+        height: 50,
+        margin: EdgeInsets.fromLTRB(30, MediaQuery.of(context).size.width * 0.6 + 300, 30, 0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            Container(
+              width: 50,
+              height: 50,
+              padding: EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: Colors.grey[900],
+                shape: BoxShape.circle,
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 1,
+                    spreadRadius: 1,
+                    offset: Offset(0, -1)
+                  )
+                ]
+              ),
+              child: Image.asset(
+                'assets/images/play_prev.png'
+              )
+            ),
+            StoreConnector<AppState, VoidCallback>(
+              converter: (store) {
+                var _action = new Map();
+                if (state.audioControllerState.playing == true) {
+                  _action['type'] = Actions.pause;
+                } else {
+                  _action['type'] = Actions.play;
+                }
+                return () => store.dispatch(_action);
+              },
+              builder: (context, callback) {
+                return GestureDetector(
+                  onTap: callback,
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    padding: EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[900],
+                      shape: BoxShape.circle,
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 1,
+                          spreadRadius: 1,
+                          offset: Offset(0, -1)
+                        )
+                      ]
+                    ),
+                    child: state.audioControllerState.playing
+                    ?
+                    Image.asset(
+                      'assets/images/play_pause.png'
+                    )
+                    :
+                    Image.asset(
+                      'assets/images/play_play.png'
+                    )
+                  ),
+                );
+              }
+            ),
+            Container(
+              width: 50,
+              height: 50,
+              padding: EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: Colors.grey[900],
+                shape: BoxShape.circle,
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 1,
+                    spreadRadius: 1,
+                    offset: Offset(0, -1)
+                  )
+                ]
+              ),
+              child: Image.asset(
+                'assets/images/play_next.png'
+              )
+            )   
+          ],
+        )
+      );
   }
 }
