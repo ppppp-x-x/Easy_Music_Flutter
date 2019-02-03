@@ -6,18 +6,18 @@ import './pages/recommand/index.dart';
 import './pages/songList/index.dart';
 import './pages/rank/index.dart';
 import './pages/MySong/index.dart';
-import './redux/playList/state.dart';
 import './components/customBottomNavigationBar.dart';
+import './redux/index.dart';
 
 class MyApp extends StatefulWidget{
-  final Store<PlayListModelState> store;
+  final Store<AppState> store;
   MyApp(this.store);
   @override
   MyAppState createState() => new MyAppState(this.store);
 }
 
 class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
-  final Store<PlayListModelState> store;
+  final Store<AppState> store;
   MyAppState(this.store);
   TabController _tabController;
   List<Widget> _body = [
