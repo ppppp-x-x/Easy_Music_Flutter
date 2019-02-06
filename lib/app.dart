@@ -8,6 +8,7 @@ import './pages/rank/index.dart';
 import './pages/MySong/index.dart';
 import './components/customBottomNavigationBar.dart';
 import './redux/index.dart';
+import './pages/Search/index.dart';
 
 class MyApp extends StatefulWidget{
   final Store<AppState> store;
@@ -60,18 +61,7 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Autom
                 Text(
                   '发现音乐'
                 ),
-                IconButton(
-                  onPressed: () {
-                    print('暂未开发');
-                  },
-                  icon: ImageIcon(
-                  AssetImage(
-                    'assets/images/find.png'
-                  ),
-                  color: Colors.white,
-                  size: 22,
-                  )
-                )
+                SearchButton()
               ],
             ),
             bottom: TabBar(
@@ -105,5 +95,28 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Autom
 
   @override
   bool get wantKeepAlive => true;
+}
+
+class SearchButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Search()
+          )
+        );
+      },
+      icon: ImageIcon(
+      AssetImage(
+        'assets/images/find.png'
+      ),
+      color: Colors.white,
+      size: 22,
+      )
+    );
+  }
 }
 
