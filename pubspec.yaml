@@ -64,6 +64,7 @@ flutter:
    - assets/images/play_play.png
    - assets/images/play_next.png
    - assets/images/play_pause.png
+   - assets/images/billboard.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:
