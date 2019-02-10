@@ -1,16 +1,10 @@
 # easy_music
 
-A new Flutter project.
+这是一个使用Flutter框架开发的音乐应用，开发它的目的是学习Flutter开发相关知识。
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
-
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+1. clone本项目
+2. clone https://github.com/Binaryify/NeteaseCloudMusicApi
+3. 启动网易云音乐node服务器
+4. 编译并运行本项目
