@@ -41,9 +41,9 @@ class RankState extends State<Rank> {
               )
             ],
           ),
-          GridView.builder(
-             itemBuilder: context,
-          )
+          // GridView.builder(
+          //    itemBuilder: context,
+          // )
         ],
       )
     );

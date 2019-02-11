@@ -14,20 +14,39 @@ class Play extends StatefulWidget {
   PlayState createState() => new PlayState(songId);
 }
 
-class PlayState extends State<Play> {
+class PlayState extends State<Play> with SingleTickerProviderStateMixin{
   int songId;
   PlayState(this.songId);
+
   dynamic songDetail;
+  bool initPlay;
+  AnimationController coverController;
+  CurvedAnimation coverCurved;
 
   @override
   void initState() {
     super.initState();
     getSongDetail(songId);
+    initPlay = false;
+    coverController = new AnimationController(
+      vsync: this,
+      duration: Duration(
+        seconds: 40
+      ),
+    );
+    coverCurved = new CurvedAnimation(
+      parent: coverController,
+      curve: Curves.linear
+    );
+    coverController.repeat();
   }
 
   @override
   void dispose() {
-    super.dispose();
+    if(this.mounted) {
+      coverController.dispose();
+      super.dispose();
+    }
   }
 
   dynamic getSongDetail(int id) async {
@@ -37,6 +56,12 @@ class PlayState extends State<Play> {
       songDetail = _songDetail['playList']; 
       });
     }
+  }
+
+  void setInitPlay (bool val) {
+    this.setState(() {
+      initPlay = val;
+    });
   }
 
   @override
@@ -138,7 +163,22 @@ class PlayState extends State<Play> {
                         height: MediaQuery.of(context).size.width * 0.6 - 20,
                         margin: EdgeInsets.fromLTRB(10, 160, 0, 0),
                         child: ClipOval(
-                          child: CachedNetworkImage(
+                          child: 
+                          state.audioControllerState.playing || (this.initPlay != null && this.initPlay == true)
+                          ?
+                          RotationTransition(
+                            turns: coverCurved,
+                            child: CachedNetworkImage(
+                              imageUrl: state.playListModelState.playList[state.playListModelState.currentIndex - 1]['albumBg'],
+                              placeholder: Container(
+                                width: MediaQuery.of(context).size.width * 0.6 - 20,
+                                height: MediaQuery.of(context).size.width * 0.6 - 20,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          )
+                          :
+                          CachedNetworkImage(
                             imageUrl: state.playListModelState.playList[state.playListModelState.currentIndex - 1]['albumBg'],
                             placeholder: Container(
                               width: MediaQuery.of(context).size.width * 0.6 - 20,
@@ -204,7 +244,7 @@ class PlayState extends State<Play> {
                   ],
                 ),
               ),
-              PlayController(songId, state)
+              PlayController(songId, state, coverController, setInitPlay)
             ],
           )
         );
@@ -216,7 +256,9 @@ class PlayState extends State<Play> {
 class PlayController extends StatelessWidget {
   int songId;
   dynamic state;
-  PlayController(this.songId, this.state);
+  AnimationController coverController;
+  dynamic setInitPlay;
+  PlayController(this.songId, this.state, this.coverController, this.setInitPlay);
 
   @override
   Widget build(BuildContext context) {
@@ -257,9 +299,17 @@ class PlayController extends StatelessWidget {
                 }
                 return () => store.dispatch(_action);
               },
-              builder: (context, callback) {
+              builder: (BuildContext context, callback) {
                 return GestureDetector(
-                  onTap: callback,
+                  onTap: () {
+                    if(state.audioControllerState.playing == true) {
+                      this.coverController.stop();
+                    } else {
+                      this.coverController.forward();
+                      this.setInitPlay(true);
+                    }
+                    callback();
+                  },
                   child: Container(
                     width: 50,
                     height: 50,
