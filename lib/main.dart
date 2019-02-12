@@ -5,13 +5,11 @@ import 'package:redux/redux.dart';
 
 import './app.dart';
 import './redux/index.dart';
-import './redux/audioController/state.dart';
-import './redux/playList/state.dart';
+import './redux/playController/state.dart';
 
 void main() {
   final store = Store<AppState>(appReducer, initialState: AppState(
-    playListModelState: PlayListModelState.initState(),
-    audioControllerState: AudioControllerState.initState()
+    playControllerState: PlayController.initState(),
   ));
   runApp(MyApp(store));
   if (Platform.isAndroid) {

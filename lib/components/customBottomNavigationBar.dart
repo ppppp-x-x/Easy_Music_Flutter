@@ -4,7 +4,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 
 import './../redux/index.dart';
 import './../pages/Play/play.dart';
-import './../redux/audioController/action.dart' as audioControllActions;
+import './../redux/playController/action.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
   @override
@@ -28,7 +28,7 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       converter: (store) => store.state,
       builder: (BuildContext context, state) {
         return
-        state.playListModelState.currentIndex == 0 || state.playListModelState.playList.length == 0 || state.playListModelState.playList[state.playListModelState.currentIndex - 1] == null
+        state.playControllerState.currentIndex == 0 || state.playControllerState.playList.length == 0 || state.playControllerState.playList[state.playControllerState.currentIndex - 1] == null
         ?
         Container(
           width: MediaQuery.of(context).size.width,
@@ -61,7 +61,7 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Play(state.playListModelState.playList[state.playListModelState.currentIndex - 1]['id'])
+                        builder: (context) => Play(state.playControllerState.playList[state.playControllerState.currentIndex - 1]['id'])
                       )
                     );
                   },
@@ -71,7 +71,7 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                     children: <Widget>[
                       ClipOval(
                         child: CachedNetworkImage(
-                          imageUrl: state.playListModelState.playList[state.playListModelState.currentIndex - 1]['albumBg'],
+                          imageUrl: state.playControllerState.playList[state.playControllerState.currentIndex - 1]['al']['picUrl'],
                           width: 40,
                           height: 40,
                           placeholder: Image.asset(
@@ -91,14 +91,14 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              state.playListModelState.playList[state.playListModelState.currentIndex - 1]['name'],
+                              state.playControllerState.playList[state.playControllerState.currentIndex - 1]['name'],
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                             ),
                             Container(
                               margin: EdgeInsets.only(top: 3),
                               child: Text(
-                                state.playListModelState.playList[state.playListModelState.currentIndex - 1]['singer'],
+                                state.playControllerState.playList[state.playControllerState.currentIndex - 1]['ar'][0]['name'],
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                                 style: TextStyle(
@@ -130,10 +130,10 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                         child: StoreConnector<AppState, VoidCallback>(
                         converter: (store) {
                           var _action = new Map();
-                          if (state.audioControllerState.playing == true) {
-                            _action['type'] = audioControllActions.Actions.pause;
+                          if (state.playControllerState.playing == true) {
+                            _action['type'] = Actions.pause;
                           } else {
-                            _action['type'] = audioControllActions.Actions.play;
+                            _action['type'] = Actions.play;
                           }
                           return () => store.dispatch(_action);
                         },
@@ -143,7 +143,7 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                             child: Container(
                               width: 20,
                               height: 20,
-                              child: state.audioControllerState.playing
+                              child: state.playControllerState.playing
                               ?
                               Image.asset(
                                 'assets/images/bottomNagivationBar_pause.png',
