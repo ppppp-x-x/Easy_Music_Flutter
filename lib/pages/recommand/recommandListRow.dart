@@ -77,6 +77,7 @@ class RecommandList extends StatelessWidget {
                         children: <Widget>[
                           Container(
                             decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: CachedNetworkImage(

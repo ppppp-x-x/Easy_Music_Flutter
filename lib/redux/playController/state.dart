@@ -9,7 +9,7 @@ class PlayController {
 
   bool _playing;
   get playing => _playing;
-  set playing(val) => _playing = !_playing;
+  set playing(val) => _playing = val;
 
   String _songUrl;
   get songUrl => _songUrl;

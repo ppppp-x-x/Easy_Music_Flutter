@@ -130,7 +130,7 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                         child: StoreConnector<AppState, VoidCallback>(
                         converter: (store) {
                           var _action = new Map();
-                          if (state.playControllerState.playing == true) {
+                          if (state.playControllerState.playing) {
                             _action['type'] = Actions.pause;
                           } else {
                             _action['type'] = Actions.play;

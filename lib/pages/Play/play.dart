@@ -128,7 +128,7 @@ class PlayState extends State<Play> with SingleTickerProviderStateMixin{
                   Stack(
                     children: <Widget>[
                       Container(
-                        margin: EdgeInsets.only(top: 150),
+                        margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.3),
                         width: MediaQuery.of(context).size.width * 0.6,
                         height: MediaQuery.of(context).size.width * 0.6,
                         decoration: BoxDecoration(
@@ -147,7 +147,7 @@ class PlayState extends State<Play> with SingleTickerProviderStateMixin{
                       Container(
                         width: MediaQuery.of(context).size.width * 0.6 - 20,
                         height: MediaQuery.of(context).size.width * 0.6 - 20,
-                        margin: EdgeInsets.fromLTRB(10, 160, 0, 0),
+                        margin: EdgeInsets.fromLTRB(10, MediaQuery.of(context).size.height * 0.3 + 10, 0, 0),
                         child: ClipOval(
                           child: 
                           state.playControllerState.playing || (this.initPlay != null && this.initPlay == true)
@@ -179,7 +179,7 @@ class PlayState extends State<Play> with SingleTickerProviderStateMixin{
                 ],
               ),
               Container(
-                margin: EdgeInsets.fromLTRB(40, MediaQuery.of(context).size.width * 0.6 + 210, 40, 0),
+                margin: EdgeInsets.fromLTRB(40, MediaQuery.of(context).size.height * 0.7, 40, 0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
@@ -251,7 +251,7 @@ class PlayController extends StatelessWidget {
     return Container(
         width: MediaQuery.of(context).size.width,
         height: 50,
-        margin: EdgeInsets.fromLTRB(30, MediaQuery.of(context).size.width * 0.6 + 300, 30, 0),
+        margin: EdgeInsets.fromLTRB(30, MediaQuery.of(context).size.height * 0.87, 30, 0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[

@@ -13,6 +13,7 @@ PlayController PlayControllerReducer(PlayController state, action) {
   if (action['type'] == Actions.changeSong) {
     if(action['payLoad'] != state.songUrl) {
       state.audioPlayer.stop();
+      state.playing = false;
       state.songUrl = action['payLoad'];
       state.audioPlayer.play(state.songUrl);
       state.playing = true;
@@ -21,10 +22,11 @@ PlayController PlayControllerReducer(PlayController state, action) {
   if(action['type'] == Actions.addPlayList) {
     state.playList.add(action['payLoad']['songDetail']);
     state.audioPlayer.stop();
+    state.playing = false;
+    state.currentIndex = state.currentIndex + 1;
     state.songUrl = action['payLoad']['songUrl'];
     state.audioPlayer.play(state.songUrl);
     state.playing = true;
-    state.currentIndex = state.currentIndex + 1;
   }
   return state;
 }
