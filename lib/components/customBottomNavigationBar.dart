@@ -61,7 +61,7 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Play(state.playControllerState.playList[state.playControllerState.currentIndex - 1]['id'])
+                        builder: (context) => Play()
                       )
                     );
                   },

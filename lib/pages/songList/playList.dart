@@ -6,8 +6,7 @@ import './../../utils/request.dart';
 import './../../redux/index.dart';
 import './../../components/customBottomNavigationBar.dart';
 
-import './../../redux/playList/action.dart' as playListActions;
-import './../../redux/audioController/action.dart' as audioControllerActions;
+import './../../redux/playController/action.dart';
 
 class PlayList extends StatefulWidget {
   var store;
@@ -61,7 +60,7 @@ class PlayListState extends State<PlayList> {
                   ),
                   PlayListCardMid(playListData),
                   Divider(),
-                  PlayListCardBottom(playListData, state.playListModelState.currentIndex)
+                  PlayListCardBottom(playListData, state.playControllerState.currentIndex)
                 ],
               ),
             )
@@ -112,11 +111,11 @@ class PlayListCardBottom extends StatelessWidget {
                         _playListItem['albumBg'] = data[i]['al']['picUrl'];
                         _playListItem['id'] = data[i]['id'];
                         _playListAction['payLoad'] = _playListItem;
-                        _playListAction['type'] = playListActions.Actions.addPlayList;
+                        _playListAction['type'] = Actions.addPlayList;
 
                         var _audioControllerAction = new Map();
                         _audioControllerAction['payLoad'] = 'http://music.163.com/song/media/outer/url?id=' + data[i]['id'].toString() + '.mp3';
-                        _audioControllerAction['type'] = audioControllerActions.Actions.changeSong;
+                        _audioControllerAction['type'] = Actions.changeSong;
                         dynamic _actions() {
                           store.dispatch(_audioControllerAction);
                           store.dispatch(_playListAction);

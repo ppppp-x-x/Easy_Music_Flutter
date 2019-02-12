@@ -11,13 +11,12 @@ import 'package:redux/redux.dart';
 
 import './../lib/app.dart';
 import './../lib/redux/index.dart';
-import './../lib/redux/audioController/state.dart';
+import './../lib/redux/playController/state.dart';
 import './../lib/redux/playList/state.dart';
 
 void main() {
   final store = Store<AppState>(appReducer, initialState: AppState(
-    playListModelState: PlayListModelState.initState(),
-    audioControllerState: AudioControllerState.initState()
+    playControllerState: PlayController.initState(),
   ));
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.

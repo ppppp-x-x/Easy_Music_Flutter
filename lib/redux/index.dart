@@ -1,19 +1,15 @@
-import './audioController/state.dart';
-import './playList/state.dart';
+import './playController/state.dart';
 
-import './audioController/reducer.dart';
-import './playList/reducer.dart';
+import './playController/reducer.dart';
 
 class AppState {
-  AudioControllerState audioControllerState;
-  PlayListModelState playListModelState;
+  PlayController playControllerState;
 
-  AppState({this.audioControllerState, this.playListModelState});
+  AppState({this.playControllerState});
 }
 
 AppState appReducer(AppState state, action) {
   return AppState(
-    audioControllerState: audioControllerStateReducer(state.audioControllerState, action),
-    playListModelState: playListModelStateReducer(state.playListModelState, action)
+    playControllerState: PlayControllerReducer(state.playControllerState, action)
   );
 }

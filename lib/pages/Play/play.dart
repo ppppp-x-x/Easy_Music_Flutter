@@ -4,19 +4,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:ui' as ui;
 
 import './../../redux/index.dart';
-import './../../utils/request.dart';
-import './../../redux/audioController/action.dart';
+import './../../redux/playController/action.dart';
 
 class Play extends StatefulWidget {
-  int songId;
-  Play(this.songId);
   @override
-  PlayState createState() => new PlayState(songId);
+  PlayState createState() => new PlayState();
 }
 
 class PlayState extends State<Play> with SingleTickerProviderStateMixin{
   int songId;
-  PlayState(this.songId);
 
   dynamic songDetail;
   bool initPlay;
@@ -26,7 +22,6 @@ class PlayState extends State<Play> with SingleTickerProviderStateMixin{
   @override
   void initState() {
     super.initState();
-    getSongDetail(songId);
     initPlay = false;
     coverController = new AnimationController(
       vsync: this,
@@ -49,15 +44,6 @@ class PlayState extends State<Play> with SingleTickerProviderStateMixin{
     }
   }
 
-  dynamic getSongDetail(int id) async {
-    dynamic _songDetail = await fetchData('http://xinpeng.natapp1.cc/song/detail?ids=' + id.toString());
-    if(this.mounted) {
-      setState(() {
-      songDetail = _songDetail['playList']; 
-      });
-    }
-  }
-
   void setInitPlay (bool val) {
     this.setState(() {
       initPlay = val;
@@ -76,7 +62,7 @@ class PlayState extends State<Play> with SingleTickerProviderStateMixin{
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
                 child: Image.network(
-                  state.playListModelState.playList[state.playListModelState.currentIndex - 1]['albumBg'],
+                  state.playControllerState.playList[state.playControllerState.currentIndex - 1]['al']['picUrl'],
                   fit: BoxFit.cover,
                 ),
               ),
@@ -108,7 +94,7 @@ class PlayState extends State<Play> with SingleTickerProviderStateMixin{
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          state.playListModelState.playList[state.playListModelState.currentIndex - 1]['name'],
+                          state.playControllerState.playList[state.playControllerState.currentIndex - 1]['name'],
                           style: TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.bold,
@@ -116,7 +102,7 @@ class PlayState extends State<Play> with SingleTickerProviderStateMixin{
                           ),
                         ),
                         Text(
-                          state.playListModelState.playList[state.playListModelState.currentIndex - 1]['singer'],
+                          state.playControllerState.playList[state.playControllerState.currentIndex - 1]['ar'][0]['name'],
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.white
@@ -164,12 +150,12 @@ class PlayState extends State<Play> with SingleTickerProviderStateMixin{
                         margin: EdgeInsets.fromLTRB(10, 160, 0, 0),
                         child: ClipOval(
                           child: 
-                          state.audioControllerState.playing || (this.initPlay != null && this.initPlay == true)
+                          state.playControllerState.playing || (this.initPlay != null && this.initPlay == true)
                           ?
                           RotationTransition(
                             turns: coverCurved,
                             child: CachedNetworkImage(
-                              imageUrl: state.playListModelState.playList[state.playListModelState.currentIndex - 1]['albumBg'],
+                              imageUrl: state.playControllerState.playList[state.playControllerState.currentIndex - 1]['al']['picUrl'],
                               placeholder: Container(
                                 width: MediaQuery.of(context).size.width * 0.6 - 20,
                                 height: MediaQuery.of(context).size.width * 0.6 - 20,
@@ -179,7 +165,7 @@ class PlayState extends State<Play> with SingleTickerProviderStateMixin{
                           )
                           :
                           CachedNetworkImage(
-                            imageUrl: state.playListModelState.playList[state.playListModelState.currentIndex - 1]['albumBg'],
+                            imageUrl: state.playControllerState.playList[state.playControllerState.currentIndex - 1]['al']['picUrl'],
                             placeholder: Container(
                               width: MediaQuery.of(context).size.width * 0.6 - 20,
                               height: MediaQuery.of(context).size.width * 0.6 - 20,
@@ -292,7 +278,7 @@ class PlayController extends StatelessWidget {
             StoreConnector<AppState, VoidCallback>(
               converter: (store) {
                 var _action = new Map();
-                if (state.audioControllerState.playing == true) {
+                if (state.playControllerState.playing == true) {
                   _action['type'] = Actions.pause;
                 } else {
                   _action['type'] = Actions.play;
@@ -302,7 +288,7 @@ class PlayController extends StatelessWidget {
               builder: (BuildContext context, callback) {
                 return GestureDetector(
                   onTap: () {
-                    if(state.audioControllerState.playing == true) {
+                    if(state.playControllerState.playing == true) {
                       this.coverController.stop();
                     } else {
                       this.coverController.forward();
@@ -326,7 +312,7 @@ class PlayController extends StatelessWidget {
                         )
                       ]
                     ),
-                    child: state.audioControllerState.playing
+                    child: state.playControllerState.playing
                     ?
                     Image.asset(
                       'assets/images/play_pause.png'
