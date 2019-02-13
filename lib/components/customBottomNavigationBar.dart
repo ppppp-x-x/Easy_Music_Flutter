@@ -56,7 +56,7 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                GestureDetector(
+                InkWell(
                   onTap: () {
                     Navigator.push(
                       context,

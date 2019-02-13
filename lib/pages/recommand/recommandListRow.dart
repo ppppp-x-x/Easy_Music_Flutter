@@ -76,10 +76,8 @@ class RecommandList extends StatelessWidget {
                       Stack(
                         children: <Widget>[
                           Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.rectangle,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
+                            child:                           ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
                             child: CachedNetworkImage(
                               imageUrl: recommandList[index]['coverImgUrl'],
                               width: 120,
@@ -91,6 +89,7 @@ class RecommandList extends StatelessWidget {
                                 color: Colors.grey,
                               ),
                             ),
+                          ),
                           ),
                           Container(
                             width: 120,

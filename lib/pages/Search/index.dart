@@ -191,7 +191,7 @@ class SearchState extends State<Search> {
                             return () => store.dispatch(playListAction);
                           },
                           builder: (BuildContext context, callback) {
-                            return GestureDetector(
+                            return InkWell(
                               onTap: () async {
                                 dynamic songDetail = await getSongDetail(searchList[index]['id']);
                                 playListAction = new Map();

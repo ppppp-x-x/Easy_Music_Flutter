@@ -5,6 +5,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import './../../utils/request.dart';
 import './../../redux/index.dart';
 import './../../components/customBottomNavigationBar.dart';
+import './../../utils/commonFetch.dart';
 
 import './../../redux/playController/action.dart';
 
@@ -75,6 +76,7 @@ class PlayListState extends State<PlayList> {
 class PlayListCardBottom extends StatelessWidget {
   final dynamic playListData;
   int currentIndex;
+  dynamic playListAction;
   PlayListCardBottom(this.playListData, this.currentIndex);
   
   List<Widget> createPlayListContent(data, context) {
@@ -103,28 +105,19 @@ class PlayListCardBottom extends StatelessWidget {
                   Container(
                     child: StoreConnector<AppState, VoidCallback>(
                       converter: (store) {
-                        var _playListItem = new Map();
-                        var _playListAction = new Map();
-                        _playListItem['name'] = data[i]['name'];
-                        _playListItem['singer'] = data[i]['ar'][0]['name'];
-                        _playListItem['albumName'] = data[i]['al']['name'];
-                        _playListItem['albumBg'] = data[i]['al']['picUrl'];
-                        _playListItem['id'] = data[i]['id'];
-                        _playListAction['payLoad'] = _playListItem;
-                        _playListAction['type'] = Actions.addPlayList;
-
-                        var _audioControllerAction = new Map();
-                        _audioControllerAction['payLoad'] = 'http://music.163.com/song/media/outer/url?id=' + data[i]['id'].toString() + '.mp3';
-                        _audioControllerAction['type'] = Actions.changeSong;
-                        dynamic _actions() {
-                          store.dispatch(_audioControllerAction);
-                          store.dispatch(_playListAction);
-                        }
-                        return () => _actions();
+                        return () => store.dispatch(playListAction);
                       },
                       builder: (BuildContext context, callback) {
-                        return GestureDetector(
-                          onTap: () {
+                        return InkWell(
+                          onTap: () async {
+                            dynamic songDetail = await getSongDetail(data[i]['id']);
+                            playListAction = new Map();
+                            var _playListActionPayLoad = new Map();
+                            _playListActionPayLoad['songDetail'] = songDetail;
+                            _playListActionPayLoad['songUrl'] = 'http://music.163.com/song/media/outer/url?id=' + data[i]['id'].toString() + '.mp3';
+                            playListAction['payLoad'] = _playListActionPayLoad;
+                            playListAction['type'] = Actions.addPlayList;
+                            songDetail  = null;
                             callback();
                           },
                           child: Container(
