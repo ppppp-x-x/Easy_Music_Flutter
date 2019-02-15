@@ -67,6 +67,7 @@ flutter:
    - assets/images/play_pause.png
    - assets/images/loop.png
    - assets/images/random.png
+   - assets/images/playingAudio.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
