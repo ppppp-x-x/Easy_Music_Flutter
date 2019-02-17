@@ -12,7 +12,6 @@ import 'package:redux/redux.dart';
 import './../lib/app.dart';
 import './../lib/redux/index.dart';
 import './../lib/redux/playController/state.dart';
-import './../lib/redux/playList/state.dart';
 
 void main() {
   final store = Store<AppState>(appReducer, initialState: AppState(
