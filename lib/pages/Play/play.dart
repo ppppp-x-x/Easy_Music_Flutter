@@ -147,58 +147,7 @@ class PlayState extends State<Play> with SingleTickerProviderStateMixin{
                   ],
                 )
               ),
-              // Container(
-              //   margin: EdgeInsets.fromLTRB(40, MediaQuery.of(context).size.height * 0.7, 40, 0),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //     children: <Widget>[
-              //       IconButton(
-              //         onPressed: () {
-              //           print('暂未开发');
-              //         },
-              //         color: Colors.white,
-              //         iconSize: 20,
-              //         icon: ImageIcon(
-              //           AssetImage(
-              //             'assets/images/like_playList.png',
-              //           )
-              //         ),
-              //       ),
-              //       IconButton(
-              //         onPressed: () {
-              //           print('暂未开发');
-              //         },
-              //         color: Colors.white,
-              //         iconSize: 20,
-              //         icon: ImageIcon(
-              //           AssetImage(
-              //             'assets/images/comment_playList.png',
-              //           )
-              //         ),
-              //       ),
-              //       IconButton(
-              //         onPressed: () {
-              //           print('暂未开发');
-              //         },
-              //         color: Colors.white,
-              //         iconSize: 20,
-              //         icon: ImageIcon(
-              //           AssetImage(
-              //             'assets/images/retweet_playList.png',
-              //           )
-              //         ),
-              //       ),
-              //       IconButton(
-              //         onPressed: () {
-              //           print('暂未开发');
-              //         },
-              //         color: Colors.white,
-              //         iconSize: 20,
-              //         icon: Icon(Icons.file_download)
-              //       )
-              //     ],
-              //   ),
-              // ),
+              ProcessController(),
               PlayController(songId, state, setInitPlay)
             ],
           )
@@ -208,6 +157,35 @@ class PlayState extends State<Play> with SingleTickerProviderStateMixin{
   }
 }
 
+class ProcessController extends StatefulWidget {
+  @override
+  ProcessControllerState createState () => new ProcessControllerState();
+}
+
+class ProcessControllerState extends State<ProcessController> {
+  double processVal = 0.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(top: MediaQuery.of(context).size.width),
+      child: Slider(
+        value: processVal,
+        max: 100,
+        min: 0,
+        label: processVal.toString(),
+        activeColor: Colors.black,
+        inactiveColor: Colors.black26,
+        divisions: 100,
+        onChanged: (double val) {
+          setState(() {
+            this.processVal = val;  
+          });
+        },
+      )
+    );
+  }
+}
 class PlayController extends StatelessWidget {
   int songId;
   dynamic state;
