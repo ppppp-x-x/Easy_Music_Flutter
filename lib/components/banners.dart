@@ -26,7 +26,7 @@ class Banners extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             height: 160,
             fit: BoxFit.cover,
-            placeholder: Container(
+            placeholder: (context, url) => Container(
               width: MediaQuery.of(context).size.width,
               height: 160,
               color: Colors.grey,

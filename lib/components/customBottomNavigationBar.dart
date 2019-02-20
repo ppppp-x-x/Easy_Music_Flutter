@@ -74,7 +74,7 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                           imageUrl: state.playControllerState.playList[state.playControllerState.currentIndex - 1]['al']['picUrl'],
                           width: 40,
                           height: 40,
-                          placeholder: Image.asset(
+                          placeholder: (context, url) => Image.asset(
                             'assets/images/album_avatar_default.png',
                             width: 40,
                             height: 40,
