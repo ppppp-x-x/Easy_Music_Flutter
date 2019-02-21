@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:ui' as ui;
+import 'dart:async';
 
 import './../../redux/index.dart';
 import './../../redux/playController/action.dart';
@@ -48,10 +49,14 @@ class PlayState extends State<Play> with SingleTickerProviderStateMixin{
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
-                child: Image.network(
-                  state.playControllerState.playList[state.playControllerState.currentIndex - 1]['al']['picUrl'],
-                  fit: BoxFit.cover,
-                ),
+                child: CachedNetworkImage(
+                  imageUrl: state.playControllerState.playList[state.playControllerState.currentIndex - 1]['al']['picUrl'],
+                  placeholder: (context, url) => Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    color: Colors.grey,
+                  ),
+                )
               ),
               BackdropFilter(
                 filter: ui.ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
@@ -65,15 +70,13 @@ class PlayState extends State<Play> with SingleTickerProviderStateMixin{
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.width,
                 child: CachedNetworkImage(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.width,
                   imageUrl: state.playControllerState.playList[state.playControllerState.currentIndex - 1]['al']['picUrl'],
-                  placeholder: Container(
+                  placeholder: (context, url) => Container(
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.width,
                     color: Colors.grey,
                   ),
-                ),
+                )
               ),
               Container(
                 height: 70,
@@ -147,7 +150,7 @@ class PlayState extends State<Play> with SingleTickerProviderStateMixin{
                   ],
                 )
               ),
-              ProcessController(),
+              ProcessController(state),
               PlayController(songId, state, setInitPlay)
             ],
           )
@@ -159,30 +162,137 @@ class PlayState extends State<Play> with SingleTickerProviderStateMixin{
 
 class ProcessController extends StatefulWidget {
   @override
-  ProcessControllerState createState () => new ProcessControllerState();
+  dynamic state;
+  ProcessController(this.state);
+  ProcessControllerState createState () => new ProcessControllerState(state);
 }
 
 class ProcessControllerState extends State<ProcessController> {
+  dynamic state;
+  ProcessControllerState(this.state);
   double processVal = 0.0;
+  double processValAgent = 0.0;
+  double lastProcessVal = 0.0;
+  bool refreshView = true;
+  bool processTouching = false;
+  dynamic timer;
+  dynamic actionMap = new Map();
+
+  double computeProcessVal(String position, String duration) {
+    double parsedPosition = double.parse(position.substring(0, 2)) * 60 + double.parse(position.substring(3, 5));
+    double parsedDuration = double.parse(duration.substring(0, 2)) * 60 + double.parse(duration.substring(3, 5));
+    this.processVal = ((parsedPosition / parsedDuration) * 500);
+    if(!this.processTouching) {
+      this.processValAgent = ((parsedPosition / parsedDuration) * 500);
+    }
+    return this.processVal;
+  }
+
+  @override
+  void initState() {
+    timer = Timer.periodic(const Duration(milliseconds: 100), (Void) {
+      setState(() {
+       this.refreshView = !this.refreshView; 
+      });
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(top: MediaQuery.of(context).size.width),
-      child: Slider(
-        value: processVal,
-        max: 100,
-        min: 0,
-        label: processVal.toString(),
-        activeColor: Colors.black,
-        inactiveColor: Colors.black26,
-        divisions: 100,
-        onChanged: (double val) {
-          setState(() {
-            this.processVal = val;  
-          });
-        },
-      )
+    return StoreConnector<AppState, dynamic>(
+      converter: (store) => store.state.playControllerState,
+      builder: (BuildContext context, playControllerState) {
+        return Container(
+          margin: EdgeInsets.only(top: MediaQuery.of(context).size.width),
+          child: Row(
+            children: <Widget>[
+              Container(
+                width: 35,
+                margin: EdgeInsets.only(left: 10),
+                child: Text(
+                  playControllerState.songPosition == null
+                  ?
+                  ''
+                  :
+                  playControllerState.songPosition.toString().substring(2, 7),
+                  style: TextStyle(
+                    color: Colors.white
+                  ),
+                )
+              ),
+              Text(
+                computeProcessVal(playControllerState.songPosition.toString().substring(2, 7), playControllerState.audioPlayer.duration.toString().substring(2, 7)).toString(),
+                style: TextStyle(
+                  fontSize: 0
+                ),
+              ),
+              StoreConnector<AppState, VoidCallback>(
+                converter: (store) {
+                  return () => store.dispatch(actionMap);
+                },
+                builder: (BuildContext context, callback) {
+                  return Container(
+                    width: MediaQuery.of(context).size.width - 90,
+                    child: Slider(
+                      value: this.processValAgent,
+                      max: 500,
+                      min: 0,
+                      label: this.processValAgent.toStringAsFixed(1),
+                      activeColor: Colors.white,
+                      inactiveColor: Colors.white54,
+                      divisions: 500,
+                      onChangeStart: (double val) {
+                        this.timer.cancel();
+                        this.processTouching = true;
+                      },
+                      onChanged: (double val) {
+                        setState(() {
+                          this.processValAgent = val; 
+                        });
+                      },
+                      onChangeEnd: (double val) {
+                        setState(() {
+                          this.timer = Timer.periodic(const Duration(microseconds: 100), (Void) {
+                            setState(() {
+                            this.refreshView = !this.refreshView; 
+                            });
+                          });
+                        });
+                        this.processTouching = false;
+                        int _songSecond = int.parse(playControllerState.audioPlayer.duration.toString().substring(2, 4)) * 60 +
+                        int.parse(playControllerState.audioPlayer.duration.toString().substring(5, 7));
+                        actionMap['type'] = Actions.playSeek;
+                        actionMap['payLoad'] = _songSecond * this.processValAgent.floor() / 500;
+                        callback();
+                      },
+                    ),
+                  );
+                },
+              ),
+              Container(
+                width: 35,
+                child: Text(
+                  playControllerState.audioPlayer.duration == null
+                  ?
+                  ''
+                  :
+                  playControllerState.audioPlayer.duration.toString().substring(2, 7),
+                  style: TextStyle(
+                    color: Colors.white
+                  ),
+                )
+              )
+            ],
+          )
+        );
+      },
     );
   }
 }
