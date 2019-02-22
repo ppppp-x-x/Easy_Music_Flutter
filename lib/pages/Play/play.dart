@@ -6,6 +6,7 @@ import 'dart:async';
 
 import './../../redux/index.dart';
 import './../../redux/playController/action.dart';
+import './../../utils/commonFetch.dart';
 
 class Play extends StatefulWidget {
   @override
@@ -48,7 +49,8 @@ class PlayState extends State<Play> with SingleTickerProviderStateMixin{
             children: <Widget>[
               Container(
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
+                height: MediaQuery.of(context).size.height - MediaQuery.of(context).size.width,
+                margin: EdgeInsets.only(top: MediaQuery.of(context).size.width),
                 child: CachedNetworkImage(
                   imageUrl: state.playControllerState.playList[state.playControllerState.currentIndex - 1]['al']['picUrl'],
                   placeholder: (context, url) => Container(
@@ -56,12 +58,13 @@ class PlayState extends State<Play> with SingleTickerProviderStateMixin{
                     height: MediaQuery.of(context).size.height,
                     color: Colors.grey,
                   ),
+                  fit: BoxFit.cover,
                 )
               ),
               BackdropFilter(
-                filter: ui.ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
+                filter: ui.ImageFilter.blur(sigmaX: 40.0, sigmaY: 40.0),
                 child: Container(
-                  color: Colors.black.withOpacity(0.5),
+                  color: Colors.white.withOpacity(0.1),
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
                 )
@@ -223,14 +226,14 @@ class ProcessControllerState extends State<ProcessController> {
                   :
                   playControllerState.songPosition.toString().substring(2, 7),
                   style: TextStyle(
-                    color: Colors.white
+                    color: Colors.black87
                   ),
                 )
               ),
               Text(
                 computeProcessVal(playControllerState.songPosition.toString().substring(2, 7), playControllerState.audioPlayer.duration.toString().substring(2, 7)).toString(),
                 style: TextStyle(
-                  fontSize: 0
+                  fontSize: 0,
                 ),
               ),
               StoreConnector<AppState, VoidCallback>(
@@ -244,9 +247,12 @@ class ProcessControllerState extends State<ProcessController> {
                       value: this.processValAgent,
                       max: 500,
                       min: 0,
-                      label: this.processValAgent.toStringAsFixed(1),
-                      activeColor: Colors.white,
-                      inactiveColor: Colors.white54,
+                      label: ((this.processValAgent.floor() / 500) * (int.parse(playControllerState.audioPlayer.duration.toString().substring(2, 4)) * 60 +
+                        int.parse(playControllerState.audioPlayer.duration.toString().substring(5, 7))) / 60).floor().toString() + ':' +
+                        ((this.processValAgent.floor() / 500) * (int.parse(playControllerState.audioPlayer.duration.toString().substring(2, 4)) * 60 +
+                        int.parse(playControllerState.audioPlayer.duration.toString().substring(5, 7))) % 60).floor().toString(),
+                      activeColor: Colors.black,
+                      inactiveColor: Colors.black26,
                       divisions: 500,
                       onChangeStart: (double val) {
                         this.timer.cancel();
@@ -285,7 +291,7 @@ class ProcessControllerState extends State<ProcessController> {
                   :
                   playControllerState.audioPlayer.duration.toString().substring(2, 7),
                   style: TextStyle(
-                    color: Colors.white
+                    color: Colors.black87
                   ),
                 )
               )
@@ -300,6 +306,7 @@ class PlayController extends StatelessWidget {
   int songId;
   dynamic state;
   dynamic setInitPlay;
+  dynamic playListAction;
   PlayController(this.songId, this.state, this.setInitPlay);
 
   @override
@@ -354,14 +361,42 @@ class PlayController extends StatelessWidget {
                 );
               }
             ),
-            Container(
-              width: 50,
-              height: 50,
-              padding: EdgeInsets.all(15),
-              child: Image.asset(
-                'assets/images/play_next.png'
-              )
-            )   
+            StoreConnector<AppState, VoidCallback>(
+              converter: (store) {
+                return () => store.dispatch(playListAction);
+              },
+              builder: (BuildContext context, callback) {
+                return InkWell(
+                  onTap: () async {
+                    dynamic songDetail;
+                    dynamic _playListAction = new Map();
+                    var _playListActionPayLoad = new Map();
+                    if (state.playControllerState.songList.length > state.playControllerState.songIndex + 1) {
+                      songDetail = await getSongDetail(int.parse(state.playControllerState.songList[0]));
+                      _playListActionPayLoad['songIndex'] = 0;
+                      _playListActionPayLoad['songUrl'] = 'http://music.163.com/song/media/outer/url?id=' + state.playControllerState.songList[0] + '.mp3';
+                    } else {
+                      songDetail = await getSongDetail(int.parse(state.playControllerState.songList[state.playControllerState.songIndex + 1]));
+                      _playListActionPayLoad['songIndex'] = state.playControllerState.songIndex + 1;
+                      _playListActionPayLoad['songUrl'] = 'http://music.163.com/song/media/outer/url?id=' + state.playControllerState.songList[state.playControllerState.songIndex + 1] + '.mp3';
+                    }
+                    _playListActionPayLoad['songDetail'] = songDetail;
+                    _playListAction['payLoad'] = _playListActionPayLoad;
+                    _playListAction['type'] = Actions.addPlayList;
+                    this.playListAction =_playListAction;
+                    callback();
+                  },
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    padding: EdgeInsets.all(15),
+                    child: Image.asset(
+                      'assets/images/play_next.png'
+                    )
+                  )   
+                );
+              }
+            )
           ],
         )
       );
