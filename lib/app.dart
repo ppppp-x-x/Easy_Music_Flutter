@@ -50,6 +50,7 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Autom
       child: MaterialApp(
         title: 'Easy_Music',
         home: Scaffold(
+          backgroundColor: Colors.white,
           drawer: Drawer(
             child: Text('data'),
           ),
@@ -59,7 +60,7 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Autom
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
-                  '发现音乐'
+                  '发现音乐',
                 ),
                 SearchButton()
               ],
@@ -69,16 +70,36 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Autom
               indicatorColor: Colors.white,
               tabs: <Widget>[
                 Tab(
-                  text: '个性推荐',
+                  child: Text(
+                    '个性推荐',
+                    style: TextStyle(
+                      color: Colors.white
+                    ),
+                  ),
                 ),
                 Tab(
-                  text: '我的音乐',
+                  child: Text(
+                    '我的音乐',
+                    style: TextStyle(
+                      color: Colors.white
+                    ),
+                  ),
                 ),
                 Tab(
-                  text: '歌单',
+                  child: Text(
+                    '歌单',
+                    style: TextStyle(
+                      color: Colors.white
+                    ),
+                  ),
                 ),
                 Tab(
-                  text: '排行榜'
+                  child: Text(
+                    '排行榜',
+                    style: TextStyle(
+                      color: Colors.white
+                    ),
+                  ),
                 )
               ],
             ),
@@ -100,21 +121,27 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Autom
 class SearchButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Search()
+    return Hero(
+      tag: 'homeSearch',
+      child: Material(
+        color: Colors.red,
+        child: IconButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Search()
+              )
+            );
+          },
+          icon: ImageIcon(
+          AssetImage(
+            'assets/images/find.png'
+          ),
+          color: Colors.white,
+          size: 22,
           )
-        );
-      },
-      icon: ImageIcon(
-      AssetImage(
-        'assets/images/find.png'
-      ),
-      color: Colors.white,
-      size: 22,
+        )
       )
     );
   }

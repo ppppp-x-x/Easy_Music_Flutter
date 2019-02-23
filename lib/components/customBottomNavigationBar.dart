@@ -69,18 +69,25 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      ClipOval(
-                        child: CachedNetworkImage(
-                          imageUrl: state.playControllerState.playList[state.playControllerState.currentIndex - 1]['al']['picUrl'],
-                          width: 40,
-                          height: 40,
-                          placeholder: (context, url) => Image.asset(
-                            'assets/images/album_avatar_default.png',
+                      state.playControllerState.playList[state.playControllerState.currentIndex - 1]['al']['picUrl'] == null
+                      ?
+                      Container()
+                      :
+                      Hero(
+                        tag: 'bottomNavigation',
+                        child: ClipOval(
+                          child: CachedNetworkImage(
+                            imageUrl: state.playControllerState.playList[state.playControllerState.currentIndex - 1]['al']['picUrl'],
                             width: 40,
                             height: 40,
-                            fit: BoxFit.fill,
-                          ),
-                        )
+                            placeholder: (context, url) => Image.asset(
+                              'assets/images/album_avatar_default.png',
+                              width: 40,
+                              height: 40,
+                              fit: BoxFit.fill,
+                            ),
+                          )
+                        ),
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width - 220,

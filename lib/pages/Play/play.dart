@@ -41,124 +41,127 @@ class PlayState extends State<Play> with SingleTickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, dynamic>(
-      converter: (store) => store.state,
-      builder: (BuildContext context, state) {
-        return Material(
-          child: Stack(
-            children: <Widget>[
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height - MediaQuery.of(context).size.width,
-                margin: EdgeInsets.only(top: MediaQuery.of(context).size.width),
-                child: CachedNetworkImage(
-                  imageUrl: state.playControllerState.playList[state.playControllerState.currentIndex - 1]['al']['picUrl'],
-                  placeholder: (context, url) => Container(
+    return Hero(
+      tag: 'bottomNavigation',
+      child: StoreConnector<AppState, dynamic>(
+        converter: (store) => store.state,
+        builder: (BuildContext context, state) {
+          return Material(
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height - MediaQuery.of(context).size.width,
+                  margin: EdgeInsets.only(top: MediaQuery.of(context).size.width),
+                  child: CachedNetworkImage(
+                    imageUrl: state.playControllerState.playList[state.playControllerState.currentIndex - 1]['al']['picUrl'],
+                    placeholder: (context, url) => Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      color: Colors.grey,
+                    ),
+                    fit: BoxFit.cover,
+                  )
+                ),
+                BackdropFilter(
+                  filter: ui.ImageFilter.blur(sigmaX: 40.0, sigmaY: 40.0),
+                  child: Container(
+                    color: Colors.white.withOpacity(0.1),
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height,
-                    color: Colors.grey,
-                  ),
-                  fit: BoxFit.cover,
-                )
-              ),
-              BackdropFilter(
-                filter: ui.ImageFilter.blur(sigmaX: 40.0, sigmaY: 40.0),
-                child: Container(
-                  color: Colors.white.withOpacity(0.1),
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                )
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.width,
-                child: CachedNetworkImage(
-                  imageUrl: state.playControllerState.playList[state.playControllerState.currentIndex - 1]['al']['picUrl'],
-                  placeholder: (context, url) => Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.width,
-                    color: Colors.grey,
-                  ),
-                )
-              ),
-              Container(
-                height: 70,
-                margin: EdgeInsets.only(top: MediaQuery.of(context).size.width - 70),
-                padding: EdgeInsets.only(left: 40),
-                alignment: Alignment.centerLeft,
-                decoration: BoxDecoration(
-                  color: Colors.black26
+                  )
                 ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  mainAxisSize: MainAxisSize.max,
-                  children: <Widget>[
-                    Container(
-                      width: (MediaQuery.of(context).size.width - 50) * 0.6,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            state.playControllerState.playList[state.playControllerState.currentIndex - 1]['name'],
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20
-                            ),
-                            textAlign: TextAlign.left,
-                          ),
-                          Text(
-                            state.playControllerState.playList[state.playControllerState.currentIndex - 1]['ar'][0]['name'],
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15
-                            ),
-                            textAlign: TextAlign.left,
-                          )
-                        ],
-                      ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.width,
+                  child: CachedNetworkImage(
+                    imageUrl: state.playControllerState.playList[state.playControllerState.currentIndex - 1]['al']['picUrl'],
+                    placeholder: (context, url) => Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.width,
+                      color: Colors.grey,
                     ),
-                    Container(
-                      width: (MediaQuery.of(context).size.width - 50) * 0.4,
-                      child: Row(
-                        children: <Widget>[
-                          IconButton(
-                            iconSize: 20,
-                            color: Colors.white,
-                            onPressed: () {
-                              print('未开发');
-                            },
-                            icon: ImageIcon(
-                              AssetImage(
-                                'assets/images/loop.png'
+                  )
+                ),
+                Container(
+                  height: 70,
+                  margin: EdgeInsets.only(top: MediaQuery.of(context).size.width - 70),
+                  padding: EdgeInsets.only(left: 40),
+                  alignment: Alignment.centerLeft,
+                  decoration: BoxDecoration(
+                    color: Colors.black26
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.max,
+                    children: <Widget>[
+                      Container(
+                        width: (MediaQuery.of(context).size.width - 50) * 0.6,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              state.playControllerState.playList[state.playControllerState.currentIndex - 1]['name'],
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20
+                              ),
+                              textAlign: TextAlign.left,
+                            ),
+                            Text(
+                              state.playControllerState.playList[state.playControllerState.currentIndex - 1]['ar'][0]['name'],
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15
+                              ),
+                              textAlign: TextAlign.left,
+                            )
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: (MediaQuery.of(context).size.width - 50) * 0.4,
+                        child: Row(
+                          children: <Widget>[
+                            IconButton(
+                              iconSize: 20,
+                              color: Colors.white,
+                              onPressed: () {
+                                print('未开发');
+                              },
+                              icon: ImageIcon(
+                                AssetImage(
+                                  'assets/images/loop.png'
+                                )
+                              )
+                            ),
+                            IconButton(
+                              iconSize: 20,
+                              color: Colors.white,
+                              onPressed: () {
+                                print('未开发');
+                              },
+                              icon: ImageIcon(
+                                AssetImage(
+                                  'assets/images/random.png'
+                                )
                               )
                             )
-                          ),
-                          IconButton(
-                            iconSize: 20,
-                            color: Colors.white,
-                            onPressed: () {
-                              print('未开发');
-                            },
-                            icon: ImageIcon(
-                              AssetImage(
-                                'assets/images/random.png'
-                              )
-                            )
-                          )
-                        ],
+                          ],
+                        )
                       )
-                    )
-                  ],
-                )
-              ),
-              ProcessController(state),
-              PlayController(songId, state, setInitPlay)
-            ],
-          )
-        );
-      }
+                    ],
+                  )
+                ),
+                ProcessController(state),
+                PlayController(songId, state, setInitPlay)
+              ],
+            )
+          );
+        }
+      )
     );
   }
 }
@@ -214,11 +217,11 @@ class ProcessControllerState extends State<ProcessController> {
       builder: (BuildContext context, playControllerState) {
         return Container(
           margin: EdgeInsets.only(top: MediaQuery.of(context).size.width),
+          padding: EdgeInsets.fromLTRB(10, 0, 0, 10),
           child: Row(
             children: <Widget>[
               Container(
                 width: 35,
-                margin: EdgeInsets.only(left: 10),
                 child: Text(
                   playControllerState.songPosition == null
                   ?
@@ -319,9 +322,9 @@ class PlayController extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             Container(
-              width: 50,
-              height: 50,
-              padding: EdgeInsets.all(15),
+              width: 40,
+              height: 40,
+              padding: EdgeInsets.all(5),
               child: Image.asset(
                 'assets/images/play_prev.png'
               )
@@ -347,7 +350,7 @@ class PlayController extends StatelessWidget {
                   child: Container(
                     width: 50,
                     height: 50,
-                    padding: EdgeInsets.all(15),
+                    padding: EdgeInsets.all(10),
                     child: state.playControllerState.playing
                     ?
                     Image.asset(
@@ -387,11 +390,11 @@ class PlayController extends StatelessWidget {
                     callback();
                   },
                   child: Container(
-                    width: 50,
-                    height: 50,
-                    padding: EdgeInsets.all(15),
+                    width: 40,
+                    height: 40,
+                    padding: EdgeInsets.all(5),
                     child: Image.asset(
-                      'assets/images/play_next.png'
+                      'assets/images/play_next.png',
                     )
                   )   
                 );
