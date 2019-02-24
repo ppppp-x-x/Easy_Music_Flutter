@@ -156,7 +156,7 @@ class Menu extends StatelessWidget {
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(50),
-                  color: Colors.red[300],
+                  color: Colors.red,
                   border: Border.all(
                     width: 1,
                     color: Colors.red[400],

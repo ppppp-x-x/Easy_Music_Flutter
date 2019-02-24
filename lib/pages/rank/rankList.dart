@@ -70,7 +70,7 @@ class RankListState extends State<RankList> {
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.width * 0.6,
                         fit: BoxFit.fitWidth,
-                        placeholder: Container(
+                        placeholder: (context, url) => Container(
                           width: MediaQuery.of(context).size.width,
                           height: MediaQuery.of(context).size.width * 0.6,
                           color: Colors.grey,

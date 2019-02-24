@@ -3,5 +3,6 @@ enum Actions {
   play,
   changeSong,
   addPlayList,
-  playSeek
+  playSeek,
+  next
 }

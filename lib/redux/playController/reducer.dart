@@ -21,8 +21,14 @@ PlayController PlayControllerReducer(PlayController state, action) {
       }
     }
     if(action['type'] == Actions.addPlayList) {
+      if (action['payLoad']['songList'] != null) {
+        state.songList = action['payLoad']['songList'];
+      }
+      state.songIndex = action['payLoad']['songIndex'];
       state.playList.add(action['payLoad']['songDetail']);
-      state.audioPlayer.stop();
+      if (state.playing) {
+        state.audioPlayer.stop();
+      }
       state.playing = false;
       state.currentIndex = state.currentIndex + 1;
       state.songUrl = action['payLoad']['songUrl'];

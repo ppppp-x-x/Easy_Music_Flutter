@@ -103,7 +103,7 @@ class RankState extends State<Rank> with AutomaticKeepAliveClientMixin{
                       imageUrl: allRankList[index]['coverImgUrl'],
                       width: 80,
                       height: 80,
-                      placeholder: Container(
+                      placeholder: (context, url) => Container(
                         width: 80,
                         height: 80,
                         color: Colors.grey,

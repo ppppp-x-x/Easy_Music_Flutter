@@ -29,7 +29,7 @@ class RecommandList extends StatelessWidget {
                   Container(
                     width: 5,
                     height: 20,
-                    color: Colors.red,
+                    color: Colors.black,
                   ),
                   Container(
                     margin: EdgeInsets.only(left: 5),
@@ -47,7 +47,7 @@ class RecommandList extends StatelessWidget {
                 '更多',
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.red
+                  color: Colors.black
                 ),
               )
             ],
@@ -65,7 +65,7 @@ class RecommandList extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => PlayList(id: recommandList[index]['id'])
+                      builder: (context) => PlayList(recommandList[index]['id'], index.toString())
                     )
                   );
                 },
@@ -76,24 +76,27 @@ class RecommandList extends StatelessWidget {
                       Stack(
                         children: <Widget>[
                           Container(
-                            child:                           ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: CachedNetworkImage(
-                              imageUrl: recommandList[index]['coverImgUrl'],
-                              width: 120,
-                              height: 120,
-                              fit: BoxFit.cover,
-                              placeholder: Container(
-                                width: 120,
-                                height: 120,
-                                color: Colors.grey,
+                            child: ClipRRect(
+                            borderRadius: BorderRadius.circular(5),
+                            child: Hero(
+                              tag: index.toString(),
+                              child: CachedNetworkImage(
+                                imageUrl: recommandList[index]['coverImgUrl'],
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => Container(
+                                  width: 100,
+                                  height: 100,
+                                  color: Colors.grey,
+                                ),
                               ),
-                            ),
+                            )
                           ),
                           ),
                           Container(
-                            width: 120,
-                            height: 120,
+                            width: 100,
+                            height: 100,
                             padding: EdgeInsets.fromLTRB(0, 5, 5, 5),
                             alignment: Alignment.topRight,
                             decoration: BoxDecoration(
@@ -115,12 +118,15 @@ class RecommandList extends StatelessWidget {
                         ],
                       ),
                       Container(
-                        width: 120,
+                        width: 100,
                         margin: EdgeInsets.only(top: 5),
                         child: Text(
                           recommandList[index]['name'],
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
+                          style: TextStyle(
+                            fontSize: 12
+                          ),
                         ),
                       )
                     ],

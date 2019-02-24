@@ -7,6 +7,14 @@ class PlayController {
   get currentIndex => _currentIndex;
   set currentIndex(int val) => _currentIndex = val;
 
+  dynamic _songList;
+  get songList => _songList;
+  set songList(val) => _songList = val;
+
+  int _songIndex;
+  get songIndex => _songIndex;
+  set songIndex(val) => _songIndex = val;
+
   bool _playing;
   get playing => _playing;
   set playing(val) => _playing = val;
