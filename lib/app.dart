@@ -9,6 +9,7 @@ import './pages/MySong/index.dart';
 import './components/customBottomNavigationBar.dart';
 import './redux/index.dart';
 import './pages/Search/index.dart';
+import './pages/Search/index.dart';
 
 class MyApp extends StatefulWidget{
   final Store<AppState> store;
@@ -54,54 +55,66 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Autom
           drawer: Drawer(
             child: Text('data'),
           ),
-          appBar: AppBar(
-            backgroundColor: Colors.red,
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  '发现音乐',
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(80),
+            child: AppBar(
+              backgroundColor: Colors.white,
+              leading: Builder(
+                builder: (BuildContext context) {
+                  return IconButton(
+                    icon: Icon(Icons.menu),
+                    color: Colors.black,
+                    onPressed: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                  );
+                },
+              ),
+              title: Container(
+                margin: EdgeInsets.only(top: 3),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      '发现音乐',
+                      style: TextStyle(
+                        color: Colors.black
+                      ),
+                    ),
+                    SearchButton()
+                  ],
                 ),
-                SearchButton()
-              ],
-            ),
-            bottom: TabBar(
-              controller: _tabController,
-              indicatorColor: Colors.white,
-              tabs: <Widget>[
-                Tab(
-                  child: Text(
-                    '个性推荐',
-                    style: TextStyle(
-                      color: Colors.white
+              ),
+              bottom: TabBar(
+                controller: _tabController,
+                indicatorColor: Colors.black,
+                tabs: <Widget>[
+                  Tab(
+                    child: Text(
+                      '发现音乐',
+                      style: TextStyle(
+                        color: Colors.black
+                      ),
                     ),
                   ),
-                ),
-                Tab(
-                  child: Text(
-                    '我的音乐',
-                    style: TextStyle(
-                      color: Colors.white
+                  Tab(
+                    child: Text(
+                      '歌单',
+                      style: TextStyle(
+                        color: Colors.black
+                      ),
                     ),
                   ),
-                ),
-                Tab(
-                  child: Text(
-                    '歌单',
-                    style: TextStyle(
-                      color: Colors.white
+                  Tab(
+                    child: Text(
+                      '排行榜',
+                      style: TextStyle(
+                        color: Colors.black
+                      ),
                     ),
                   ),
-                ),
-                Tab(
-                  child: Text(
-                    '排行榜',
-                    style: TextStyle(
-                      color: Colors.white
-                    ),
-                  ),
-                )
-              ],
+                ],
+              ),
             ),
           ),
           body: TabBarView(
@@ -124,7 +137,7 @@ class SearchButton extends StatelessWidget {
     return Hero(
       tag: 'homeSearch',
       child: Material(
-        color: Colors.red,
+        color: Colors.white,
         child: IconButton(
           onPressed: () {
             Navigator.push(
@@ -134,12 +147,10 @@ class SearchButton extends StatelessWidget {
               )
             );
           },
-          icon: ImageIcon(
-          AssetImage(
-            'assets/images/find.png'
-          ),
-          color: Colors.white,
-          size: 22,
+          icon: Icon(
+            Icons.search,
+            size: 22,
+            color: Colors.black,
           )
         )
       )

@@ -105,9 +105,9 @@ class SearchState extends State<Search> {
       child: Material(
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: Colors.red,
+            backgroundColor: Colors.white,
             leading: IconButton(
-              color: Colors.white,
+              color: Colors.black,
               icon: Icon(
                 Icons.arrow_back
               ),
@@ -118,17 +118,17 @@ class SearchState extends State<Search> {
             title: TextField(
               controller: searchController,
               style: TextStyle(
-                color: Colors.white
+                color: Colors.black
               ),
               decoration: InputDecoration(
                 labelStyle: TextStyle(
-                  color: Colors.white
+                  color: Colors.black
                 ),
                 hintText: '歌名/歌手/歌单',
                 hintStyle: TextStyle(
-                  color: Colors.white
+                  color: Colors.black
                 ),
-                fillColor: Colors.white,
+                fillColor: Colors.black,
                 contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 8),
               ),
               onSubmitted: this.Submit,
