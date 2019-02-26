@@ -29,7 +29,7 @@ class RecommandList extends StatelessWidget {
                   Container(
                     width: 5,
                     height: 20,
-                    color: Colors.black,
+                    color: Colors.red,
                   ),
                   Container(
                     margin: EdgeInsets.only(left: 5),
@@ -47,7 +47,7 @@ class RecommandList extends StatelessWidget {
                 '更多',
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.black
+                  color: Colors.red
                 ),
               )
             ],

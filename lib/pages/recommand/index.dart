@@ -12,19 +12,21 @@ class Recommand extends StatefulWidget {
 class RecommandState extends State<Recommand> with AutomaticKeepAliveClientMixin {
   var bannerList;
   var recommandList;
+  var officialRecommendList;
 
   @override
   void initState() {
     super.initState();
     fetchBannner();
     fetchRecommandList();
+    fetchOfficialRecommend();
   }
 
   void fetchBannner() async {
     var _bannerList = await fetchData('http://xinpeng.natapp1.cc/banner');
     if(this.mounted) {
       setState(() {
-      bannerList = _bannerList['banners']; 
+        bannerList = _bannerList['banners']; 
       });
     }
   }
@@ -33,7 +35,16 @@ class RecommandState extends State<Recommand> with AutomaticKeepAliveClientMixin
     var _recommandList = await fetchData('http://xinpeng.natapp1.cc/top/playlist?limit=10&order=hot');
     if(this.mounted) {
       setState(() {
-      recommandList = _recommandList['playlists']; 
+        recommandList = _recommandList['playlists']; 
+      });
+    }
+  }
+
+  void fetchOfficialRecommend() async {
+    var _officialRecommendList = await fetchData('http://xinpeng.natapp1.cc/personalized');
+    if(this.mounted) {
+      setState(() {
+        officialRecommendList = _officialRecommendList['result']; 
       });
     }
   }
