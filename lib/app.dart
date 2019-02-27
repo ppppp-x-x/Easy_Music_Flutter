@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
-import './pages/recommand/index.dart';
-import './pages/songList/index.dart';
+import './pages/Recommend/index.dart';
 import './pages/rank/index.dart';
 import './pages/MySong/index.dart';
 import './components/customBottomNavigationBar.dart';
@@ -23,9 +22,8 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Autom
   MyAppState(this.store);
   TabController _tabController;
   List<Widget> _body = [
-    new Recommand(),
+    new Recommend(),
     new MySong(),
-    new SongList(),
     new Rank()
   ];
 
@@ -99,7 +97,7 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Autom
                   ),
                   Tab(
                     child: Text(
-                      '歌单',
+                      '我的音乐',
                       style: TextStyle(
                         color: Colors.black
                       ),
