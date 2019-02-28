@@ -77,17 +77,17 @@ class SearchState extends State<Search> {
             this.Submit(this.searchController.text);
           },
           child: Container(
-            padding: EdgeInsets.all(2),
+            padding: EdgeInsets.all(3),
             height: 22,
             decoration: BoxDecoration(
-              color: Colors.black38,
+              color: Colors.grey[200],
               borderRadius: BorderRadius.circular(3)
             ),
             child: Text(
               _searchHot[i]['first'],
               maxLines: 1,
               style: TextStyle(
-                color: Colors.white,
+                color: Colors.black87,
                 fontSize: 12
               ),
             ),
@@ -105,7 +105,7 @@ class SearchState extends State<Search> {
       child: Material(
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: Colors.white,
+            backgroundColor: Color(0XFFFFFFF0),
             leading: IconButton(
               color: Colors.black,
               icon: Icon(
@@ -154,6 +154,7 @@ class SearchState extends State<Search> {
           searchHotWidgets.length > 0 && !searched
           ?
           Container(
+            color: Color(0XFFFFFFF0),
             margin: EdgeInsets.only(top: 20),
             width: MediaQuery.of(context).size.width,
             alignment: Alignment.topCenter,
