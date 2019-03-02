@@ -216,9 +216,11 @@ class ProcessControllerState extends State<ProcessController> {
       converter: (store) => store.state.playControllerState,
       builder: (BuildContext context, playControllerState) {
         return Container(
+          width: MediaQuery.of(context).size.width,
           margin: EdgeInsets.only(top: MediaQuery.of(context).size.width),
-          padding: EdgeInsets.fromLTRB(10, 0, 0, 10),
+          padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Container(
                 width: 35,
@@ -245,7 +247,7 @@ class ProcessControllerState extends State<ProcessController> {
                 },
                 builder: (BuildContext context, callback) {
                   return Container(
-                    width: MediaQuery.of(context).size.width - 90,
+                    width: MediaQuery.of(context).size.width - 95,
                     child: Slider(
                       value: this.processValAgent,
                       max: 500,
@@ -321,7 +323,7 @@ class PlayController extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            Container(
+            Container( 
               width: 40,
               height: 40,
               padding: EdgeInsets.all(5),
