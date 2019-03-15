@@ -41,127 +41,124 @@ class PlayState extends State<Play> with SingleTickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context) {
-    return Hero(
-      tag: 'bottomNavigation',
-      child: StoreConnector<AppState, dynamic>(
-        converter: (store) => store.state,
-        builder: (BuildContext context, state) {
-          return Material(
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height - MediaQuery.of(context).size.width,
-                  margin: EdgeInsets.only(top: MediaQuery.of(context).size.width),
-                  child: CachedNetworkImage(
-                    imageUrl: state.playControllerState.playList[state.playControllerState.currentIndex - 1]['al']['picUrl'],
-                    placeholder: (context, url) => Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height,
-                      color: Colors.grey,
-                    ),
-                    fit: BoxFit.cover,
-                  )
-                ),
-                BackdropFilter(
-                  filter: ui.ImageFilter.blur(sigmaX: 40.0, sigmaY: 40.0),
-                  child: Container(
-                    color: Colors.white.withOpacity(0.1),
+    return StoreConnector<AppState, dynamic>(
+      converter: (store) => store.state,
+      builder: (BuildContext context, state) {
+        return Material(
+          child: Stack(
+            children: <Widget>[
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height - MediaQuery.of(context).size.width,
+                margin: EdgeInsets.only(top: MediaQuery.of(context).size.width),
+                child: CachedNetworkImage(
+                  imageUrl: state.playControllerState.playList[state.playControllerState.currentIndex - 1]['al']['picUrl'],
+                  placeholder: (context, url) => Container(
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height,
-                  )
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.width,
-                  child: CachedNetworkImage(
-                    imageUrl: state.playControllerState.playList[state.playControllerState.currentIndex - 1]['al']['picUrl'],
-                    placeholder: (context, url) => Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.width,
-                      color: Colors.grey,
-                    ),
-                  )
-                ),
-                Container(
-                  height: 70,
-                  margin: EdgeInsets.only(top: MediaQuery.of(context).size.width - 70),
-                  padding: EdgeInsets.only(left: 40),
-                  alignment: Alignment.centerLeft,
-                  decoration: BoxDecoration(
-                    color: Colors.black26
+                    color: Colors.grey,
                   ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[
-                      Container(
-                        width: (MediaQuery.of(context).size.width - 50) * 0.6,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              state.playControllerState.playList[state.playControllerState.currentIndex - 1]['name'],
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20
-                              ),
-                              textAlign: TextAlign.left,
-                            ),
-                            Text(
-                              state.playControllerState.playList[state.playControllerState.currentIndex - 1]['ar'][0]['name'],
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15
-                              ),
-                              textAlign: TextAlign.left,
-                            )
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: (MediaQuery.of(context).size.width - 50) * 0.4,
-                        child: Row(
-                          children: <Widget>[
-                            IconButton(
-                              iconSize: 20,
-                              color: Colors.white,
-                              onPressed: () {
-                                print('未开发');
-                              },
-                              icon: ImageIcon(
-                                AssetImage(
-                                  'assets/images/loop.png'
-                                )
-                              )
-                            ),
-                            IconButton(
-                              iconSize: 20,
-                              color: Colors.white,
-                              onPressed: () {
-                                print('未开发');
-                              },
-                              icon: ImageIcon(
-                                AssetImage(
-                                  'assets/images/random.png'
-                                )
-                              )
-                            )
-                          ],
-                        )
-                      )
-                    ],
-                  )
+                  fit: BoxFit.cover,
+                )
+              ),
+              BackdropFilter(
+                filter: ui.ImageFilter.blur(sigmaX: 40.0, sigmaY: 40.0),
+                child: Container(
+                  color: Colors.white.withOpacity(0.1),
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                )
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.width,
+                child: CachedNetworkImage(
+                  imageUrl: state.playControllerState.playList[state.playControllerState.currentIndex - 1]['al']['picUrl'],
+                  placeholder: (context, url) => Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.width,
+                    color: Colors.grey,
+                  ),
+                )
+              ),
+              Container(
+                height: 70,
+                margin: EdgeInsets.only(top: MediaQuery.of(context).size.width - 70),
+                padding: EdgeInsets.only(left: 40),
+                alignment: Alignment.centerLeft,
+                decoration: BoxDecoration(
+                  color: Colors.black26
                 ),
-                ProcessController(state),
-                PlayController(songId, state, setInitPlay)
-              ],
-            )
-          );
-        }
-      )
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Container(
+                      width: (MediaQuery.of(context).size.width - 50) * 0.6,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            state.playControllerState.playList[state.playControllerState.currentIndex - 1]['name'],
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20
+                            ),
+                            textAlign: TextAlign.left,
+                          ),
+                          Text(
+                            state.playControllerState.playList[state.playControllerState.currentIndex - 1]['ar'][0]['name'],
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15
+                            ),
+                            textAlign: TextAlign.left,
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(
+                      width: (MediaQuery.of(context).size.width - 50) * 0.4,
+                      child: Row(
+                        children: <Widget>[
+                          IconButton(
+                            iconSize: 20,
+                            color: Colors.white,
+                            onPressed: () {
+                              print('未开发');
+                            },
+                            icon: ImageIcon(
+                              AssetImage(
+                                'assets/images/loop.png'
+                              )
+                            )
+                          ),
+                          IconButton(
+                            iconSize: 20,
+                            color: Colors.white,
+                            onPressed: () {
+                              print('未开发');
+                            },
+                            icon: ImageIcon(
+                              AssetImage(
+                                'assets/images/random.png'
+                              )
+                            )
+                          )
+                        ],
+                      )
+                    )
+                  ],
+                )
+              ),
+              ProcessController(state),
+              PlayController(songId, state, setInitPlay)
+            ],
+          )
+        );
+      }
     );
   }
 }
@@ -183,12 +180,13 @@ class ProcessControllerState extends State<ProcessController> {
   bool processTouching = false;
   dynamic timer;
   dynamic actionMap = new Map();
+  bool processValAgentLock = false;
 
   double computeProcessVal(String position, String duration) {
     double parsedPosition = double.parse(position.substring(0, 2)) * 60 + double.parse(position.substring(3, 5));
     double parsedDuration = double.parse(duration.substring(0, 2)) * 60 + double.parse(duration.substring(3, 5));
     this.processVal = ((parsedPosition / parsedDuration) * 500);
-    if(!this.processTouching) {
+    if(!this.processTouching && !processValAgentLock) {
       this.processValAgent = ((parsedPosition / parsedDuration) * 500);
     }
     return this.processVal;
@@ -196,6 +194,7 @@ class ProcessControllerState extends State<ProcessController> {
 
   @override
   void initState() {
+    this.processValAgentLock = true;
     timer = Timer.periodic(const Duration(milliseconds: 100), (Void) {
       setState(() {
        this.refreshView = !this.refreshView; 
@@ -207,6 +206,7 @@ class ProcessControllerState extends State<ProcessController> {
   @override
   void dispose() {
     timer.cancel();
+    this.processValAgentLock = false;
     super.dispose();
   }
 
@@ -268,20 +268,23 @@ class ProcessControllerState extends State<ProcessController> {
                           this.processValAgent = val; 
                         });
                       },
-                      onChangeEnd: (double val) {
-                        setState(() {
-                          this.timer = Timer.periodic(const Duration(microseconds: 100), (Void) {
-                            setState(() {
-                            this.refreshView = !this.refreshView; 
-                            });
-                          });
-                        });
+                      onChangeEnd: (double val) async{
+                        this.processValAgentLock = true;
                         this.processTouching = false;
                         int _songSecond = int.parse(playControllerState.audioPlayer.duration.toString().substring(2, 4)) * 60 +
                         int.parse(playControllerState.audioPlayer.duration.toString().substring(5, 7));
                         actionMap['type'] = Actions.playSeek;
                         actionMap['payLoad'] = _songSecond * this.processValAgent.floor() / 500;
                         callback();
+                        await new Future.delayed(const Duration(milliseconds: 500));
+                        this.processValAgentLock = false;
+                        setState(() {
+                          this.timer = Timer.periodic(const Duration(microseconds: 100), (Void) {
+                            setState(() {
+                              this.refreshView = !this.refreshView; 
+                            });
+                          });
+                        });
                       },
                     ),
                   );
