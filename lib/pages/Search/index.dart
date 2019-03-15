@@ -3,6 +3,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import './../../redux/index.dart';
+import './../../utils/url.dart';
 import './../../utils/commonFetch.dart';
 import './../../utils/request.dart';
 import './../../redux/playController/action.dart';
@@ -44,7 +45,7 @@ class SearchState extends State<Search> {
   }
 
   dynamic getSearchHot() async {
-    dynamic _searchHot = await fetchData('http://xinpeng.natapp1.cc/search/hot');
+    dynamic _searchHot = await fetchData(localBaseUrl + 'search/hot');
     if(this.mounted) {
       setState(() {
         searchHotWidgets = createSearchHot(_searchHot);  
@@ -56,7 +57,7 @@ class SearchState extends State<Search> {
     setState(() {
       showSpinner = true;  
     });
-    dynamic _searchList = await fetchData('http://xinpeng.natapp1.cc/search?keywords=' + str);
+    dynamic _searchList = await fetchData(localBaseUrl + 'search?keywords=' + str);
     if(this.mounted) {
       setState(() {
         searched = true;
@@ -105,7 +106,7 @@ class SearchState extends State<Search> {
       child: Material(
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: Color(0XFFFFFFF0),
+            backgroundColor: Colors.white,
             leading: IconButton(
               color: Colors.black,
               icon: Icon(
@@ -154,7 +155,7 @@ class SearchState extends State<Search> {
           searchHotWidgets.length > 0 && !searched
           ?
           Container(
-            color: Color(0XFFFFFFF0),
+            color: Colors.white,
             margin: EdgeInsets.only(top: 20),
             width: MediaQuery.of(context).size.width,
             alignment: Alignment.topCenter,

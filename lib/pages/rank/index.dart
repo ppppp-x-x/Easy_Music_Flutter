@@ -4,6 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import './rankList.dart';
 import './../../utils/request.dart';
+import './../../utils/url.dart';
 
 dynamic rankContrast = {
   '云音乐新歌榜': 0,
@@ -53,7 +54,7 @@ class RankState extends State<Rank> with AutomaticKeepAliveClientMixin{
   }
 
   void getAllRankList() async {
-    dynamic _allRankList = await fetchData('http://xinpeng.natapp1.cc/toplist');
+    dynamic _allRankList = await fetchData(localBaseUrl + '/toplist');
     setState(() {
       allRankList = _allRankList['list'];
     });

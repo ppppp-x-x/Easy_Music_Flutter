@@ -4,6 +4,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:ui' as ui;
 
+import './../../utils/url.dart';
 import './../../utils/request.dart';
 import './../../redux/index.dart';
 import './../../components/customBottomNavigationBar.dart';
@@ -38,7 +39,7 @@ class PlayListState extends State<PlayList> {
   }
 
   void fetchOlayList(id) async {
-    var _playListData = await fetchData('http://xinpeng.natapp1.cc/playlist/detail?id=' + id.toString());
+    var _playListData = await fetchData(localBaseUrl + 'playlist/detail?id=' + id.toString());
     if(this.mounted) {
       setState(() {
         playListData = _playListData['playlist'];
@@ -226,7 +227,7 @@ class PlayListCardBottomState extends State<PlayListCardBottom> {
     Container()
     :
     Container(
-      color: Color(0XFFFFFFF0),
+      color: Colors.white,
       child: Column(
         children: createPlayListContent(playListData['tracks'], context),
       )

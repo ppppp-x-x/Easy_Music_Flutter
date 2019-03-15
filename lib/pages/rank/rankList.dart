@@ -5,6 +5,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 
 import './../../utils/request.dart';
 import './../../utils/commonFetch.dart';
+import './../../utils/url.dart';
 import './../../redux/index.dart';
 import './../../redux/playController/action.dart';
 import './../../components/customBottomNavigationBar.dart';
@@ -36,7 +37,7 @@ class RankListState extends State<RankList> {
 
   void getRankDetail () async {
     print(rankListId);
-    dynamic _rankDetail = await fetchData('http://xinpeng.natapp1.cc/top/list?idx=' + rankListId.toString());
+    dynamic _rankDetail = await fetchData(localBaseUrl + 'top/list?idx=' + rankListId.toString());
     setState(() {
       rankTracks = _rankDetail['playlist']['tracks'];
       rankDec = _rankDetail['playlist']['creator'];
