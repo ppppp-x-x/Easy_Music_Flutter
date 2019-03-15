@@ -194,7 +194,7 @@ class ProcessControllerState extends State<ProcessController> {
 
   @override
   void initState() {
-    this.processValAgentLock = true;
+    this.processValAgentLock = false;
     timer = Timer.periodic(const Duration(milliseconds: 100), (Void) {
       setState(() {
        this.refreshView = !this.refreshView; 
