@@ -25,7 +25,10 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
 
   void fetchBannner() async {
     var _bannerList = await fetchData(localBaseUrl + 'banner');
-    if(this.mounted) {
+    if (_bannerList == '请求错误') {
+      return;
+    }
+    if(this.mounted && this.bannerList == null) {
       setState(() {
         bannerList = _bannerList['banners']; 
       });
@@ -34,7 +37,10 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
 
   void fetchHotSongList() async {
     var _hotSongList = await fetchData(localBaseUrl + 'top/playlist?limit=10&order=hot');
-    if(this.mounted) {
+    if (_hotSongList == '请求错误') {
+      return;
+    }
+    if(this.mounted && this.hotSongList == null) {
       setState(() {
         this.hotSongList = _hotSongList['playlists']; 
       });
@@ -43,7 +49,10 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
 
   void fetchRecommedSongList() async {
     var _recommendSongList = await fetchData(localBaseUrl + 'personalized');
-    if(this.mounted) {
+    if (_recommendSongList == '请求错误') {
+      return;
+    }
+    if(this.mounted && this.recommendSongList == null) {
       setState(() {
         this.recommendSongList = _recommendSongList['result']; 
       });
