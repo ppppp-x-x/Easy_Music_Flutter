@@ -82,14 +82,14 @@ class SearchState extends State<Search> {
             height: 22,
             decoration: BoxDecoration(
               color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(3)
+              borderRadius: BorderRadius.circular(8)
             ),
             child: Text(
               _searchHot[i]['first'],
               maxLines: 1,
               style: TextStyle(
                 color: Colors.black87,
-                fontSize: 12
+                fontSize: 10
               ),
             ),
           )
@@ -184,7 +184,7 @@ class SearchState extends State<Search> {
                           child: Text(
                             (index + 1).toString(),
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: 12,
                               color: Colors.black54
                             ),
                           ),
