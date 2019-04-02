@@ -28,7 +28,7 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       converter: (store) => store.state,
       builder: (BuildContext context, state) {
         return
-        state.playControllerState.currentIndex == 0 || state.playControllerState.playList.length == 0 || state.playControllerState.playList[state.playControllerState.currentIndex - 1] == null
+        state.playControllerState.playList.length == 0 || state.playControllerState.playList[state.playControllerState.currentIndex] == null
         ?
         Container(
           width: MediaQuery.of(context).size.width,
@@ -69,13 +69,13 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      state.playControllerState.playList[state.playControllerState.currentIndex - 1]['al']['picUrl'] == null
+                      state.playControllerState.playList[state.playControllerState.currentIndex]['al']['picUrl'] == null
                       ?
                       Container()
                       :
                       ClipOval(
                         child: CachedNetworkImage(
-                          imageUrl: state.playControllerState.playList[state.playControllerState.currentIndex - 1]['al']['picUrl'],
+                          imageUrl: state.playControllerState.playList[state.playControllerState.currentIndex]['al']['picUrl'],
                           width: 40,
                           height: 40,
                           placeholder: (context, url) => Image.asset(
@@ -95,14 +95,14 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              state.playControllerState.playList[state.playControllerState.currentIndex - 1]['name'],
+                              state.playControllerState.playList[state.playControllerState.currentIndex]['name'],
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                             ),
                             Container(
                               margin: EdgeInsets.only(top: 3),
                               child: Text(
-                                state.playControllerState.playList[state.playControllerState.currentIndex - 1]['ar'][0]['name'],
+                                state.playControllerState.playList[state.playControllerState.currentIndex]['ar'][0]['name'],
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                                 style: TextStyle(

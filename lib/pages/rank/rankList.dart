@@ -39,8 +39,8 @@ class RankListState extends State<RankList> {
     print(rankListId);
     dynamic _rankDetail = await fetchData(localBaseUrl + 'top/list?idx=' + rankListId.toString());
     setState(() {
-      rankTracks = _rankDetail['playlist']['tracks'];
-      rankDec = _rankDetail['playlist']['creator'];
+      rankTracks = _rankDetail['playList']['tracks'];
+      rankDec = _rankDetail['playList']['creator'];
     });
   }
 
@@ -121,8 +121,8 @@ class RankListState extends State<RankList> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
-                      state.playControllerState.currentIndex > 1 && 
-                      state.playControllerState.playList[state.playControllerState.currentIndex - 1]['id'] == rankTracks[index - 1]['id']
+                      state.playControllerState.songList.length > 1 && 
+                      state.playControllerState.songList[state.playControllerState.songList.length - 1]['id'] == rankTracks[index - 1]['id']
                       ?
                       Container(
                         width: 30,

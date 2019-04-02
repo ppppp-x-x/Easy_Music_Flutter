@@ -4,6 +4,7 @@ import './../../utils/url.dart';
 import './../../utils/request.dart';
 import './../../components/banners.dart';
 import './recommendListRow.dart';
+import './recommendVideoRow.dart';
 
 class Recommend extends StatefulWidget {
   @override
@@ -14,6 +15,7 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
   var bannerList;
   var hotSongList;
   var recommendSongList;
+  var recommendVideos;
 
   @override
   void initState() {
@@ -21,6 +23,7 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
     fetchBannner();
     fetchHotSongList();
     fetchRecommedSongList();
+    fetchRecommendVideos();
   }
 
   void fetchBannner() async {
@@ -55,6 +58,18 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
     if(this.mounted && this.recommendSongList == null) {
       setState(() {
         this.recommendSongList = _recommendSongList['result']; 
+      });
+    }
+  }
+
+  void fetchRecommendVideos() async {
+    var _recommendVideos = await fetchData(localBaseUrl + '/personalized/mv');
+    if (_recommendVideos == '请求错误') {
+      return;
+    }
+    if(this.mounted && this.recommendVideos == null) {
+      setState(() {
+        this.recommendVideos =_recommendVideos;
       });
     }
   }

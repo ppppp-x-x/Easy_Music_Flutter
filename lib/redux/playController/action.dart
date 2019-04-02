@@ -1,7 +1,8 @@
 enum Actions {
   pause,
   play,
-  changeSong,
+  nextSong,
+  prevSong,
   addPlayList,
   playSeek,
   next

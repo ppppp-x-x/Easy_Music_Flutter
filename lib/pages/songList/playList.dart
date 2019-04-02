@@ -122,101 +122,118 @@ class PlayListCardBottomState extends State<PlayListCardBottom> {
     :
     Container(
       color: Colors.white,
-      child: ListView.builder(
-        physics: new NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        itemCount: playListData['tracks'].length,
-        itemBuilder: (BuildContext context, int index) {
-          return Column(
-            children: <Widget>[
-              Row(
+      child: Container(
+        child: StoreConnector<AppState, dynamic>(
+          converter: (store) => store.state,
+          builder: (BuildContext context, state) {
+            return ListView.builder(
+            physics: new NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: playListData['tracks'].length,
+            itemBuilder: (BuildContext context, int index) {
+              return Column(
                 children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.only(left: 15),
-                    width: 30,
-                    child: Text(
-                      (index + 1).toString(),
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black54
-                      ),
-                    ),
-                  ),
-                  Container(
-                    child: StoreConnector<AppState, VoidCallback>(
-                      converter: (store) {
-                        return () => store.dispatch(playListAction);
-                      },
-                      builder: (BuildContext context, callback) {
-                        return InkWell(
-                          onTap: () async {
-                            dynamic songDetail = await getSongDetail(playListData['tracks'][index]['id']);
-                            playListAction = new Map();
-                            var _playListActionPayLoad = new Map();
-                            if (playList.length == 0) {
-                              dynamic _playList = [];
-                              for(int j = 0;j < playListData['tracks'].length;j ++) {
-                                _playList.add(playListData['tracks'][j]['id'].toString());
-                              }
-                              playList =_playList;
-                              _playListActionPayLoad['songList'] = _playList;
-                              _playListActionPayLoad['songIndex'] = index;
-                            }
-                            _playListActionPayLoad['songDetail'] = songDetail;
-                            _playListActionPayLoad['songUrl'] = 'http://music.163.com/song/media/outer/url?id=' + playListData['tracks'][index]['id'].toString() + '.mp3';
-                            playListAction['payLoad'] = _playListActionPayLoad;
-                            playListAction['type'] = Actions.addPlayList;
-                            callback();
-                          },
-                          child: Container(
-                            width: MediaQuery.of(context).size.width - 110,
-                            margin: EdgeInsets.only(left: 20),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Container(
-                                  child: Text(
-                                    playListData['tracks'][index]['name'],
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  child: Text(
-                                    playListData['tracks'][index]['ar'][0]['name'],
-                                    maxLines: 1,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black54
-                                  ),
-                                  ),
-                                )
-                              ],
-                            ),
+                  Row(
+                    children: <Widget>[
+                      state.playControllerState.playList.length > 0 && state.playControllerState.playList[state.playControllerState.currentIndex] != null && state.playControllerState.playList[state.playControllerState.currentIndex]['id'] == playListData['tracks'][index]['id']
+                      ?
+                      Container(
+                        margin: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                        width: 15,
+                        child: Image.asset('assets/images/playingAudio.png')
+                      )
+                      :
+                      Container(
+                        margin: EdgeInsets.only(left: 15),
+                        width: 30,
+                        child: Text(
+                          (index + 1).toString(),
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black54
                           ),
-                        );
-                      }
-                    ) 
+                        ),
+                      ),
+                      Container(
+                        child: StoreConnector<AppState, VoidCallback>(
+                          converter: (store) {
+                            return () => store.dispatch(playListAction);
+                          },
+                          builder: (BuildContext context, callback) {
+                            return InkWell(
+                              onTap: () async {
+                                dynamic songDetail = await getSongDetail(playListData['tracks'][index]['id']);
+                                dynamic songLyr = await fetchData('${localBaseUrl}lyric?id=${playListData['tracks'][index]['id']}');
+                                songDetail['songLyr'] = songLyr;
+                                playListAction = new Map();
+                                var _playListActionPayLoad = new Map();
+                                if (playList.length == 0) {
+                                  dynamic _playList = [];
+                                  for(int j = 0;j < playListData['tracks'].length;j ++) {
+                                    _playList.add(playListData['tracks'][j]['id'].toString());
+                                  }
+                                  playList =_playList;
+                                  _playListActionPayLoad['songList'] = _playList;
+                                  _playListActionPayLoad['songIndex'] = index;
+                                }
+                                _playListActionPayLoad['songDetail'] = songDetail;
+                                _playListActionPayLoad['songUrl'] = 'http://music.163.com/song/media/outer/url?id=' + playListData['tracks'][index]['id'].toString() + '.mp3';
+                                playListAction['payLoad'] = _playListActionPayLoad;
+                                playListAction['type'] = Actions.addPlayList;
+                                callback();
+                              },
+                              child: Container(
+                                width: MediaQuery.of(context).size.width - 110,
+                                margin: EdgeInsets.only(left: 20),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Container(
+                                      child: Text(
+                                        playListData['tracks'][index]['name'],
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      child: Text(
+                                        playListData['tracks'][index]['ar'][0]['name'],
+                                        maxLines: 1,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.black54
+                                      ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
+                        ) 
+                      ),
+                      Container(
+                        width: 20,
+                        child: Image.asset(
+                          'assets/images/more_playList.png',
+                          width: 20,
+                          height: 20,
+                        ),
+                      )
+                    ],
                   ),
-                  Container(
-                    width: 20,
-                    child: Image.asset(
-                      'assets/images/more_playList.png',
-                      width: 20,
-                      height: 20,
-                    ),
-                  )
+                  Divider()
                 ],
-              ),
-              Divider()
-            ],
+              );
+            },
           );
-        },
+          }
+        )
       )
     );
   }

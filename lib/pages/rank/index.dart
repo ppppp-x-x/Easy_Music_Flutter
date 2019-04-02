@@ -54,7 +54,7 @@ class RankState extends State<Rank> with AutomaticKeepAliveClientMixin{
   }
 
   void getAllRankList() async {
-    dynamic _allRankList = await fetchData(localBaseUrl + '/toplist');
+    dynamic _allRankList = await fetchData(localBaseUrl + 'toplist');
     if (_allRankList == '请求错误') {
       return;
     }

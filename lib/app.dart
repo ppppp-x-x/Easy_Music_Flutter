@@ -3,11 +3,10 @@ import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
 import './pages/Recommend/index.dart';
-import './pages/rank/index.dart';
+import './pages/Rank/index.dart';
 import './pages/MySong/index.dart';
 import './components/customBottomNavigationBar.dart';
 import './redux/index.dart';
-import './pages/Search/index.dart';
 import './pages/Search/index.dart';
 
 class MyApp extends StatefulWidget{

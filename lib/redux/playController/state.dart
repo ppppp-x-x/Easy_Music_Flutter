@@ -32,7 +32,7 @@ class PlayController {
 
   PlayController.initState() {
     _playList = [];
-    _currentIndex = 0;
+    _currentIndex = -1;
     _playing = false;
     songUrl = '';
     _audioPlayer = new AudioPlayer();
