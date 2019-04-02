@@ -198,13 +198,20 @@ class SearchState extends State<Search> {
                               return InkWell(
                                 onTap: () async {
                                   dynamic songDetail = await getSongDetail(searchList[index]['id']);
+                                  dynamic songLyr = await fetchData('${localBaseUrl}lyric?id=${searchList[index]['id']}');
+                                  songDetail['songLyr'] = songLyr;
                                   playListAction = new Map();
                                   var _playListActionPayLoad = new Map();
+                                  dynamic _playList = [];
+                                  for(int j = 0;j < searchList.length;j ++) {
+                                    _playList.add(searchList[j]['id'].toString());
+                                  }
+                                  _playListActionPayLoad['songList'] = _playList;
+                                  _playListActionPayLoad['songIndex'] = index;
                                   _playListActionPayLoad['songDetail'] = songDetail;
                                   _playListActionPayLoad['songUrl'] = 'http://music.163.com/song/media/outer/url?id=' + searchList[index]['id'].toString() + '.mp3';
                                   playListAction['payLoad'] = _playListActionPayLoad;
                                   playListAction['type'] = Actions.addPlayList;
-                                  songDetail = null;
                                   callback();
                                 },
                                 child: Container(

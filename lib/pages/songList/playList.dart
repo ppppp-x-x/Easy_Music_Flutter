@@ -100,8 +100,9 @@ class PlayListCardBottom extends StatefulWidget {
 }
 
 class PlayListCardBottomState extends State<PlayListCardBottom> {
-  dynamic playListData;
   int currentIndex;
+  bool isRequesting = false;
+  dynamic playListData;
   dynamic playList = [];
   dynamic playListAction;
 
@@ -160,6 +161,10 @@ class PlayListCardBottomState extends State<PlayListCardBottom> {
                             return () => store.dispatch(playListAction);
                           },
                           builder: (BuildContext context, callback) {
+                            if (this.isRequesting == true) {
+                              return null;
+                            }
+                            this.isRequesting = true;
                             return InkWell(
                               onTap: () async {
                                 dynamic songDetail = await getSongDetail(playListData['tracks'][index]['id']);
@@ -167,19 +172,17 @@ class PlayListCardBottomState extends State<PlayListCardBottom> {
                                 songDetail['songLyr'] = songLyr;
                                 playListAction = new Map();
                                 var _playListActionPayLoad = new Map();
-                                if (playList.length == 0) {
-                                  dynamic _playList = [];
-                                  for(int j = 0;j < playListData['tracks'].length;j ++) {
-                                    _playList.add(playListData['tracks'][j]['id'].toString());
-                                  }
-                                  playList =_playList;
-                                  _playListActionPayLoad['songList'] = _playList;
-                                  _playListActionPayLoad['songIndex'] = index;
+                                dynamic _playList = [];
+                                for(int j = 0;j < playListData['tracks'].length;j ++) {
+                                  _playList.add(playListData['tracks'][j]['id'].toString());
                                 }
+                                _playListActionPayLoad['songList'] = _playList;
+                                _playListActionPayLoad['songIndex'] = index;
                                 _playListActionPayLoad['songDetail'] = songDetail;
                                 _playListActionPayLoad['songUrl'] = 'http://music.163.com/song/media/outer/url?id=' + playListData['tracks'][index]['id'].toString() + '.mp3';
                                 playListAction['payLoad'] = _playListActionPayLoad;
                                 playListAction['type'] = Actions.addPlayList;
+                                this.isRequesting = false;
                                 callback();
                               },
                               child: Container(

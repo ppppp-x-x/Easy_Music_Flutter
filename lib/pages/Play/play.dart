@@ -362,6 +362,7 @@ class ProcessControllerState extends State<ProcessController> {
 }
 class PlayController extends StatelessWidget {
   int songId;
+  bool isRequesting = false;
   dynamic state;
   dynamic setInitPlay;
   dynamic songListAction;
@@ -424,6 +425,10 @@ class PlayController extends StatelessWidget {
                 return () => store.dispatch(songListAction);
               },
               builder: (BuildContext context, callback) {
+                if (this.isRequesting == true) {
+                  return null;
+                }
+                this.isRequesting = true;
                 return InkWell(
                   onTap: () async {
                     dynamic songDetail;
@@ -438,6 +443,7 @@ class PlayController extends StatelessWidget {
                     } else {
                       songDetail = await getSongDetail(int.parse(state.playControllerState.songList[state.playControllerState.songIndex + 1]));
                       dynamic songLyr = await fetchData('${localBaseUrl}lyric?id=${state.playControllerState.songList[state.playControllerState.songIndex + 1]}');
+                      print(state.playControllerState.songIndex);
                       songDetail['songLyr'] = songLyr;
                       _songListActionPayLoad['songIndex'] = state.playControllerState.songIndex + 1;
                       _songListActionPayLoad['songUrl'] = 'http://music.163.com/song/media/outer/url?id=' + state.playControllerState.songList[state.playControllerState.songIndex + 1] + '.mp3';
@@ -446,6 +452,7 @@ class PlayController extends StatelessWidget {
                     _songListAction['payLoad'] = _songListActionPayLoad;
                     _songListAction['type'] = Actions.nextSong;
                     this.songListAction =_songListAction;
+                    this.isRequesting = false;
                     callback();
                   },
                   child: Container(
