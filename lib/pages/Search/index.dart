@@ -101,170 +101,167 @@ class SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
-    return Hero(
-      tag: 'homeSearch',
-      child: Material(
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            leading: IconButton(
-              color: Colors.black,
-              icon: Icon(
-                Icons.arrow_back
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
+    return Material(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          leading: IconButton(
+            color: Colors.black,
+            icon: Icon(
+              Icons.arrow_back
             ),
-            title: TextField(
-              controller: searchController,
-              style: TextStyle(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          title: TextField(
+            controller: searchController,
+            style: TextStyle(
+              color: Colors.black
+            ),
+            decoration: InputDecoration(
+              labelStyle: TextStyle(
                 color: Colors.black
               ),
-              decoration: InputDecoration(
-                labelStyle: TextStyle(
-                  color: Colors.black
-                ),
-                hintText: '歌名/歌手/歌单',
-                hintStyle: TextStyle(
-                  color: Colors.black
-                ),
-                fillColor: Colors.black,
-                contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 8),
+              hintText: '歌名/歌手/歌单',
+              hintStyle: TextStyle(
+                color: Colors.black
               ),
-              onSubmitted: this.Submit,
+              fillColor: Colors.black,
+              contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 8),
             ),
-            actions: <Widget>[
-              Container(
-                margin: EdgeInsets.fromLTRB(0, 5, 10, 0),
-                child: Icon(
-                  Icons.search
-                )
-              )
-            ],
+            onSubmitted: this.Submit,
           ),
-          body:
-          showSpinner
-          ?
-          Container(
-            child:  SpinKitDualRing(
-              color: Colors.red,
-            )
-          )
-          :
-          searchHotWidgets.length > 0 && !searched
-          ?
-          Container(
-            color: Colors.white,
-            margin: EdgeInsets.only(top: 20),
-            width: MediaQuery.of(context).size.width,
-            alignment: Alignment.topCenter,
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.8,
-              child: Wrap(
-                spacing: 10,
-                runSpacing: 10,
-                children: searchHotWidgets,
+          actions: <Widget>[
+            Container(
+              margin: EdgeInsets.fromLTRB(0, 5, 10, 0),
+              child: Icon(
+                Icons.search
               )
             )
-          )
-          :
-          Container(
-            margin: EdgeInsets.only(top: 20),
-            child: ListView.builder(
-              itemCount: searchList.length,
-              itemBuilder: (BuildContext context, int index) {
-                return  Column(
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.only(left: 15),
-                          width: 30,
-                          child: Text(
-                            (index + 1).toString(),
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black54
-                            ),
-                          ),
-                        ),
-                        Container(
-                          child: StoreConnector<AppState, VoidCallback>(
-                            converter: (store) {
-                              return () => store.dispatch(playListAction);
-                            },
-                            builder: (BuildContext context, callback) {
-                              return InkWell(
-                                onTap: () async {
-                                  dynamic songDetail = await getSongDetail(searchList[index]['id']);
-                                  dynamic songLyr = await fetchData('${localBaseUrl}lyric?id=${searchList[index]['id']}');
-                                  songDetail['songLyr'] = songLyr;
-                                  playListAction = new Map();
-                                  var _playListActionPayLoad = new Map();
-                                  dynamic _playList = [];
-                                  for(int j = 0;j < searchList.length;j ++) {
-                                    _playList.add(searchList[j]['id'].toString());
-                                  }
-                                  _playListActionPayLoad['songList'] = _playList;
-                                  _playListActionPayLoad['songIndex'] = index;
-                                  _playListActionPayLoad['songDetail'] = songDetail;
-                                  _playListActionPayLoad['songUrl'] = 'http://music.163.com/song/media/outer/url?id=' + searchList[index]['id'].toString() + '.mp3';
-                                  playListAction['payLoad'] = _playListActionPayLoad;
-                                  playListAction['type'] = Actions.addPlayList;
-                                  callback();
-                                },
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width - 100,
-                                  margin: EdgeInsets.only(left: 20),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Container(
-                                        child: Text(
-                                          searchList[index]['name'],
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                        ),
-                                      ),
-                                      Container(
-                                        child: Text(
-                                          searchList[index]['album']['name'] + '——' + searchList[index]['artists'][0]['name'],
-                                          maxLines: 1,
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.black54
-                                        ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }
-                          ) 
-                        ),
-                        Container(
-                          width: 20,
-                          child: Image.asset(
-                            'assets/images/more_playList.png',
-                            width: 20,
-                            height: 20,
-                          ),
-                        )
-                      ],
-                    ),
-                    Divider()
-                  ],
-                );
-              },
-            )
-          ),
-          bottomNavigationBar: CustomBottomNavigationBar(),
+          ],
         ),
-      )
+        body:
+        showSpinner
+        ?
+        Container(
+          child:  SpinKitDualRing(
+            color: Colors.red,
+          )
+        )
+        :
+        searchHotWidgets.length > 0 && !searched
+        ?
+        Container(
+          color: Colors.white,
+          margin: EdgeInsets.only(top: 20),
+          width: MediaQuery.of(context).size.width,
+          alignment: Alignment.topCenter,
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            child: Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: searchHotWidgets,
+            )
+          )
+        )
+        :
+        Container(
+          margin: EdgeInsets.only(top: 20),
+          child: ListView.builder(
+            itemCount: searchList.length,
+            itemBuilder: (BuildContext context, int index) {
+              return  Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.only(left: 15),
+                        width: 30,
+                        child: Text(
+                          (index + 1).toString(),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.black54
+                          ),
+                        ),
+                      ),
+                      Container(
+                        child: StoreConnector<AppState, VoidCallback>(
+                          converter: (store) {
+                            return () => store.dispatch(playListAction);
+                          },
+                          builder: (BuildContext context, callback) {
+                            return InkWell(
+                              onTap: () async {
+                                dynamic songDetail = await getSongDetail(searchList[index]['id']);
+                                dynamic songLyr = await fetchData('${localBaseUrl}lyric?id=${searchList[index]['id']}');
+                                songDetail['songLyr'] = songLyr;
+                                playListAction = new Map();
+                                var _playListActionPayLoad = new Map();
+                                dynamic _playList = [];
+                                for(int j = 0;j < searchList.length;j ++) {
+                                  _playList.add(searchList[j]['id'].toString());
+                                }
+                                _playListActionPayLoad['songList'] = _playList;
+                                _playListActionPayLoad['songIndex'] = index;
+                                _playListActionPayLoad['songDetail'] = songDetail;
+                                _playListActionPayLoad['songUrl'] = 'http://music.163.com/song/media/outer/url?id=' + searchList[index]['id'].toString() + '.mp3';
+                                playListAction['payLoad'] = _playListActionPayLoad;
+                                playListAction['type'] = Actions.addPlayList;
+                                callback();
+                              },
+                              child: Container(
+                                width: MediaQuery.of(context).size.width - 100,
+                                margin: EdgeInsets.only(left: 20),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Container(
+                                      child: Text(
+                                        searchList[index]['name'],
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                    ),
+                                    Container(
+                                      child: Text(
+                                        searchList[index]['album']['name'] + '——' + searchList[index]['artists'][0]['name'],
+                                        maxLines: 1,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.black54
+                                      ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
+                        ) 
+                      ),
+                      Container(
+                        width: 20,
+                        child: Image.asset(
+                          'assets/images/more_playList.png',
+                          width: 20,
+                          height: 20,
+                        ),
+                      )
+                    ],
+                  ),
+                  Divider()
+                ],
+              );
+            },
+          )
+        ),
+        bottomNavigationBar: CustomBottomNavigationBar(),
+      ),
     );
   }
 }

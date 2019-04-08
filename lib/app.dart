@@ -131,24 +131,21 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Autom
 class SearchButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Hero(
-      tag: 'homeSearch',
-      child: Material(
-        color: Colors.white,
-        child: IconButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Search()
-              )
-            );
-          },
-          icon: Icon(
-            Icons.search,
-            size: 22,
-            color: Colors.black,
-          )
+    return Material(
+      color: Colors.white,
+      child: IconButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Search()
+            )
+          );
+        },
+        icon: Icon(
+          Icons.search,
+          size: 22,
+          color: Colors.black,
         )
       )
     );

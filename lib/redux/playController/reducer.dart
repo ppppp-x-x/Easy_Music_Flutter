@@ -37,14 +37,14 @@ PlayController PlayControllerReducer(PlayController state, action) {
     if(action['type'] == Actions.addPlayList) {
       if (state.playing) {
         state.audioPlayer.stop();
+        state.playing = false;
       }
       if (action['payLoad']['songList'] != null) {
         state.songList = action['payLoad']['songList'];
       }
-      if (action['payLoad']['songDetail']['songLyr']['lrc']['lyric'] != null) {
+      if (action['payLoad']['songDetail']['songLyr']['lrc'] != null && action['payLoad']['songDetail']['songLyr']['lrc']['lyric'] != null) {
         action['payLoad']['songDetail']['lyric'] = combinLyric(action['payLoad']['songDetail']['songLyr']['lrc']['lyric']);
       }
-      state.playing = false;
       state.songIndex = action['payLoad']['songIndex'];
       state.playList.add(action['payLoad']['songDetail']);
       state.currentIndex = state.currentIndex + 1;
