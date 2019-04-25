@@ -10,5 +10,7 @@
 4. 编译并运行本项目
 
 ## 项目截图
-  <image src='https://github.com/HarrisonPeng/blogPic/blob/master/Home.gif' align="center" width="386" height="669" />
-  <div>首页</div>
+<div align=center width="1000"><img src="https://github.com/HarrisonPeng/blogPic/blob/master/Home.gif" width="386" height="620" /></div>
+<p align="首页"></p>
+<div align=center width="1000"><img src="https://github.com/HarrisonPeng/blogPic/blob/master/Home.gif" width="386" height="620" /></div>
+<p align="歌单"></p>
