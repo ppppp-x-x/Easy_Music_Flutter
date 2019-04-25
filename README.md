@@ -11,6 +11,16 @@
 
 ## 项目截图
 <div align=center width="1000"><img src="https://github.com/HarrisonPeng/blogPic/blob/master/Home.gif" width="386" height="620" /></div>
-<p align="首页"></p>
-<div align=center width="1000"><img src="https://github.com/HarrisonPeng/blogPic/blob/master/Home.gif" width="386" height="620" /></div>
-<p align="歌单"></p>
+<div align=center width="1000"><p align="首页"></p></div>
+<div align=center width="1000"><img src="https://github.com/HarrisonPeng/blogPic/blob/master/%E6%AD%8C%E5%8D%95.gif" width="386" height="620" /></div>
+<div align=center width="1000"><p align="歌单"></p></div>
+<div align=center width="1000"><img src="https://github.com/HarrisonPeng/blogPic/blob/master/%E6%92%AD%E6%94%BE1.gif" /></div>
+<div align=center width="1000"><p align="播放"></p></div>
+<div align=center width="1000"><img src="https://github.com/HarrisonPeng/blogPic/blob/master/%E6%92%AD%E6%94%BE2.gif" width="386" height="620" /></div>
+<div align=center width="1000"><p align="播放"></p></div>
+<div align=center width="1000"><img src="https://github.com/HarrisonPeng/blogPic/blob/master/%E6%92%AD%E6%94%BE3.gif" width="386" height="620" /></div>
+<div align=center width="1000"><p align="播放"></p></div>
+<div align=center width="1000"><img src="https://github.com/HarrisonPeng/blogPic/blob/master/%E6%8E%92%E8%A1%8C%E6%A6%9C.gif" width="386" height="620" /></div>
+<div align=center width="1000"><p align="排行榜"></p></div>
+<div align=center width="1000"><img src="https://github.com/HarrisonPeng/blogPic/blob/master/%E6%90%9C%E7%B4%A2.gif" width="386" height="620" /></div>
+<div align=center width="1000"><p align="搜索"></p></div>
