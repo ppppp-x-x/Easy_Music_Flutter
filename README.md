@@ -2,6 +2,8 @@
 
 这是一个使用Flutter框架开发的音乐应用，开发它的目的是学习Flutter开发相关知识。
 
+# 已完成功能
+
 ## Getting Started
 
 1. clone本项目
