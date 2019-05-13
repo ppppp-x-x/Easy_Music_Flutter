@@ -6,10 +6,7 @@ import 'dart:async';
 
 import './../../redux/index.dart';
 import './../../redux/playController/action.dart';
-import './../../utils/url.dart';
-import './../../utils/request.dart';
-import './../../utils/commonFetch.dart';
-
+import './../../components/songComments.dart';
 class Play extends StatefulWidget {
   @override
   PlayState createState() => new PlayState();
@@ -17,9 +14,9 @@ class Play extends StatefulWidget {
 
 class PlayState extends State<Play> with SingleTickerProviderStateMixin{
   int songId;
-
   dynamic songDetail;
   bool initPlay;
+  bool showSongComments = false;
   CurvedAnimation coverCurved;
 
   @override
@@ -50,7 +47,8 @@ class PlayState extends State<Play> with SingleTickerProviderStateMixin{
           child: Stack(
             children: <Widget>[
               ProcessController(state),
-              PlayController(songId, state, setInitPlay)
+              PlayController(songId, state, setInitPlay),
+              SongComments()
             ],
           )
         );
@@ -78,6 +76,8 @@ class ProcessControllerState extends State<ProcessController> {
   dynamic timer;
   dynamic actionMap = new Map();
   bool processValAgentLock = false;
+  dynamic showSongCommentsAction = {};
+  
   List<String> lyricsNow = [
     '',
     '正在搜索歌词',
@@ -136,6 +136,7 @@ class ProcessControllerState extends State<ProcessController> {
   @override
   void initState() {
     this.processValAgentLock = false;
+    this.showSongCommentsAction['type'] = Actions.switchSongComments;
     timer = Timer.periodic(const Duration(milliseconds: 100), (Void) {
       setState(() {
        this.refreshView = !this.refreshView; 
@@ -235,7 +236,25 @@ class ProcessControllerState extends State<ProcessController> {
                   Container(
                     width: (MediaQuery.of(context).size.width - 50) * 0.4,
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
+                        StoreConnector<AppState, VoidCallback>(
+                          converter: (store) {
+                            return () => store.dispatch(this.showSongCommentsAction);
+                          },
+                          builder: (BuildContext context, callback) {
+                            return InkWell(
+                              child: IconButton(
+                                icon: Icon(Icons.comment),
+                                iconSize: 20,
+                                color: Colors.white,
+                                onPressed: () {
+                                  callback();
+                                },
+                              ),
+                            );
+                          }
+                        ),
                         IconButton(
                           iconSize: 20,
                           color: Colors.white,
@@ -248,18 +267,18 @@ class ProcessControllerState extends State<ProcessController> {
                             )
                           )
                         ),
-                        IconButton(
-                          iconSize: 20,
-                          color: Colors.white,
-                          onPressed: () {
-                            print('未开发');
-                          },
-                          icon: ImageIcon(
-                            AssetImage(
-                              'assets/images/random.png'
-                            )
-                          )
-                        )
+                        // IconButton(
+                        //   iconSize: 20,
+                        //   color: Colors.white,
+                        //   onPressed: () {
+                        //     print('未开发');
+                        //   },
+                        //   icon: ImageIcon(
+                        //     AssetImage(
+                        //       'assets/images/random.png'
+                        //     )
+                        //   )
+                        // )
                       ],
                     )
                   )

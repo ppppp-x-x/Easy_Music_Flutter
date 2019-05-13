@@ -39,8 +39,8 @@ class RankListState extends State<RankList> {
     print(rankListId);
     dynamic _rankDetail = await fetchData(localBaseUrl + 'top/list?idx=' + rankListId.toString());
     setState(() {
-      rankTracks = _rankDetail['playList']['tracks'];
-      rankDec = _rankDetail['playList']['creator'];
+      rankTracks = _rankDetail['playlist']['tracks'];
+      rankDec = _rankDetail['playlist']['creator'];
     });
   }
 
@@ -121,8 +121,8 @@ class RankListState extends State<RankList> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
-                      state.playControllerState.songList.length > 1 && 
-                      state.playControllerState.songList[state.playControllerState.songList.length - 1]['id'] == rankTracks[index - 1]['id']
+                      state.playControllerState.songList != null && state.playControllerState.songList.length > 1 && 
+                      state.playControllerState.songList[state.playControllerState.songList.length - 1] == rankTracks[index - 1]['id']
                       ?
                       Container(
                         width: 30,
@@ -155,14 +155,21 @@ class RankListState extends State<RankList> {
                           builder: (BuildContext context, callback) {
                             return InkWell(
                               onTap: () async {
-                                dynamic songDetail = await getSongDetail(rankTracks[index - 1]['id']);
+                               dynamic songDetail = await getSongDetail(rankTracks[index - 1]['id']);
+                                dynamic songLyr = await fetchData('${localBaseUrl}lyric?id=${rankTracks[index - 1]['id']}');
+                                songDetail['songLyr'] = songLyr;
                                 playListAction = new Map();
                                 var _playListActionPayLoad = new Map();
+                                dynamic _playList = [];
+                                for(int j = 0;j < rankTracks.length;j ++) {
+                                  _playList.add(rankTracks[j]['id'].toString());
+                                }
+                                _playListActionPayLoad['songList'] = _playList;
+                                _playListActionPayLoad['songIndex'] = index;
                                 _playListActionPayLoad['songDetail'] = songDetail;
                                 _playListActionPayLoad['songUrl'] = 'http://music.163.com/song/media/outer/url?id=' + rankTracks[index - 1]['id'].toString() + '.mp3';
                                 playListAction['payLoad'] = _playListActionPayLoad;
                                 playListAction['type'] = Actions.addPlayList;
-                                songDetail  = null;
                                 callback();
                               },
                               child: Container(

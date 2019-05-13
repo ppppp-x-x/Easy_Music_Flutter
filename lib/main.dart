@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:redux/redux.dart';
+import 'package:redux_thunk/redux_thunk.dart';
 
 import './app.dart';
 import './redux/index.dart';
 import './redux/playController/state.dart';
 
 void main() {
-  final store = Store<AppState>(appReducer, initialState: AppState(
+  final store = Store<AppState>(appReducer, middleware: [thunkMiddleware], initialState: AppState(
     playControllerState: PlayController.initState(),
   ));
   runApp(MyApp(store));

@@ -36,7 +36,7 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Autom
   void initState() {
     super.initState();
     _tabController = new TabController(
-      length: 4,
+      length: 3,
       vsync: this
     );
   }

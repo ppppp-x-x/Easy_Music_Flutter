@@ -4,7 +4,17 @@ import './action.dart';
 List<dynamic> combinLyric (String source) {
   List<dynamic> outputLyric = [];
   source.split('[').forEach((item) {
-    outputLyric.add(item.split(']'));
+    List<String> splitItem = item.split('');
+    // 需要保证歌词进度是正确的格式
+    bool isAccess = true;
+    try {
+      int.parse(splitItem[0] + splitItem[1]);
+    } catch (err) {
+      isAccess = false;
+    }
+    if (isAccess) {
+      outputLyric.add(item.split(']'));
+    }
   });
   return outputLyric;
 }
@@ -20,6 +30,7 @@ PlayController PlayControllerReducer(PlayController state, action) {
       state.playing = false;
     }
     if (action['type'] == Actions.nextSong) {
+      print(action);
       if (state.playing) {
         state.audioPlayer.stop();
       }
@@ -56,6 +67,10 @@ PlayController PlayControllerReducer(PlayController state, action) {
       if(action['payLoad'] > 0) {
         state.audioPlayer.seek(action['payLoad']);
       }
+    }
+    if (action['type'] == Actions.switchSongComments) {
+      print('success');
+      state.showSongComments = !state.showSongComments;
     }
   }
   return state;

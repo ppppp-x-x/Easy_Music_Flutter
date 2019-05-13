@@ -33,6 +33,12 @@ class PlayController {
   get songUrl => _songUrl;
   set songUrl(val) => _songUrl = val;
 
+
+  // 当前播放页面是否显示评论
+  bool _showSongComments;
+  get showSongComments => _showSongComments;
+  set showSongComments(val) => _showSongComments = val;
+
   // 音乐播放器实例
   AudioPlayer _audioPlayer;
   get audioPlayer => _audioPlayer;
@@ -71,6 +77,7 @@ class PlayController {
     _playList = [];
     _currentIndex = -1;
     _playing = false;
+    _showSongComments = false;
     songUrl = '';
     _audioPlayer = new AudioPlayer();
     _audioPlayer.onPlayerStateChanged.listen((d) {
