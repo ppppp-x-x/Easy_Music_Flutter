@@ -262,11 +262,11 @@ class PlayListCardTop extends StatelessWidget {
         CachedNetworkImage(
           imageUrl: backgroundImageUrl,
           width: MediaQuery.of(context).size.width,
-          height: 270,
+          height: 230,
           fit: BoxFit.fitWidth,
           placeholder: (context, url) => Container(
             width: MediaQuery.of(context).size.width,
-            height: 270,
+            height: 230,
             color: Colors.grey,
           ),
         ),
@@ -275,7 +275,7 @@ class PlayListCardTop extends StatelessWidget {
           child: Container(
             color: Colors.white.withOpacity(0.3),
             width: MediaQuery.of(context).size.width,
-            height: 270,
+            height: 230,
           )
         ),
         Container(
@@ -303,71 +303,71 @@ class PlayListCardTop extends StatelessWidget {
               ),
               Container(
                 width: MediaQuery.of(context).size.width - 60,
-                height: 45,
+                height: 55,
                 margin: EdgeInsets.only(top: 10),
                 child: Text(
                   this.description,
-                  maxLines: 2,
+                  maxLines: 3,
                   overflow: TextOverflow.fade,
                   style: TextStyle(
                     color: Colors.black54,
-                    fontSize: 14
+                    fontSize: 11
                   ),
                 ),
               ),  
-              Container(
-                margin: EdgeInsets.only(top: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        Icon(
-                          Icons.star,
-                          color: Colors.black38,
-                        ),
-                        Text(
-                          '收藏',
-                          style: TextStyle(
-                            color: Colors.black38,
-                            fontSize: 13
-                          ),
-                        )
-                      ],
-                    ),
-                    Column(
-                      children: <Widget>[
-                        Icon(
-                          Icons.cloud_download,
-                          color: Colors.black38,
-                        ),
-                        Text(
-                          '下载',
-                          style: TextStyle(
-                            color: Colors.black38,
-                            fontSize: 13
-                          ),
-                        )
-                      ],
-                    ),
-                    Column(
-                      children: <Widget>[
-                        Icon(
-                          Icons.comment,
-                          color: Colors.black38,
-                        ),
-                        Text(
-                          '评论',
-                          style: TextStyle(
-                            color: Colors.black38,
-                            fontSize: 13
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
-                )
-              )
+              // Container(
+              //   margin: EdgeInsets.only(top: 10),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //     children: <Widget>[
+              //       Column(
+              //         children: <Widget>[
+              //           Icon(
+              //             Icons.star,
+              //             color: Colors.black38,
+              //           ),
+              //           Text(
+              //             '收藏',
+              //             style: TextStyle(
+              //               color: Colors.black38,
+              //               fontSize: 13
+              //             ),
+              //           )
+              //         ],
+              //       ),
+              //       Column(
+              //         children: <Widget>[
+              //           Icon(
+              //             Icons.cloud_download,
+              //             color: Colors.black38,
+              //           ),
+              //           Text(
+              //             '下载',
+              //             style: TextStyle(
+              //               color: Colors.black38,
+              //               fontSize: 13
+              //             ),
+              //           )
+              //         ],
+              //       ),
+              //       Column(
+              //         children: <Widget>[
+              //           Icon(
+              //             Icons.comment,
+              //             color: Colors.black38,
+              //           ),
+              //           Text(
+              //             '评论',
+              //             style: TextStyle(
+              //               color: Colors.black38,
+              //               fontSize: 13
+              //             ),
+              //           )
+              //         ],
+              //       ),
+              //     ],
+              //   )
+              // )
             ],
           )
         )

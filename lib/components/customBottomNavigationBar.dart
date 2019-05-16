@@ -51,7 +51,7 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
           child: Container(
             padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
             width: MediaQuery.of(context).size.width,
-            height: 70,
+            height: 60,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -73,7 +73,7 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                       ?
                       Container()
                       :
-                      ClipOval(
+                      Container(
                         child: CachedNetworkImage(
                           imageUrl: state.playControllerState.playList[state.playControllerState.currentIndex]['al']['picUrl'],
                           width: 40,
@@ -126,7 +126,7 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                         width: 20,
                         height: 20,
                         child: Image.asset(
-                          'assets/images/bottomNagivationBar_prev.png',
+                          'assets/images/play_prev.png',
                           fit: BoxFit.fitHeight,
                         )
                       ),
@@ -150,12 +150,12 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                               child: state.playControllerState.playing
                               ?
                               Image.asset(
-                                'assets/images/bottomNagivationBar_pause.png',
+                                'assets/images/play_pause.png',
                                 fit: BoxFit.fitHeight,
                               )
                               :
                               Image.asset(
-                                'assets/images/bottomNagivationBar_play.png'
+                                'assets/images/play_play.png'
                               )
                             ),
                           );
@@ -166,7 +166,7 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                         width: 20,
                         height: 20,
                         child: Image.asset(
-                          'assets/images/bottomNagivationBar_next.png',
+                          'assets/images/play_next.png',
                           fit: BoxFit.fitHeight,
                         )
                       )
