@@ -22,7 +22,7 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Autom
   TabController _tabController;
   List<Widget> _body = [
     new Recommend(),
-    new MySong(),
+    new CollectSongList(),
     new Rank()
   ];
 

@@ -1,1 +1,1 @@
-final String localBaseUrl = 'http://10.0.2.2:3000/';
+final String localBaseUrl = 'http://junchen.natapp1.cc/';

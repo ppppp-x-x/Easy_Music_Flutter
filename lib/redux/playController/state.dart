@@ -23,6 +23,11 @@ class PlayController {
   get songList => _songList;
   set songList(val) => _songList = val;
 
+  // 当前用户喜欢歌曲
+  List<dynamic> _collectSongs;
+  get collectSongs => _collectSongs;
+  set collectSongs(val) => _collectSongs = val;
+
   // 当前是否正在播放歌曲
   bool _playing;
   get playing => _playing;
@@ -75,6 +80,7 @@ class PlayController {
 
   PlayController.initState() {
     _playList = [];
+    _collectSongs = [];
     _currentIndex = -1;
     _playing = false;
     _showSongComments = false;

@@ -14,7 +14,9 @@ enum Actions {
   addPlayList,
   playSeek,
   next,
-  switchSongComments
+  switchSongComments,
+  addCollectSong,
+  deleteCollectSong
 }
 
 ThunkAction<AppState> playeNextSong = (Store<AppState> store) async {

@@ -1,6 +1,10 @@
 import './state.dart';
 import './action.dart';
 
+bool checkSameId (a, b) {
+  return a['id'] == b['id'];
+}
+
 List<dynamic> combinLyric (String source) {
   List<dynamic> outputLyric = [];
   source.split('[').forEach((item) {
@@ -34,7 +38,7 @@ PlayController PlayControllerReducer(PlayController state, action) {
       if (state.playing) {
         state.audioPlayer.stop();
       }
-      if (action['payLoad']['songDetail']['songLyr']['lrc']['lyric'] != null) {
+      if (action['payLoad']['songDetail']['songLyr']['lrc'] != null && action['payLoad']['songDetail']['songLyr']['lrc']['lyric'] != null) {
         action['payLoad']['songDetail']['lyric'] = combinLyric(action['payLoad']['songDetail']['songLyr']['lrc']['lyric']);
       }
       state.playing = false;
@@ -71,6 +75,27 @@ PlayController PlayControllerReducer(PlayController state, action) {
     if (action['type'] == Actions.switchSongComments) {
       print('success');
       state.showSongComments = !state.showSongComments;
+    }
+    if (action['type'] == Actions.addCollectSong) {
+      dynamic newSongMap = {};
+      if (state.collectSongs.length > 0) {
+        bool findSameSongFlag = state.collectSongs.any((item) => checkSameId(item, state.playList[state.currentIndex]));
+        if (!findSameSongFlag) {
+          newSongMap['id'] = state.playList[state.currentIndex]['id'];
+          newSongMap['songUrl'] = state.songUrl;
+          newSongMap['cover'] = state.playList[state.currentIndex]['al']['picUrl'];
+          newSongMap['name'] = state.playList[state.currentIndex]['name'];
+          newSongMap['author'] = state.playList[state.currentIndex]['ar'][0]['name'];
+          state.collectSongs.add(newSongMap);
+        }
+      } else {
+        newSongMap['id'] = state.playList[state.currentIndex]['id'];
+        newSongMap['songUrl'] = state.songUrl;
+        newSongMap['cover'] = state.playList[state.currentIndex]['al']['picUrl'];
+        newSongMap['name'] = state.playList[state.currentIndex]['name'];
+        newSongMap['author'] = state.playList[state.currentIndex]['ar'][0]['name'];
+        state.collectSongs.add(newSongMap);
+      }
     }
   }
   return state;

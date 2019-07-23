@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'dart:ui' as ui;
 import 'dart:async';
 
 import './../../redux/index.dart';
@@ -12,12 +11,11 @@ class Play extends StatefulWidget {
   PlayState createState() => new PlayState();
 }
 
-class PlayState extends State<Play> with SingleTickerProviderStateMixin{
+class PlayState extends State<Play> with SingleTickerProviderStateMixin {
   int songId;
-  dynamic songDetail;
   bool initPlay;
   bool showSongComments = false;
-  CurvedAnimation coverCurved;
+  dynamic songDetail;
 
   @override
   void initState() {
@@ -58,8 +56,8 @@ class PlayState extends State<Play> with SingleTickerProviderStateMixin{
 }
 
 class ProcessController extends StatefulWidget {
-  @override
   dynamic state;
+  @override
   ProcessController(this.state);
   ProcessControllerState createState () => new ProcessControllerState(state);
 }
@@ -68,74 +66,66 @@ class ProcessControllerState extends State<ProcessController> {
   dynamic state;
   ProcessControllerState(this.state);
 
-  double processVal = 0.0;
-  double processValAgent = 0.0;
-  double lastProcessVal = 0.0;
+  // swtich auto refresh view
   bool refreshView = true;
+  // is touching process bar
   bool processTouching = false;
-  dynamic timer;
-  dynamic actionMap = new Map();
-  bool processValAgentLock = false;
-  dynamic showSongCommentsAction = {};
-  
-  List<String> lyricsNow = [
-    '',
-    '正在搜索歌词',
-    ''
-  ];
-  var lyrics = [];
-  String currentDuration;
+  double processVal = 0.0;
+  Timer timer;
+  // save&&dispatch playProcess
+  Map durationActionMap = new Map();
+  Map showSongCommentsAction = {};
 
   double computeProcessVal(String position, String duration) {
-    double parsedPosition = stringDurationToDouble(position);
-    double parsedDuration = stringDurationToDouble(duration);
-    this.processVal = ((parsedPosition / parsedDuration) * 500);
-    if(!this.processTouching && !processValAgentLock) {
-      this.processValAgent = ((parsedPosition / parsedDuration) * 500);
+    // current play percentage: 0.55555555
+    double currentPercent = stringDurationToDouble(position) / stringDurationToDouble(duration); 
+    if(!this.processTouching) {
+      this.processVal = currentPercent * 500;
     }
-    return this.processVal;
+    return currentPercent * 500;
   }
 
   double stringDurationToDouble (String duration) {
     return double.parse(duration.substring(0, 2)) * 60 + double.parse(duration.substring(3, 5));
   }
 
+  // 
   List<String> getLyricsNow(List<dynamic> allLyrics, String timeNow, Duration allTime) {
     double _timeNow = stringDurationToDouble(timeNow);
     List<String> _lyricsNow = [];
-    var _lyrics = [];
-    if (currentDuration != allTime.toString().substring(0)) {
-      currentDuration = allTime.toString().substring(0);
-      if (allLyrics != null && allLyrics.length > 0) {
-        allLyrics.forEach((item) {
-          List<dynamic> _subLyrics = [];
-          if (item.length != null && item.length == 2 && item[0] != null && item[1] != null) {
-            if (item[0].length > 5) {
-              _subLyrics.add(stringDurationToDouble(item[0].substring(0, 5)));
-            } else {
-              _subLyrics.add('');
-            }
-            _subLyrics.add(item[1]);
-            _lyrics.add(_subLyrics);
+    List<dynamic> _lyrics = [];
+    if (allLyrics != null && allLyrics.length > 0) {
+      allLyrics.forEach((item) {
+        List<dynamic> _subLyrics = [];
+        if (item.length != null && item.length == 2 && item[0] != null && item[1] != null) {
+          if (item[0].length > 5) {
+            _subLyrics.add(stringDurationToDouble(item[0].substring(0, 5)));
+          } else {
+            _subLyrics.add('');
           }
-        });
-      }
-      this.lyrics = _lyrics;
+          _subLyrics.add(item[1]);
+          _lyrics.add(_subLyrics);
+        }
+      });
     }
-    for (int i = 0;i < this.lyrics.length;i ++) {
-      if (_timeNow >= this.lyrics[i][0] && (i == this.lyrics.length - 1 || _timeNow <= this.lyrics[i + 1][0])) {
-        _lyricsNow.add(i > 0 ? this.lyrics[i - 1][1] : '');
-        _lyricsNow.add(this.lyrics[i][1]);
-        _lyricsNow.add(i < this.lyrics.length - 1 ? this.lyrics[i + 1][1] : '');
-        this.lyricsNow = _lyricsNow;
+    for (int i = 0;i < _lyrics.length;i ++) {
+      if (_timeNow >= _lyrics[i][0] && (i == _lyrics.length - 1 || _timeNow <= _lyrics[i + 1][0])) {
+        _lyricsNow.add(i > 0 ? _lyrics[i - 1][1] : '');
+        _lyricsNow.add(_lyrics[i][1]);
+        _lyricsNow.add(i < _lyrics.length - 1 ? _lyrics[i + 1][1] : '');
       }
     }
-    return this.lyricsNow;
+    return _lyricsNow.length > 0
+      ? _lyricsNow 
+      : [
+        '',
+        '正在搜索歌词',
+        ''
+      ];
   }
 
   @override
   void initState() {
-    this.processValAgentLock = false;
     this.showSongCommentsAction['type'] = Actions.switchSongComments;
     timer = Timer.periodic(const Duration(milliseconds: 100), (Void) {
       setState(() {
@@ -148,7 +138,6 @@ class ProcessControllerState extends State<ProcessController> {
   @override
   void dispose() {
     timer.cancel();
-    this.processValAgentLock = false;
     super.dispose();
   }
 
@@ -315,10 +304,11 @@ class ProcessControllerState extends State<ProcessController> {
                         child: Text(
                           playControllerState.songPosition != null
                             ? this.getLyricsNow(playControllerState.playList[playControllerState.currentIndex ]['lyric'], playControllerState.songPosition.toString().substring(2, 7), playControllerState.audioPlayer.duration)[1]
-                            : '',maxLines: 1,
+                            : '',
                           style: TextStyle(
                             fontSize: 14,
                           ),
+                          maxLines: 1,
                         ),
                       ),
                       Container(
@@ -366,18 +356,18 @@ class ProcessControllerState extends State<ProcessController> {
                         ),
                         StoreConnector<AppState, VoidCallback>(
                           converter: (store) {
-                            return () => store.dispatch(actionMap);
+                            return () => store.dispatch(durationActionMap);
                           },
                           builder: (BuildContext context, callback) {
                             return Container(
                               width: MediaQuery.of(context).size.width - 95,
                               child: Slider(
-                                value: this.processValAgent,
+                                value: this.processVal,
                                 max: 500,
                                 min: 0,
-                                label: ((this.processValAgent.floor() / 500) * (int.parse(playControllerState.audioPlayer.duration.toString().substring(2, 4)) * 60 +
+                                label: ((this.processVal.floor() / 500) * (int.parse(playControllerState.audioPlayer.duration.toString().substring(2, 4)) * 60 +
                                   int.parse(playControllerState.audioPlayer.duration.toString().substring(5, 7))) / 60).floor().toString() + '：' +
-                                  ((this.processValAgent.floor() / 500) * (int.parse(playControllerState.audioPlayer.duration.toString().substring(2, 4)) * 60 +
+                                  ((this.processVal.floor() / 500) * (int.parse(playControllerState.audioPlayer.duration.toString().substring(2, 4)) * 60 +
                                   int.parse(playControllerState.audioPlayer.duration.toString().substring(5, 7))) % 60).floor().toString(),
                                 activeColor: Colors.black,
                                 inactiveColor: Colors.black26,
@@ -388,19 +378,17 @@ class ProcessControllerState extends State<ProcessController> {
                                 },
                                 onChanged: (double val) {
                                   setState(() {
-                                    this.processValAgent = val; 
+                                    this.processVal = val; 
                                   });
                                 },
                                 onChangeEnd: (double val) async{
-                                  this.processValAgentLock = true;
-                                  this.processTouching = false;
                                   int _songSecond = int.parse(playControllerState.audioPlayer.duration.toString().substring(2, 4)) * 60 +
                                   int.parse(playControllerState.audioPlayer.duration.toString().substring(5, 7));
-                                  actionMap['type'] = Actions.playSeek;
-                                  actionMap['payLoad'] = _songSecond * this.processValAgent.floor() / 500;
+                                  durationActionMap['type'] = Actions.playSeek;
+                                  durationActionMap['payLoad'] = _songSecond * this.processVal.floor() / 500;
                                   callback();
                                   await new Future.delayed(const Duration(milliseconds: 500));
-                                  this.processValAgentLock = false;
+                                  this.processTouching = false;
                                   if (this.mounted) {
                                     setState(() {
                                       this.timer = Timer.periodic(const Duration(microseconds: 100), (Void) {
@@ -458,9 +446,31 @@ class PlayController extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
+            StoreConnector<AppState, VoidCallback>(
+              converter: (store) {
+                var _action = new Map();
+                _action['type'] = Actions.addCollectSong;
+                return () => store.dispatch(_action);
+              },
+              builder: (BuildContext context, callback) {
+                return GestureDetector(
+                  onTap: () {
+                    callback();
+                  },
+                  child: Container( 
+                    width: 30,
+                    height: 30,
+                    padding: EdgeInsets.all(5),
+                    child: Image.asset(
+                      'assets/images/unLike.png'
+                    )
+                  ),
+                );
+              }
+            ),
             Container( 
-              width: 40,
-              height: 40,
+              width: 30,
+              height: 30,
               padding: EdgeInsets.all(5),
               child: Image.asset(
                 'assets/images/play_prev.png'
@@ -517,8 +527,8 @@ class PlayController extends StatelessWidget {
                     callback();
                   },
                   child: Container(
-                    width: 40,
-                    height: 40,
+                    width: 30,
+                    height: 30,
                     padding: EdgeInsets.all(5),
                     child: Image.asset(
                       'assets/images/play_next.png',
@@ -526,7 +536,15 @@ class PlayController extends StatelessWidget {
                   )   
                 );
               }
-            )
+            ),
+            Container( 
+              width: 30,
+              height: 30,
+              padding: EdgeInsets.all(5),
+              child: Image.asset(
+                'assets/images/next_play.png'
+              )
+            ),
           ],
         )
       );
