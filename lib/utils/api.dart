@@ -28,6 +28,7 @@ String createFetchUrl (Map<String, String> params) {
   return paramsString;
 }
 
-dynamic getData (String type, Map<String, String> params) {
-  return fetchData(localBaseUrl + type + createFetchUrl(params));
+dynamic getData (String type, Map<String, String> params) async {
+  dynamic response = await fetchData(localBaseUrl + api[type] + createFetchUrl(params));
+  return response;
 }

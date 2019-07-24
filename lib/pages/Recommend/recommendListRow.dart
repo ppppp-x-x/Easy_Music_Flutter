@@ -4,16 +4,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import './../SongList/playList.dart';
 
 class RecommendList extends StatelessWidget {
-  var recommendList;
+  List recommendList;
   String listTitle;
-
-  String computePlayCount(num number) {
-    return (number / 10000).toStringAsFixed(0);
-  }
 
   RecommendList(this.recommendList, this.listTitle);
 
-  Widget createRowList (dynamic rowData, String rowCount) {
+  Widget createRowList (List<Map<String, dynamic>> rowData, String rowCount) {
     return SizedBox(
       height: 170,
       child: ListView.builder(
@@ -69,7 +65,7 @@ class RecommendList extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10)
                         ),
                         child: Text(
-                          computePlayCount(rowData[index]['playCount']) + '万',
+                          (rowData[index]['playCount'] / 10000).toStringAsFixed(0) + '万',
                           textAlign: TextAlign.right,
                           style: TextStyle(
                             color: Colors.grey[200]
@@ -102,7 +98,7 @@ class RecommendList extends StatelessWidget {
   List<Widget> createRow () {
     int count = 0;
     int rowCount = 0;
-    dynamic rowData = [];
+    List<Map<String, dynamic>> rowData = [];
     List<Widget> allRowData = [];
     allRowData.add(
       Container(

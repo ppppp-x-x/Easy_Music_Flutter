@@ -42,7 +42,10 @@ class PlayListState extends State<PlayList> {
     var _playListData = await getData('playlistDetail', {
       'id': id.toString()
     });
-    if(this.mounted) {
+    if (_playListData == '请求错误') {
+      return;
+    }
+    if(this.mounted && _playListData != null) {
       setState(() {
         playListData = _playListData['playlist'];
       });

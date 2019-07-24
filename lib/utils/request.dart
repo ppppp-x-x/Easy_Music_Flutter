@@ -3,7 +3,7 @@ import 'dart:convert';
 
 dynamic fetchData(String url) async {
   print('request start');
-  String responeseBody;
+  dynamic responeseBody;
   HttpClient httpClient = new HttpClient();
   HttpClientRequest request = await httpClient.getUrl(
     Uri.parse(url)

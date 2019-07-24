@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
-import './../../utils/url.dart';
-import './../../utils/request.dart';
 import './../../utils//api.dart';
 
 import './../../components/banners.dart';
+
 import './recommendListRow.dart';
 
 class Recommend extends StatefulWidget {
