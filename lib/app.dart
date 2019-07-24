@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
+import './redux/index.dart';
+
 import './pages/Recommend/index.dart';
 import './pages/Rank/index.dart';
-import './pages/MySong/index.dart';
-import './components/customBottomNavigationBar.dart';
-import './redux/index.dart';
 import './pages/Search/index.dart';
+import './pages/MySong/index.dart';
+
+import './components/customBottomNavigationBar.dart';
 
 class MyApp extends StatefulWidget{
   final Store<AppState> store;
@@ -16,6 +18,7 @@ class MyApp extends StatefulWidget{
   MyAppState createState() => new MyAppState(this.store);
 }
 
+// AutomaticKeepAliveClientMixin：keep tab pages alive
 class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   final Store<AppState> store;
   MyAppState(this.store);
@@ -27,12 +30,6 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Autom
   ];
 
   @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  @override
   void initState() {
     super.initState();
     _tabController = new TabController(
@@ -42,6 +39,24 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Autom
   }
 
   @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  Widget createTab (String title) {
+    return Tab(
+      child: Text(
+        title,
+        style: TextStyle(
+          color: Colors.black
+        ),
+      ),
+    );
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     return StoreProvider(
       store: store,
@@ -49,6 +64,7 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Autom
         title: 'Easy_Music',
         home: Scaffold(
           backgroundColor: Colors.white,
+          // todo：left drawer content
           drawer: Drawer(
             child: Text('data'),
           ),
@@ -86,30 +102,9 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Autom
                 controller: _tabController,
                 indicatorColor: Colors.black,
                 tabs: <Widget>[
-                  Tab(
-                    child: Text(
-                      '发现音乐',
-                      style: TextStyle(
-                        color: Colors.black
-                      ),
-                    ),
-                  ),
-                  Tab(
-                    child: Text(
-                      '我的音乐',
-                      style: TextStyle(
-                        color: Colors.black
-                      ),
-                    ),
-                  ),
-                  Tab(
-                    child: Text(
-                      '排行榜',
-                      style: TextStyle(
-                        color: Colors.black
-                      ),
-                    ),
-                  ),
+                  createTab('发现音乐'),
+                  createTab('我的音乐'),
+                  createTab('排行榜'),
                 ],
               ),
             ),

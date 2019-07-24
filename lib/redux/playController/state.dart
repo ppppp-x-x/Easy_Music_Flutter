@@ -1,7 +1,6 @@
 import 'package:audioplayer/audioplayer.dart';
-import './../../utils/url.dart';
-import './../../utils/request.dart';
 import './../../utils/commonFetch.dart';
+import './../../utils//api.dart';
 
 class PlayController {
   // 已经播放过或者正要播放的歌曲索引
@@ -66,9 +65,10 @@ class PlayController {
   }
 
   void goNextSong (String id) async {
-    int idNum = int.parse(id);
-    dynamic songDetail = await getSongDetail(idNum);
-    dynamic songLyr = await fetchData('${localBaseUrl}lyric?id=${idNum}');
+    dynamic songDetail = await getSongDetail(int.parse(id));
+    dynamic songLyr = await getData('lyric', {
+      'id': id
+    });
     _songIndex = _songIndex + 1;
     _currentIndex = _currentIndex + 1;
     songDetail['lyric'] = combinLyric(songLyr['lrc']['lyric']);

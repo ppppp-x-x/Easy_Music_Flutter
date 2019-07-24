@@ -4,13 +4,13 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:ui' as ui;
 
-import './../../utils/url.dart';
-import './../../utils/request.dart';
 import './../../redux/index.dart';
-import './../../components/customBottomNavigationBar.dart';
-import './../../utils/commonFetch.dart';
-
 import './../../redux/playController/action.dart';
+
+import './../../components/customBottomNavigationBar.dart';
+
+import './../../utils/commonFetch.dart';
+import './../../utils//api.dart';
 
 class PlayList extends StatefulWidget {
   final int id;
@@ -39,7 +39,9 @@ class PlayListState extends State<PlayList> {
   }
 
   void fetchOlayList(id) async {
-    var _playListData = await fetchData(localBaseUrl + 'playlist/detail?id=' + id.toString());
+    var _playListData = await getData('playlistDetail', {
+      'id': id.toString()
+    });
     if(this.mounted) {
       setState(() {
         playListData = _playListData['playlist'];
@@ -148,7 +150,9 @@ class PlayListCardBottomState extends State<PlayListCardBottom> {
                           }
                           this.isRequesting = true;
                           dynamic songDetail = await getSongDetail(playListData['tracks'][index]['id']);
-                          dynamic songLyr = await fetchData('${localBaseUrl}lyric?id=${playListData['tracks'][index]['id']}');
+                          dynamic songLyr = await getData('lyric', {
+                            'id': playListData['tracks'][index]['id']
+                          });
                           songDetail['songLyr'] = songLyr;
                           playListAction = new Map();
                           var _playListActionPayLoad = new Map();

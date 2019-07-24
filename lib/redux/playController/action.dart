@@ -3,8 +3,7 @@ import 'package:redux_thunk/redux_thunk.dart';
 import './../index.dart';
 
 import './../../utils/commonFetch.dart';
-import './../../utils/request.dart';
-import './../../utils/url.dart';
+import './../../utils//api.dart';
 
 enum Actions {
   pause,
@@ -20,20 +19,20 @@ enum Actions {
 }
 
 ThunkAction<AppState> playeNextSong = (Store<AppState> store) async {
+  Map _songListActionPayLoad = new Map();
   dynamic state = store.state.playControllerState;
   dynamic songDetail;
   dynamic _songListAction = new Map();
-  var _songListActionPayLoad = new Map();
+  dynamic songLyr = await getData('lyric', {
+    'id': state.songList[state.songIndex + 1]
+  });
+  songDetail['songLyr'] = songLyr;
   if (state.songList.length == state.songIndex + 1) {
     songDetail = await getSongDetail(int.parse(state.songList[0]));
-    dynamic songLyr = await fetchData('${localBaseUrl}lyric?id=${state.songList[state.songIndex + 1]}');
-    songDetail['songLyr'] = songLyr;
     _songListActionPayLoad['songIndex'] = 0;
-    _songListActionPayLoad['songUrl'] = 'http://m usic.163.com/song/media/outer/url?id=' + state.songList[0] + '.mp3';
+    _songListActionPayLoad['songUrl'] = 'http://music.163.com/song/media/outer/url?id=' + state.songList[0] + '.mp3';
   } else {
     songDetail = await getSongDetail(int.parse(state.songList[state.songIndex + 1]));
-    dynamic songLyr = await fetchData('${localBaseUrl}lyric?id=${state.songList[state.songIndex + 1]}');
-    songDetail['songLyr'] = songLyr;
     _songListActionPayLoad['songIndex'] = state.songIndex + 1;
     _songListActionPayLoad['songUrl'] = 'http://music.163.com/song/media/outer/url?id=' + state.songList[state.songIndex + 1] + '.mp3';
   }

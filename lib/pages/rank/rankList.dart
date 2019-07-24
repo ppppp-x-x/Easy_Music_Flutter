@@ -3,11 +3,12 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 
-import './../../utils/request.dart';
 import './../../utils/commonFetch.dart';
-import './../../utils/url.dart';
+import './../../utils//api.dart';
+
 import './../../redux/index.dart';
 import './../../redux/playController/action.dart';
+
 import './../../components/customBottomNavigationBar.dart';
 
 class RankList extends StatefulWidget {
@@ -36,8 +37,9 @@ class RankListState extends State<RankList> {
   }
 
   void getRankDetail () async {
-    print(rankListId);
-    dynamic _rankDetail = await fetchData(localBaseUrl + 'top/list?idx=' + rankListId.toString());
+    dynamic _rankDetail = await getData('topDetail', {
+      'idx': rankListId.toString()
+    });
     setState(() {
       rankTracks = _rankDetail['playlist']['tracks'];
       rankDec = _rankDetail['playlist']['creator'];
@@ -155,8 +157,10 @@ class RankListState extends State<RankList> {
                           builder: (BuildContext context, callback) {
                             return InkWell(
                               onTap: () async {
-                               dynamic songDetail = await getSongDetail(rankTracks[index - 1]['id']);
-                                dynamic songLyr = await fetchData('${localBaseUrl}lyric?id=${rankTracks[index - 1]['id']}');
+                                dynamic songDetail = await getSongDetail(rankTracks[index - 1]['id']);
+                                dynamic songLyr = await getData('lyric', {
+                                  'id': rankTracks[index - 1]['id'].toString()
+                                });
                                 songDetail['songLyr'] = songLyr;
                                 playListAction = new Map();
                                 var _playListActionPayLoad = new Map();

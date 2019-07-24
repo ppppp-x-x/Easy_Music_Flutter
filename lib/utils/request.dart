@@ -3,12 +3,12 @@ import 'dart:convert';
 
 dynamic fetchData(String url) async {
   print('request start');
-  var responeseBody;
-  var httpClient = new HttpClient();
-  var request = await httpClient.getUrl(
+  String responeseBody;
+  HttpClient httpClient = new HttpClient();
+  HttpClientRequest request = await httpClient.getUrl(
     Uri.parse(url)
   );
-  var response = await request.close();
+  HttpClientResponse response = await request.close();
   if (response.statusCode == 200) {
     responeseBody = await response.transform(utf8.decoder).join();
     responeseBody = await jsonDecode(responeseBody);

@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 
 import './../../utils/url.dart';
 import './../../utils/request.dart';
+import './../../utils//api.dart';
+
 import './../../components/banners.dart';
 import './recommendListRow.dart';
-import './recommendVideoRow.dart';
 
 class Recommend extends StatefulWidget {
   @override
@@ -12,10 +13,10 @@ class Recommend extends StatefulWidget {
 }
 
 class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin {
-  var bannerList;
-  var hotSongList;
-  var recommendSongList;
-  var recommendVideos;
+  List<dynamic> bannerList;
+  List<dynamic> hotSongList;
+  List<dynamic> recommendSongList;
+  // var recommendVideos;
 
   @override
   void initState() {
@@ -23,11 +24,11 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
     fetchBannner();
     fetchHotSongList();
     fetchRecommedSongList();
-    fetchRecommendVideos();
+    // fetchRecommendVideos();
   }
 
   void fetchBannner() async {
-    var _bannerList = await fetchData(localBaseUrl + 'banner');
+    var _bannerList = await getData('banner', {});
     if (_bannerList == '请求错误') {
       return;
     }
@@ -39,7 +40,10 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
   }
 
   void fetchHotSongList() async {
-    var _hotSongList = await fetchData(localBaseUrl + 'top/playlist?limit=10&order=hot');
+    var _hotSongList = await getData('top/playlist', {
+      'limit': '10',
+      'order': 'hot'
+    });
     if (_hotSongList == '请求错误') {
       return;
     }
@@ -51,7 +55,7 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
   }
 
   void fetchRecommedSongList() async {
-    var _recommendSongList = await fetchData(localBaseUrl + 'personalized');
+    var _recommendSongList = await getData('recommendList', {});
     if (_recommendSongList == '请求错误') {
       return;
     }
@@ -62,17 +66,17 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
     }
   }
 
-  void fetchRecommendVideos() async {
-    var _recommendVideos = await fetchData(localBaseUrl + '/personalized/mv');
-    if (_recommendVideos == '请求错误') {
-      return;
-    }
-    if(this.mounted && this.recommendVideos == null) {
-      setState(() {
-        this.recommendVideos =_recommendVideos;
-      });
-    }
-  }
+  // void fetchRecommendVideos() async {
+  //   var _recommendVideos = await fetchData(localBaseUrl + '/personalized/mv');
+  //   if (_recommendVideos == '请求错误') {
+  //     return;
+  //   }
+  //   if(this.mounted && this.recommendVideos == null) {
+  //     setState(() {
+  //       this.recommendVideos =_recommendVideos;
+  //     });
+  //   }
+  // }
 
   @override
   void dispose() {

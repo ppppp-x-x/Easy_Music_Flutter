@@ -3,8 +3,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import './rankList.dart';
-import './../../utils/request.dart';
-import './../../utils/url.dart';
+
+import './../../utils//api.dart';
 
 dynamic rankContrast = {
   '云音乐新歌榜': 0,
@@ -54,7 +54,7 @@ class RankState extends State<Rank> with AutomaticKeepAliveClientMixin{
   }
 
   void getAllRankList() async {
-    dynamic _allRankList = await fetchData(localBaseUrl + 'toplist');
+    dynamic _allRankList = await getData('toplist', {});
     if (_allRankList == '请求错误') {
       return;
     }

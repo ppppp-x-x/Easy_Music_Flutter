@@ -3,9 +3,10 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import './../../redux/index.dart';
-import './../../utils/url.dart';
+
 import './../../utils/commonFetch.dart';
-import './../../utils/request.dart';
+import './../../utils//api.dart';
+
 import './../../redux/playController/action.dart';
 import './../../components/customBottomNavigationBar.dart';
 
@@ -45,7 +46,7 @@ class SearchState extends State<Search> {
   }
 
   dynamic getSearchHot() async {
-    dynamic _searchHot = await fetchData(localBaseUrl + 'search/hot');
+    dynamic _searchHot = await getData('hotSearch', {});
     if(this.mounted) {
       setState(() {
         searchHotWidgets = createSearchHot(_searchHot);  
@@ -57,7 +58,9 @@ class SearchState extends State<Search> {
     setState(() {
       showSpinner = true;  
     });
-    dynamic _searchList = await fetchData(localBaseUrl + 'search?keywords=' + str);
+    dynamic _searchList = await getData('search', {
+      'keywords': str
+    });
     if(this.mounted) {
       setState(() {
         searched = true;
@@ -196,7 +199,9 @@ class SearchState extends State<Search> {
                             return InkWell(
                               onTap: () async {
                                 dynamic songDetail = await getSongDetail(searchList[index]['id']);
-                                dynamic songLyr = await fetchData('${localBaseUrl}lyric?id=${searchList[index]['id']}');
+                                dynamic songLyr = await getData('lyric', {
+                                  'id': searchList[index]['id']
+                                });
                                 songDetail['songLyr'] = songLyr;
                                 playListAction = new Map();
                                 var _playListActionPayLoad = new Map();
