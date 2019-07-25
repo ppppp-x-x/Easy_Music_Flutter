@@ -6,6 +6,7 @@ import './../../redux/index.dart';
 
 import './../../utils/commonFetch.dart';
 import './../../utils//api.dart';
+import './../../utils//tools.dart';
 
 import './../../redux/playController/action.dart';
 import './../../components/customBottomNavigationBar.dart';
@@ -16,12 +17,12 @@ class Search extends StatefulWidget {
 }
 
 class SearchState extends State<Search> {
-  List<Widget> searchHotWidgets = [];
-  String lastSearchStr = '';
-  List searchList = [];
   bool searched = false;
   bool showSpinner = false;
-  dynamic playListAction;
+  String lastSearchStr = '';
+  List<Widget> searchHotWidgets = [];
+  List<dynamic> searchList = [];
+  Map<String, dynamic> playListAction;
 
   TextEditingController searchController;
 
@@ -46,7 +47,7 @@ class SearchState extends State<Search> {
   }
 
   dynamic getSearchHot() async {
-    dynamic _searchHot = await getData('hotSearch', {});
+    Map _searchHot = await getData('hotSearch', {});
     if(this.mounted) {
       setState(() {
         searchHotWidgets = createSearchHot(_searchHot);  
@@ -70,8 +71,9 @@ class SearchState extends State<Search> {
     }
   }
 
-  List<Widget> createSearchHot(dynamic searchHot) {
-    dynamic _searchHot = searchHot['result']['hots'];
+  // create hot search list widget
+  List<Widget> createSearchHot(Map searchHot) {
+    List _searchHot = searchHot['result']['hots'];
     List<Widget> _searchHotWidgets = [];
     for(int i = 0;i < _searchHot.length;i ++) {
       _searchHotWidgets.add(
@@ -81,10 +83,10 @@ class SearchState extends State<Search> {
             this.Submit(this.searchController.text);
           },
           child: Container(
-            padding: EdgeInsets.all(3),
+            padding: EdgeInsets.fromLTRB(8, 3, 8, 3),
             height: 22,
             decoration: BoxDecoration(
-              color: Colors.grey[200],
+              color: randomColor(),
               borderRadius: BorderRadius.circular(8)
             ),
             child: Text(
@@ -128,7 +130,8 @@ class SearchState extends State<Search> {
               ),
               hintText: '歌名/歌手/歌单',
               hintStyle: TextStyle(
-                color: Colors.black
+                color: Colors.black,
+                fontSize: 12
               ),
               fillColor: Colors.black,
               contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 8),
@@ -157,7 +160,7 @@ class SearchState extends State<Search> {
         ?
         Container(
           color: Colors.white,
-          margin: EdgeInsets.only(top: 20),
+          margin: EdgeInsets.only(top: 30),
           width: MediaQuery.of(context).size.width,
           alignment: Alignment.topCenter,
           child: Container(
@@ -198,14 +201,14 @@ class SearchState extends State<Search> {
                           builder: (BuildContext context, callback) {
                             return InkWell(
                               onTap: () async {
-                                dynamic songDetail = await getSongDetail(searchList[index]['id']);
-                                dynamic songLyr = await getData('lyric', {
+                                String songLyr = await getData('lyric', {
                                   'id': searchList[index]['id']
                                 });
+                                Map songDetail = await getSongDetail(searchList[index]['id']);
+                                Map _playListActionPayLoad = {};
+                                List _playList = [];
                                 songDetail['songLyr'] = songLyr;
-                                playListAction = new Map();
-                                var _playListActionPayLoad = new Map();
-                                dynamic _playList = [];
+                                playListAction = {};
                                 for(int j = 0;j < searchList.length;j ++) {
                                   _playList.add(searchList[j]['id'].toString());
                                 }

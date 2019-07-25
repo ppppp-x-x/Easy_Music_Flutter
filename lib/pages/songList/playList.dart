@@ -14,19 +14,17 @@ import './../../utils//api.dart';
 
 class PlayList extends StatefulWidget {
   final int id;
-  final String heroTag;
-  PlayList(this.id, this.heroTag):super();
+  PlayList(this.id):super();
 
   @override
-  PlayListState createState() => new PlayListState(id, heroTag);
+  PlayListState createState() => new PlayListState(id);
 }
 
 class PlayListState extends State<PlayList> {
   final int id;
-  String heroTag;
-  var playListData;
+  Map playListData;
 
-  PlayListState(this.id, this.heroTag);
+  PlayListState(this.id);
   @override
   void initState() {
     super.initState();
@@ -39,7 +37,7 @@ class PlayListState extends State<PlayList> {
   }
 
   void fetchOlayList(id) async {
-    var _playListData = await getData('playlistDetail', {
+    Map _playListData = await getData('playlistDetail', {
       'id': id.toString()
     });
     if (_playListData == '请求错误') {
@@ -58,9 +56,8 @@ class PlayListState extends State<PlayList> {
       converter: (store) => store.state,
       builder: (BuildContext context, state) {
         return Scaffold(
-          body: Hero(
-            tag: heroTag,
-            child: playListData ==null
+          body: 
+            playListData ==null
             ?
             Container(
               child: Center(
@@ -75,36 +72,261 @@ class PlayListState extends State<PlayList> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    PlayListCardTop(
+                    PlayListCard(
                       playListData == null ? null : playListData['coverImgUrl'],
                       playListData == null ? null : playListData['name'],
                       playListData == null ? null : playListData['creator']['nickname'],
                       playListData == null ? null : playListData['tags'],
                       playListData == null ? null : playListData['description'] 
                     ),
-                    PlayListCardBottom(playListData, state.playControllerState.currentIndex)
+                    PlayListSongs(playListData, state.playControllerState.currentIndex)
                   ],
                 ),
               )
             ),
-          ),
-          bottomNavigationBar: CustomBottomNavigationBar()
-        );
+            bottomNavigationBar: CustomBottomNavigationBar()
+          );
       }
     );
   }
 }
 
-class PlayListCardBottom extends StatefulWidget {
-  dynamic playListData;
-  int currentIndex;
-  PlayListCardBottom(this.playListData, this.currentIndex);
+class PlayListCard extends StatelessWidget {
+  final String backgroundImageUrl;
+  final String title;
+  final String creatorName;
+  final List<dynamic> tags;
+  final String description;
+
+  PlayListCard(this.backgroundImageUrl, this.title, this.creatorName, this.tags, this.description);
 
   @override
-  PlayListCardBottomState createState () => PlayListCardBottomState(playListData, currentIndex);
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        CachedNetworkImage(
+          imageUrl: backgroundImageUrl,
+          width: MediaQuery.of(context).size.width,
+          height: 230,
+          fit: BoxFit.fitWidth,
+          placeholder: (context, url) => Container(
+            width: MediaQuery.of(context).size.width,
+            height: 230,
+            color: Colors.grey,
+          ),
+        ),
+        BackdropFilter(
+          filter: ui.ImageFilter.blur(sigmaX: 30.0, sigmaY: 30.0),
+          child: Container(
+            color: Colors.white.withOpacity(0.3),
+            width: MediaQuery.of(context).size.width,
+            height: 270,
+          )
+        ),
+        Container(
+          margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+          child: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              Icons.arrow_back_ios,
+              size: 18,
+              color: Colors.black26,
+            ),
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.fromLTRB(40, 50, 40, 0),
+          child: Column(
+            children: <Widget>[
+              PlayListCardInfo(
+                this.backgroundImageUrl,
+                this.title,
+                this.creatorName,
+                this.tags
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width - 60,
+                height: 50,
+                margin: EdgeInsets.only(top: 10),
+                child: Text(
+                  this.description,
+                  maxLines: 3,
+                  overflow: TextOverflow.fade,
+                  style: TextStyle(
+                    color: Colors.black54,
+                    fontSize: 11
+                  ),
+                ),
+              ),
+              PlayListCardButtons()
+            ],
+          )
+        )
+      ],
+    );
+  }
 }
 
-class PlayListCardBottomState extends State<PlayListCardBottom> {
+class PlayListCardInfo extends StatelessWidget {
+  final String backgroundImageUrl;
+  final String title;
+  final String creatorName;
+  final List<dynamic> tags;
+
+  PlayListCardInfo(this.backgroundImageUrl, this.title, this.creatorName, this.tags);
+
+  String composeTags(List<dynamic> list) {
+    String _str = '';
+    if (list.length == 0) {
+      return '';
+    }
+    for(int i = 0;i < list.length;i ++) {
+      _str = _str + '#' + list[i] + '#  ';
+    }
+    return _str;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          ClipRRect(
+            borderRadius: BorderRadius.circular(5),
+            child: CachedNetworkImage(
+              imageUrl: this.backgroundImageUrl,
+              width: 100,
+              height: 100,
+              fit: BoxFit.fitWidth,
+              placeholder: (context, url) => Container(
+                width: 100,
+                height: 100,
+                color: Colors.grey,
+              ),
+            ),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width - 200,
+            margin: EdgeInsets.only(left: 15),
+            padding: EdgeInsets.only(top: 5),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  this.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.fade,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black87,
+                    fontSize: 15
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 5),
+                  child: Text(
+                    this.creatorName,
+                    maxLines: 1,
+                    overflow: TextOverflow.fade,
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontSize: 12
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 10),
+                  child: Text(
+                    composeTags(this.tags),
+                    maxLines: 1,
+                    overflow: TextOverflow.fade,
+                    style: TextStyle(
+                      color: Colors.grey[800],
+                      fontSize: 12
+                    ),
+                  )
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class PlayListCardButtons extends StatelessWidget {
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Column(
+            children: <Widget>[
+              Icon(
+                Icons.star,
+                color: Colors.black38,
+              ),
+              Text(
+                '收藏',
+                style: TextStyle(
+                  color: Colors.black38,
+                  fontSize: 13
+                ),
+              )
+            ],
+          ),
+          Column(
+            children: <Widget>[
+              Icon(
+                Icons.cloud_download,
+                color: Colors.black38,
+              ),
+              Text(
+                '下载',
+                style: TextStyle(
+                  color: Colors.black38,
+                  fontSize: 13
+                ),
+              )
+            ],
+          ),
+          Column(
+            children: <Widget>[
+              Icon(
+                Icons.comment,
+                color: Colors.black38,
+              ),
+              Text(
+                '评论',
+                style: TextStyle(
+                  color: Colors.black38,
+                  fontSize: 13
+                ),
+              )
+            ],
+          ),
+        ],
+      )
+    );
+  }
+}
+
+class PlayListSongs extends StatefulWidget {
+  dynamic playListData;
+  int currentIndex;
+  PlayListSongs(this.playListData, this.currentIndex);
+
+  @override
+  PlayListSongsState createState () => PlayListSongsState(playListData, currentIndex);
+}
+
+class PlayListSongsState extends State<PlayListSongs> {
   int currentIndex;
   bool isRequesting = false;
   dynamic playListData;
@@ -118,7 +340,7 @@ class PlayListCardBottomState extends State<PlayListCardBottom> {
   }
 
   @override
-  PlayListCardBottomState(this.playListData, this.currentIndex);
+  PlayListSongsState(this.playListData, this.currentIndex);
 
   @override
   Widget build(BuildContext context) {
@@ -156,10 +378,10 @@ class PlayListCardBottomState extends State<PlayListCardBottom> {
                           dynamic songLyr = await getData('lyric', {
                             'id': playListData['tracks'][index]['id']
                           });
+                          Map _playListActionPayLoad = {};
+                          Map playListAction = {};
+                          List<String> _playList = [];
                           songDetail['songLyr'] = songLyr;
-                          playListAction = new Map();
-                          var _playListActionPayLoad = new Map();
-                          dynamic _playList = [];
                           for(int j = 0;j < playListData['tracks'].length;j ++) {
                             _playList.add(playListData['tracks'][j]['id'].toString());
                           }
@@ -249,226 +471,6 @@ class PlayListCardBottomState extends State<PlayListCardBottom> {
           }
         )
       )
-    );
-  }
-}
-
-class PlayListCardTop extends StatelessWidget {
-  final String backgroundImageUrl;
-  final String title;
-  final String creatorName;
-  final List<dynamic> tags;
-  final String description;
-
-  PlayListCardTop(this.backgroundImageUrl, this.title, this.creatorName, this.tags, this.description);
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        CachedNetworkImage(
-          imageUrl: backgroundImageUrl,
-          width: MediaQuery.of(context).size.width,
-          height: 230,
-          fit: BoxFit.fitWidth,
-          placeholder: (context, url) => Container(
-            width: MediaQuery.of(context).size.width,
-            height: 230,
-            color: Colors.grey,
-          ),
-        ),
-        BackdropFilter(
-          filter: ui.ImageFilter.blur(sigmaX: 30.0, sigmaY: 30.0),
-          child: Container(
-            color: Colors.white.withOpacity(0.3),
-            width: MediaQuery.of(context).size.width,
-            height: 230,
-          )
-        ),
-        Container(
-          margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-          child: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(
-              Icons.arrow_back_ios,
-              size: 18,
-              color: Colors.black26,
-            ),
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.fromLTRB(40, 50, 40, 0),
-          child: Column(
-            children: <Widget>[
-              PlayListCardTopInfo(
-                this.backgroundImageUrl,
-                this.title,
-                this.creatorName,
-                this.tags
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width - 60,
-                height: 55,
-                margin: EdgeInsets.only(top: 10),
-                child: Text(
-                  this.description,
-                  maxLines: 3,
-                  overflow: TextOverflow.fade,
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontSize: 11
-                  ),
-                ),
-              ),  
-              // Container(
-              //   margin: EdgeInsets.only(top: 10),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //     children: <Widget>[
-              //       Column(
-              //         children: <Widget>[
-              //           Icon(
-              //             Icons.star,
-              //             color: Colors.black38,
-              //           ),
-              //           Text(
-              //             '收藏',
-              //             style: TextStyle(
-              //               color: Colors.black38,
-              //               fontSize: 13
-              //             ),
-              //           )
-              //         ],
-              //       ),
-              //       Column(
-              //         children: <Widget>[
-              //           Icon(
-              //             Icons.cloud_download,
-              //             color: Colors.black38,
-              //           ),
-              //           Text(
-              //             '下载',
-              //             style: TextStyle(
-              //               color: Colors.black38,
-              //               fontSize: 13
-              //             ),
-              //           )
-              //         ],
-              //       ),
-              //       Column(
-              //         children: <Widget>[
-              //           Icon(
-              //             Icons.comment,
-              //             color: Colors.black38,
-              //           ),
-              //           Text(
-              //             '评论',
-              //             style: TextStyle(
-              //               color: Colors.black38,
-              //               fontSize: 13
-              //             ),
-              //           )
-              //         ],
-              //       ),
-              //     ],
-              //   )
-              // )
-            ],
-          )
-        )
-      ],
-    );
-  }
-}
-
-class PlayListCardTopInfo extends StatelessWidget {
-  final String backgroundImageUrl;
-  final String title;
-  final String creatorName;
-  final List<dynamic> tags;
-
-  PlayListCardTopInfo(this.backgroundImageUrl, this.title, this.creatorName, this.tags);
-
-  String composeTags(List<dynamic> list) {
-    String _str = '';
-    if (list.length == 0) {
-      return '';
-    }
-    for(int i = 0;i < list.length;i ++) {
-      _str = _str + '#' + list[i] + '#  ';
-    }
-    return _str;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          ClipRRect(
-            borderRadius: BorderRadius.circular(5),
-            child: CachedNetworkImage(
-              imageUrl: this.backgroundImageUrl,
-              width: 100,
-              height: 100,
-              fit: BoxFit.fitWidth,
-              placeholder: (context, url) => Container(
-                width: 100,
-                height: 100,
-                color: Colors.grey,
-              ),
-            ),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width - 200,
-            margin: EdgeInsets.only(left: 15),
-            padding: EdgeInsets.only(top: 5),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  this.title,
-                  maxLines: 2,
-                  overflow: TextOverflow.fade,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black87,
-                    fontSize: 15
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 5),
-                  child: Text(
-                    this.creatorName,
-                    maxLines: 1,
-                    overflow: TextOverflow.fade,
-                    style: TextStyle(
-                      color: Colors.black87,
-                      fontSize: 12
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 10),
-                  child: Text(
-                    composeTags(this.tags),
-                    maxLines: 1,
-                    overflow: TextOverflow.fade,
-                    style: TextStyle(
-                      color: Colors.grey[800],
-                      fontSize: 12
-                    ),
-                  )
-                )
-              ],
-            ),
-          )
-        ],
-      ),
     );
   }
 }

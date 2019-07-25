@@ -22,7 +22,7 @@ class RecommendList extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => PlayList(rowData[index]['id'], rowCount + index.toString())
+                  builder: (context) => PlayList(rowData[index]['id'])
                 )
               );
             },
@@ -38,7 +38,7 @@ class RecommendList extends StatelessWidget {
                         child: Hero(
                           tag: rowCount + index.toString() + this.listTitle,
                           child: CachedNetworkImage(
-                            imageUrl: rowData[index]['coverImgUrl']??rowData[index]['picUrl'],
+                            imageUrl: rowData[index]['coverImgUrl'] ?? rowData[index]['picUrl'],
                             width: 100,
                             height: 100,
                             fit: BoxFit.cover,

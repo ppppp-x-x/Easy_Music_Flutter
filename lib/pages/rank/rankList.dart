@@ -23,9 +23,9 @@ class RankListState extends State<RankList> {
   final int rankListId;
   RankListState(this.rankListId);
 
-  dynamic rankDec;
-  dynamic rankTracks;
-  dynamic playListAction;
+  Map<String, dynamic> rankDec;
+  Map playListAction;
+  List<dynamic> rankTracks;
 
   void initState() {
     super.initState();
@@ -64,59 +64,7 @@ class RankListState extends State<RankList> {
             itemCount: rankTracks.length,
             itemBuilder: (BuildContext context, int index) {
               if (index == 0) {
-                return Container(
-                  margin: EdgeInsets.only(bottom: 10),
-                  child: Stack(
-                    children: <Widget>[
-                      CachedNetworkImage(
-                        imageUrl: rankDec['avatarUrl'],
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.width * 0.6,
-                        fit: BoxFit.fitWidth,
-                        placeholder: (context, url) => Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.width * 0.6,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 70,
-                        margin: EdgeInsets.only(top: MediaQuery.of(context).size.width * 0.6 - 70),
-                        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                        color: Colors.black54,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              rankDec['nickname'],
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20
-                              ),
-                              textAlign: TextAlign.left,
-                            ),
-                            Text(
-                              rankDec['signature'] == null
-                              ?
-                              ''
-                              :
-                              rankDec['signature'],
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.fade,
-                              textAlign: TextAlign.left,
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  )
-                );
+                return RankDes(rankDec);
               }
               return  Column(
                 children: <Widget>[
@@ -227,6 +175,67 @@ class RankListState extends State<RankList> {
         bottomNavigationBar: CustomBottomNavigationBar(),
       ); 
       },
+    );
+  }
+}
+
+class RankDes extends StatelessWidget {
+  Map<String, dynamic> rankDec;
+  RankDes(rankDec);
+
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 10),
+      child: Stack(
+        children: <Widget>[
+          CachedNetworkImage(
+            imageUrl: rankDec['avatarUrl'],
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.width * 0.6,
+            fit: BoxFit.fitWidth,
+            placeholder: (context, url) => Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.width * 0.6,
+              color: Colors.grey,
+            ),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: 70,
+            margin: EdgeInsets.only(top: MediaQuery.of(context).size.width * 0.6 - 70),
+            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+            color: Colors.black54,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  rankDec['nickname'],
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+                Text(
+                  rankDec['signature'] == null
+                  ?
+                  ''
+                  :
+                  rankDec['signature'],
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 15
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.fade,
+                  textAlign: TextAlign.left,
+                )
+              ],
+            ),
+          )
+        ],
+      )
     );
   }
 }
