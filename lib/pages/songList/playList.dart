@@ -370,16 +370,16 @@ class PlayListSongsState extends State<PlayListSongs> {
                     builder: (BuildContext context, callback) {
                       return InkWell(
                         onTap: () async {
+                          playListAction = {};
                           if (this.isRequesting == true) {
                             return null;
                           }
                           this.isRequesting = true;
                           dynamic songDetail = await getSongDetail(playListData['tracks'][index]['id']);
                           dynamic songLyr = await getData('lyric', {
-                            'id': playListData['tracks'][index]['id']
+                            'id': playListData['tracks'][index]['id'].toString()
                           });
                           Map _playListActionPayLoad = {};
-                          Map playListAction = {};
                           List<String> _playList = [];
                           songDetail['songLyr'] = songLyr;
                           for(int j = 0;j < playListData['tracks'].length;j ++) {
