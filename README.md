@@ -1,7 +1,12 @@
 # easy_music
-
+一个使用flutter框架开发的在线音乐播放应用，api使用[开源Node Api Service](https://github.com/Binaryify/NeteaseCloudMusicApi)，目前项目还有一些问题，在有空的时候会进行修复。欢迎有兴趣的同学一起交流。
 # 已完成功能
-
+- 首页推荐歌单、最热歌单
+- 歌名搜索
+- 排行榜
+- 歌单详情
+- 歌曲播放、进度控制、歌曲切换
+- 歌词随播放进度滚动
 ## Getting Started
 
 1. clone本项目
