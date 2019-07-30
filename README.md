@@ -15,8 +15,13 @@
 4. 编译并运行本项目
 
 ## 项目截图
-<div align=center width="1000"><img src="https://b2.bmp.ovh/imgs/2019/07/f7a1226f3daa5e6a.gif" width="386" height="620" />首页</div>
-<div align=center width="1000"><img src="https://b2.bmp.ovh/imgs/2019/07/193570a3672c4feb.gif" width="386" height="620" 播放 /></div>
-<div align=center width="1000"><img src="https://b2.bmp.ovh/imgs/2019/07/662515feb55c306f.gif" width="386" height="620" 歌单 /></div>
-<div align=center width="1000"><img src="https://b2.bmp.ovh/imgs/2019/07/f0bf6994e2829a15.gif" width="386" height="620" 排行榜 /></div>
-<div align=center width="1000"><img src="https://b2.bmp.ovh/imgs/2019/07/09928a77ff8dbbfe.gif" width="386" height="620" 搜索 /></div>
+<div align="center"><img src="https://user-gold-cdn.xitu.io/2019/7/28/16c37cc63d8d18f1?w=348&h=652&f=gif&s=2017299" /><div>首页</div></div>
+  <div align="center"><img src="https://user-gold-cdn.xitu.io/2019/7/28/16c37cc72445e70c?w=348&h=652&f=gif&s=987554" />
+  <div>歌单</div></div>
+ <div align="center"><img src="https://user-gold-cdn.xitu.io/2019/7/28/16c37cc63d70c232?w=348&h=652&f=gif&s=1274275" />
+ <div>播放</div></div>
+ <div align="center"><img src="https://user-gold-cdn.xitu.io/2019/7/28/16c37cc6fab7c8f2?w=348&h=652&f=gif&s=997551" />
+ <div>排行榜</div></div>
+ <div align="center"><img src="https://user-gold-cdn.xitu.io/2019/7/28/16c37cc63dff8127?w=348&h=652&f=gif&s=357985" />
+ <div>搜索</div>
+ </div>
