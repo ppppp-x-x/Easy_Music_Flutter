@@ -5,7 +5,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:ui' as ui;
 
 import './../../redux/index.dart';
-import './../../redux/playController/action.dart';
+import './../../redux/playController/action.dart' as playControllerActions;
 
 import './../../components/customBottomNavigationBar.dart';
 
@@ -120,7 +120,7 @@ class PlayListCard extends StatelessWidget {
           child: Container(
             color: Colors.white.withOpacity(0.3),
             width: MediaQuery.of(context).size.width,
-            height: 270,
+            height: 305,
           )
         ),
         Container(
@@ -148,8 +148,10 @@ class PlayListCard extends StatelessWidget {
               ),
               Container(
                 width: MediaQuery.of(context).size.width - 60,
-                height: 50,
-                margin: EdgeInsets.only(top: 10),
+                constraints: BoxConstraints(
+                  minHeight: 50
+                ),
+                margin: EdgeInsets.only(top: 20),
                 child: Text(
                   this.description,
                   maxLines: 3,
@@ -183,7 +185,7 @@ class PlayListCardInfo extends StatelessWidget {
       return '';
     }
     for(int i = 0;i < list.length;i ++) {
-      _str = _str + '#' + list[i] + '#  ';
+      _str = _str + list[i] + ' ';
     }
     return _str;
   }
@@ -262,7 +264,7 @@ class PlayListCardInfo extends StatelessWidget {
 class PlayListCardButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 20),
+      margin: EdgeInsets.fromLTRB(0, 20, 0, 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -390,7 +392,7 @@ class PlayListSongsState extends State<PlayListSongs> {
                           _playListActionPayLoad['songDetail'] = songDetail;
                           _playListActionPayLoad['songUrl'] = 'http://music.163.com/song/media/outer/url?id=' + playListData['tracks'][index]['id'].toString() + '.mp3';
                           playListAction['payLoad'] = _playListActionPayLoad;
-                          playListAction['type'] = Actions.addPlayList;
+                          playListAction['type'] = playControllerActions.Actions.addPlayList;
                           this.isRequesting = false;
                           callback();
                         },

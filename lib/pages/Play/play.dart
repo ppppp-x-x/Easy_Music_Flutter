@@ -4,7 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:async';
 
 import './../../redux/index.dart';
-import './../../redux/playController/action.dart';
+import './../../redux/playController/action.dart' as playControllerActions;
 import './../../components/songComments.dart';
 class Play extends StatefulWidget {
   @override
@@ -126,7 +126,7 @@ class ProcessControllerState extends State<ProcessController> {
 
   @override
   void initState() {
-    this.showSongCommentsAction['type'] = Actions.switchSongComments;
+    this.showSongCommentsAction['type'] = playControllerActions.Actions.switchSongComments;
     timer = Timer.periodic(const Duration(milliseconds: 100), (Void) {
       setState(() {
        this.refreshView = !this.refreshView; 
@@ -276,7 +276,7 @@ class ProcessControllerState extends State<ProcessController> {
             ),
             Container(
               width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height - 210),
+              margin: EdgeInsets.only(top: 600),
               padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
               child: Column(
                 children: <Widget>[
@@ -384,7 +384,7 @@ class ProcessControllerState extends State<ProcessController> {
                                 onChangeEnd: (double val) async{
                                   int _songSecond = int.parse(playControllerState.audioPlayer.duration.toString().substring(2, 4)) * 60 +
                                   int.parse(playControllerState.audioPlayer.duration.toString().substring(5, 7));
-                                  durationActionMap['type'] = Actions.playSeek;
+                                  durationActionMap['type'] = playControllerActions.Actions.playSeek;
                                   durationActionMap['payLoad'] = _songSecond * this.processVal.floor() / 500;
                                   callback();
                                   await new Future.delayed(const Duration(milliseconds: 500));
@@ -449,7 +449,7 @@ class PlayController extends StatelessWidget {
             StoreConnector<AppState, VoidCallback>(
               converter: (store) {
                 var _action = new Map();
-                _action['type'] = Actions.addCollectSong;
+                _action['type'] = playControllerActions.Actions.addCollectSong;
                 return () => store.dispatch(_action);
               },
               builder: (BuildContext context, callback) {
@@ -480,9 +480,9 @@ class PlayController extends StatelessWidget {
               converter: (store) {
                 var _action = new Map();
                 if (state.playControllerState.playing == true) {
-                  _action['type'] = Actions.pause;
+                  _action['type'] = playControllerActions.Actions.pause;
                 } else {
-                  _action['type'] = Actions.play;
+                  _action['type'] = playControllerActions.Actions.play;
                 }
                 return () => store.dispatch(_action);
               },
@@ -513,7 +513,7 @@ class PlayController extends StatelessWidget {
             ),
             StoreConnector<AppState, VoidCallback>(
               converter: (store) {
-                return () => store.dispatch(playeNextSong);
+                return () => store.dispatch(playControllerActions.playeNextSong);
               },
               builder: (BuildContext context, callback) {
                 if (this.isRequesting == true) {
