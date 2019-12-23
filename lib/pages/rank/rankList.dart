@@ -181,7 +181,7 @@ class RankListState extends State<RankList> {
 
 class RankDes extends StatelessWidget {
   Map<String, dynamic> rankDec;
-  RankDes(rankDec);
+  RankDes(this.rankDec);
 
   Widget build(BuildContext context) {
     return Container(
