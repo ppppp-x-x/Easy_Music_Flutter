@@ -3,7 +3,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class Banners extends StatelessWidget {
-  var bannerList;
+  final bannerList;
   Banners(this.bannerList);
   
   @override

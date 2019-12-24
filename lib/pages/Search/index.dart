@@ -8,7 +8,7 @@ import './../../utils/commonFetch.dart';
 import './../../utils//api.dart';
 import './../../utils//tools.dart';
 
-import './../../redux/playController/action.dart';
+import './../../redux/playController/action.dart' as playControllerActions;
 import './../../components/customBottomNavigationBar.dart';
 
 class Search extends StatefulWidget {
@@ -217,7 +217,7 @@ class SearchState extends State<Search> {
                                 _playListActionPayLoad['songDetail'] = songDetail;
                                 _playListActionPayLoad['songUrl'] = 'http://music.163.com/song/media/outer/url?id=' + searchList[index]['id'].toString() + '.mp3';
                                 playListAction['payLoad'] = _playListActionPayLoad;
-                                playListAction['type'] = Actions.addPlayList;
+                                playListAction['type'] = playControllerActions.Actions.addPlayList;
                                 callback();
                               },
                               child: Container(

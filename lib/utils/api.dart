@@ -23,7 +23,7 @@ String createFetchUrl (Map<String, String> params) {
     if (paramsString != '?') {
       paramsString += '&';
     }
-    paramsString += '${key}=${value}';
+    paramsString += key + '=' + value;
   });
   return paramsString;
 }

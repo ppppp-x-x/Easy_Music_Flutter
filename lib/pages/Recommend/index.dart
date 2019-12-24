@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_redux/flutter_redux.dart';
+import './../../redux/commonController/action.dart';
+import './../../redux/index.dart';
+
 import './../../utils//api.dart';
 
 import './../../components/banners.dart';
@@ -20,14 +24,22 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
   @override
   void initState() {
     super.initState();
-    fetchBannner();
-    fetchHotSongList();
-    fetchRecommedSongList();
-    // fetchRecommendVideos();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      fetchBannner();
+      fetchHotSongList();
+      fetchRecommedSongList();
+      // fetchRecommendVideos();
+    });
+  }
+
+  void switchIsRequesting() {
+    StoreProvider.of<AppState>(context).dispatch(switchIsRequestingAction);
   }
 
   void fetchBannner() async {
+    switchIsRequesting();
     var _bannerList = await getData('banner', {});
+    switchIsRequesting();
     if (_bannerList == '请求错误') {
       return;
     }
@@ -39,10 +51,12 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
   }
 
   void fetchHotSongList() async {
+    switchIsRequesting();
     var _hotSongList = await getData('hotPlaylist', {
       'limit': '10',
       'order': 'hot'
     });
+    switchIsRequesting();
     if (_hotSongList == '请求错误') {
       return;
     }
@@ -54,7 +68,9 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
   }
 
   void fetchRecommedSongList() async {
+    switchIsRequesting();
     var _recommendSongList = await getData('recommendList', {});
+    switchIsRequesting();
     if (_recommendSongList == '请求错误') {
       return;
     }

@@ -8,9 +8,8 @@ class SongComments extends StatefulWidget {
 }
 
 class SongCommentsState extends State<SongComments> {
-
-  @override
   void initState () {
+    super.initState();
   }
 
   Widget build(BuildContext context) {

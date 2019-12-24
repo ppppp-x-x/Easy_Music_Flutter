@@ -19,8 +19,8 @@ class MyApp extends StatefulWidget{
 }
 
 // AutomaticKeepAliveClientMixin：keep tab pages alive
-class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
-  final Store<AppState> store;
+class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
+  Store<AppState> store;
   MyAppState(this.store);
   TabController _tabController;
   List<Widget> _body = [
@@ -55,8 +55,6 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Autom
     );
   }
 
-
-  @override
   Widget build(BuildContext context) {
     return StoreProvider(
       store: store,
@@ -119,8 +117,8 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Autom
     );
   }
 
-  @override
-  bool get wantKeepAlive => true;
+  // @override
+  // bool get wantKeepAlive => true;
 }
 
 class SearchButton extends StatelessWidget {

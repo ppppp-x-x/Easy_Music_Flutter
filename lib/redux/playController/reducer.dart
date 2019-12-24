@@ -34,7 +34,6 @@ PlayController PlayControllerReducer(PlayController state, action) {
       state.playing = false;
     }
     if (action['type'] == Actions.nextSong) {
-      print(action);
       if (state.playing) {
         state.audioPlayer.stop();
       }

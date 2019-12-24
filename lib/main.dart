@@ -7,10 +7,13 @@ import 'package:redux_thunk/redux_thunk.dart';
 import './app.dart';
 import './redux/index.dart';
 import './redux/playController/state.dart';
+import './redux/commonController/state.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   final store = Store<AppState>(appReducer, middleware: [thunkMiddleware], initialState: AppState(
     playControllerState: PlayController.initState(),
+    commonState: Common.initState()
   ));
   runApp(MyApp(store));
   if (Platform.isAndroid) {

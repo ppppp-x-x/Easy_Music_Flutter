@@ -1,1 +1,1 @@
-final String localBaseUrl = 'http://10.0.2.2:3000/';
+final String localBaseUrl = 'http://10.242.2.163:8080/';

@@ -7,7 +7,7 @@ import './../../utils/commonFetch.dart';
 import './../../utils//api.dart';
 
 import './../../redux/index.dart';
-import './../../redux/playController/action.dart';
+import './../../redux/playController/action.dart' as playControllerActions;
 
 import './../../components/customBottomNavigationBar.dart';
 
@@ -121,7 +121,7 @@ class RankListState extends State<RankList> {
                                 _playListActionPayLoad['songDetail'] = songDetail;
                                 _playListActionPayLoad['songUrl'] = 'http://music.163.com/song/media/outer/url?id=' + rankTracks[index - 1]['id'].toString() + '.mp3';
                                 playListAction['payLoad'] = _playListActionPayLoad;
-                                playListAction['type'] = Actions.addPlayList;
+                                playListAction['type'] = playControllerActions.Actions.addPlayList;
                                 callback();
                               },
                               child: Container(
@@ -181,7 +181,7 @@ class RankListState extends State<RankList> {
 
 class RankDes extends StatelessWidget {
   Map<String, dynamic> rankDec;
-  RankDes(this.rankDec);
+  RankDes(rankDec);
 
   Widget build(BuildContext context) {
     return Container(

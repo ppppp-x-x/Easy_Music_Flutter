@@ -4,7 +4,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 
 import './../redux/index.dart';
 import './../pages/Play/play.dart';
-import './../redux/playController/action.dart';
+import './../redux/playController/action.dart' as playControllerActions;
 
 class CustomBottomNavigationBar extends StatefulWidget {
   @override
@@ -135,9 +135,9 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                         converter: (store) {
                           var _action = new Map();
                           if (state.playControllerState.playing) {
-                            _action['type'] = Actions.pause;
+                            _action['type'] = playControllerActions.Actions.pause;
                           } else {
-                            _action['type'] = Actions.play;
+                            _action['type'] = playControllerActions.Actions.play;
                           }
                           return () => store.dispatch(_action);
                         },
