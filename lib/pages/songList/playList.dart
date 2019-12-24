@@ -6,6 +6,7 @@ import 'dart:ui' as ui;
 
 import './../../redux/index.dart';
 import './../../redux/playController/action.dart' as playControllerActions;
+import './../../redux/commonController/action.dart';
 
 import './../../components/customBottomNavigationBar.dart';
 
@@ -28,7 +29,9 @@ class PlayListState extends State<PlayList> {
   @override
   void initState() {
     super.initState();
-    fetchOlayList(id);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      fetchOlayList(id);
+    });
   }
 
   @override
@@ -36,10 +39,16 @@ class PlayListState extends State<PlayList> {
     super.dispose();
   }
 
+  void switchIsRequesting() {
+    StoreProvider.of<AppState>(context).dispatch(switchIsRequestingAction);
+  }
+
   void fetchOlayList(id) async {
-    Map _playListData = await getData('playlistDetail', {
+    switchIsRequesting();
+    var _playListData = await getData('playlistDetail', {
       'id': id.toString()
     });
+    switchIsRequesting();
     if (_playListData == '请求错误') {
       return;
     }
@@ -79,7 +88,7 @@ class PlayListState extends State<PlayList> {
                       playListData == null ? null : playListData['tags'],
                       playListData == null ? null : playListData['description'] 
                     ),
-                    PlayListSongs(playListData, state.playControllerState.currentIndex)
+                    PlayListSongs(playListData, state.playControllerState.currentIndex, switchIsRequesting)
                   ],
                 ),
               )
@@ -322,10 +331,11 @@ class PlayListCardButtons extends StatelessWidget {
 class PlayListSongs extends StatefulWidget {
   dynamic playListData;
   int currentIndex;
-  PlayListSongs(this.playListData, this.currentIndex);
+  Function switchIsRequesting;
+  PlayListSongs(this.playListData, this.currentIndex, this.switchIsRequesting);
 
   @override
-  PlayListSongsState createState () => PlayListSongsState(playListData, currentIndex);
+  PlayListSongsState createState () => PlayListSongsState(playListData, currentIndex, switchIsRequesting);
 }
 
 class PlayListSongsState extends State<PlayListSongs> {
@@ -334,6 +344,7 @@ class PlayListSongsState extends State<PlayListSongs> {
   dynamic playListData;
   dynamic playList = [];
   dynamic playListAction;
+  Function switchIsRequesting;
 
   @override
   void initState() {
@@ -342,7 +353,7 @@ class PlayListSongsState extends State<PlayListSongs> {
   }
 
   @override
-  PlayListSongsState(this.playListData, this.currentIndex);
+  PlayListSongsState(this.playListData, this.currentIndex, this.switchIsRequesting);
 
   @override
   Widget build(BuildContext context) {
@@ -377,10 +388,12 @@ class PlayListSongsState extends State<PlayListSongs> {
                             return null;
                           }
                           this.isRequesting = true;
+                          switchIsRequesting();
                           dynamic songDetail = await getSongDetail(playListData['tracks'][index]['id']);
                           dynamic songLyr = await getData('lyric', {
                             'id': playListData['tracks'][index]['id'].toString()
                           });
+                          switchIsRequesting();
                           Map _playListActionPayLoad = {};
                           List<String> _playList = [];
                           songDetail['songLyr'] = songLyr;

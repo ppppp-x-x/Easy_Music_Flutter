@@ -42,11 +42,17 @@ class PlayState extends State<Play> with SingleTickerProviderStateMixin {
       converter: (store) => store.state,
       builder: (BuildContext context, state) {
         return Material(
-          child: Stack(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               ProcessController(state),
-              PlayController(songId, state, setInitPlay),
-              SongComments()
+              Column(
+                children: <Widget>[
+                  PlayLyrics(),
+                  PlayController(songId, state, setInitPlay),
+                ],
+              )
+              // SongComments()
             ],
           )
         );
@@ -56,7 +62,7 @@ class PlayState extends State<Play> with SingleTickerProviderStateMixin {
 }
 
 class ProcessController extends StatefulWidget {
-  dynamic state;
+  final dynamic state;
   @override
   ProcessController(this.state);
   ProcessControllerState createState () => new ProcessControllerState(state);
@@ -66,78 +72,16 @@ class ProcessControllerState extends State<ProcessController> {
   dynamic state;
   ProcessControllerState(this.state);
 
-  // swtich auto refresh view
-  bool refreshView = true;
-  // is touching process bar
-  bool processTouching = false;
-  double processVal = 0.0;
-  Timer timer;
-  // save&&dispatch playProcess
-  Map durationActionMap = new Map();
   Map showSongCommentsAction = {};
-
-  double computeProcessVal(String position, String duration) {
-    // current play percentage: 0.55555555
-    double currentPercent = stringDurationToDouble(position) / stringDurationToDouble(duration); 
-    if(!this.processTouching) {
-      this.processVal = currentPercent * 500;
-    }
-    return currentPercent * 500;
-  }
-
-  double stringDurationToDouble (String duration) {
-    return double.parse(duration.substring(0, 2)) * 60 + double.parse(duration.substring(3, 5));
-  }
-
-  // 
-  List<String> getLyricsNow(List<dynamic> allLyrics, String timeNow, Duration allTime) {
-    double _timeNow = stringDurationToDouble(timeNow);
-    List<String> _lyricsNow = [];
-    List<dynamic> _lyrics = [];
-    if (allLyrics != null && allLyrics.length > 0) {
-      allLyrics.forEach((item) {
-        List<dynamic> _subLyrics = [];
-        if (item.length != null && item.length == 2 && item[0] != null && item[1] != null) {
-          if (item[0].length > 5) {
-            _subLyrics.add(stringDurationToDouble(item[0].substring(0, 5)));
-          } else {
-            _subLyrics.add('');
-          }
-          _subLyrics.add(item[1]);
-          _lyrics.add(_subLyrics);
-        }
-      });
-    }
-    for (int i = 0;i < _lyrics.length;i ++) {
-      if (_timeNow >= _lyrics[i][0] && (i == _lyrics.length - 1 || _timeNow <= _lyrics[i + 1][0])) {
-        _lyricsNow.add(i > 0 ? _lyrics[i - 1][1] : '');
-        _lyricsNow.add(_lyrics[i][1]);
-        _lyricsNow.add(i < _lyrics.length - 1 ? _lyrics[i + 1][1] : '');
-      }
-    }
-    return _lyricsNow.length > 0
-      ? _lyricsNow 
-      : [
-        '',
-        '正在搜索歌词',
-        ''
-      ];
-  }
 
   @override
   void initState() {
     this.showSongCommentsAction['type'] = playControllerActions.Actions.switchSongComments;
-    timer = Timer.periodic(const Duration(milliseconds: 100), (Void) {
-      setState(() {
-       this.refreshView = !this.refreshView; 
-      });
-    });
     super.initState();
   }
 
   @override
   void dispose() {
-    timer.cancel();
     super.dispose();
   }
 
@@ -151,8 +95,8 @@ class ProcessControllerState extends State<ProcessController> {
             // 之所以要把封面模块也写在进度条模块内是为了解决自动切换歌曲时不刷新封面视图的问题
             Container(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height - MediaQuery.of(context).size.width,
-              margin: EdgeInsets.only(top: MediaQuery.of(context).size.width),
+              height: MediaQuery.of(context).size.width,
+              // margin: EdgeInsets.only(top: MediaQuery.of(context).size.width),
               // child: CachedNetworkImage(
               //   imageUrl: state.playControllerState.playList[state.playControllerState.currentIndex]['al']['picUrl'],
               //   placeholder: (context, url) => Container(
@@ -273,10 +217,100 @@ class ProcessControllerState extends State<ProcessController> {
                   )
                 ],
               )
-            ),
-            Container(
+            )
+          ],
+        );
+      },
+    );
+  }
+}
+
+class PlayLyrics extends StatefulWidget {
+  @override
+  PlayLyricsState createState() => new PlayLyricsState();
+}
+
+class PlayLyricsState extends State<PlayLyrics> {
+  // is touching process bar
+  bool processTouching = false;
+  double processVal = 0.0;
+  Timer timer;
+  // save&&dispatch playProcess
+  Map durationActionMap = new Map();
+  // swtich auto refresh view
+  bool refreshView = true;
+
+  @override
+  void initState() {
+    timer = Timer.periodic(const Duration(milliseconds: 100), (Void) {
+      setState(() {
+       this.refreshView = !this.refreshView; 
+      });
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+
+  double computeProcessVal(String position, String duration) {
+    // current play percentage: 0.55555555
+    double currentPercent = stringDurationToDouble(position) / stringDurationToDouble(duration); 
+    if(!this.processTouching) {
+      this.processVal = currentPercent * 500;
+    }
+    return currentPercent * 500;
+  }
+
+  double stringDurationToDouble (String duration) {
+    return double.parse(duration.substring(0, 2)) * 60 + double.parse(duration.substring(3, 5));
+  }
+  
+  List<String> getLyricsNow(List<dynamic> allLyrics, String timeNow, Duration allTime) {
+    double _timeNow = stringDurationToDouble(timeNow);
+    List<String> _lyricsNow = [];
+    List<dynamic> _lyrics = [];
+    if (allLyrics != null && allLyrics.length > 0) {
+      allLyrics.forEach((item) {
+        List<dynamic> _subLyrics = [];
+        if (item.length != null && item.length == 2 && item[0] != null && item[1] != null) {
+          if (item[0].length > 5) {
+            _subLyrics.add(stringDurationToDouble(item[0].substring(0, 5)));
+          } else {
+            _subLyrics.add('');
+          }
+          _subLyrics.add(item[1]);
+          _lyrics.add(_subLyrics);
+        }
+      });
+    }
+    for (int i = 0;i < _lyrics.length;i ++) {
+      if (_timeNow >= _lyrics[i][0] && (i == _lyrics.length - 1 || _timeNow <= _lyrics[i + 1][0])) {
+        _lyricsNow.add(i > 0 ? _lyrics[i - 1][1] : '');
+        _lyricsNow.add(_lyrics[i][1]);
+        _lyricsNow.add(i < _lyrics.length - 1 ? _lyrics[i + 1][1] : '');
+      }
+    }
+    return _lyricsNow.length > 0
+      ? _lyricsNow 
+      : [
+        '',
+        '正在搜索歌词',
+        ''
+      ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return StoreConnector<AppState, dynamic>(
+      converter: (store) => store.state.playControllerState,
+      builder: (BuildContext context, playControllerState) {
+        return Container(
               width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.only(top: 600),
+              // margin: EdgeInsets.only(top: 600),
               padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
               child: Column(
                 children: <Widget>[
@@ -421,11 +455,8 @@ class ProcessControllerState extends State<ProcessController> {
                   )
                 ],
               )
-            )
-          ],
-        );
-      },
-    );
+            );
+      });             
   }
 }
 
@@ -442,7 +473,8 @@ class PlayController extends StatelessWidget {
     return Container(
         width: MediaQuery.of(context).size.width,
         height: 50,
-        margin: EdgeInsets.fromLTRB(30, MediaQuery.of(context).size.height * 0.87, 30, 0),
+        // margin: EdgeInsets.fromLTRB(30, MediaQuery.of(context).size.height * 0.87, 30, 0),
+        margin: EdgeInsets.only(bottom: 30),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
@@ -522,7 +554,6 @@ class PlayController extends StatelessWidget {
                 this.isRequesting = true;
                 return InkWell(
                   onTap: () async {
-                    // this.songListAction = await getNextSongData(state);
                     this.isRequesting = false;
                     callback();
                   },

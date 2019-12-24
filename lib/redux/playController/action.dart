@@ -21,12 +21,11 @@ enum Actions {
 ThunkAction<AppState> playeNextSong = (Store<AppState> store) async {
   Map _songListActionPayLoad = new Map();
   dynamic state = store.state.playControllerState;
-  dynamic songDetail;
+  Map songDetail = {};
   dynamic _songListAction = new Map();
   dynamic songLyr = await getData('lyric', {
     'id': state.songList[state.songIndex + 1]
   });
-  songDetail['songLyr'] = songLyr;
   if (state.songList.length == state.songIndex + 1) {
     songDetail = await getSongDetail(int.parse(state.songList[0]));
     _songListActionPayLoad['songIndex'] = 0;
@@ -36,6 +35,7 @@ ThunkAction<AppState> playeNextSong = (Store<AppState> store) async {
     _songListActionPayLoad['songIndex'] = state.songIndex + 1;
     _songListActionPayLoad['songUrl'] = 'http://music.163.com/song/media/outer/url?id=' + state.songList[state.songIndex + 1] + '.mp3';
   }
+  songDetail['songLyr'] = songLyr;
   _songListActionPayLoad['songDetail'] = songDetail;
   _songListAction['payLoad'] = _songListActionPayLoad;
   _songListAction['type'] = Actions.nextSong;

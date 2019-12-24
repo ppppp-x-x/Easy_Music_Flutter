@@ -24,10 +24,10 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_){
-      fetchBannner();
-      fetchHotSongList();
-      fetchRecommedSongList();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await fetchBannner();
+      await fetchHotSongList();
+      await fetchRecommedSongList();
       // fetchRecommendVideos();
     });
   }
@@ -36,7 +36,7 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
     StoreProvider.of<AppState>(context).dispatch(switchIsRequestingAction);
   }
 
-  void fetchBannner() async {
+  fetchBannner() async {
     switchIsRequesting();
     var _bannerList = await getData('banner', {});
     switchIsRequesting();
@@ -50,7 +50,7 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
     }
   }
 
-  void fetchHotSongList() async {
+  fetchHotSongList() async {
     switchIsRequesting();
     var _hotSongList = await getData('hotPlaylist', {
       'limit': '10',
@@ -67,7 +67,7 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
     }
   }
 
-  void fetchRecommedSongList() async {
+  fetchRecommedSongList() async {
     switchIsRequesting();
     var _recommendSongList = await getData('recommendList', {});
     switchIsRequesting();
