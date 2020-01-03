@@ -39,7 +39,7 @@ class SearchState extends State<Search> {
     super.dispose();
   }
 
-  void Submit(String str) {
+  void submit(String str) {
     if(str != lastSearchStr) {
       lastSearchStr = str;
       getSearchList(str);
@@ -80,7 +80,7 @@ class SearchState extends State<Search> {
         GestureDetector(
           onTap: () {
             this.searchController.text = _searchHot[i]['first'];
-            this.Submit(this.searchController.text);
+            this.submit(this.searchController.text);
           },
           child: Container(
             padding: EdgeInsets.fromLTRB(8, 3, 8, 3),
@@ -136,7 +136,7 @@ class SearchState extends State<Search> {
               fillColor: Colors.black,
               contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 8),
             ),
-            onSubmitted: this.Submit,
+            onSubmitted: this.submit,
           ),
           actions: <Widget>[
             Container(
@@ -267,8 +267,7 @@ class SearchState extends State<Search> {
               );
             },
           )
-        ),
-        bottomNavigationBar: CustomBottomNavigationBar(),
+        )
       ),
     );
   }
