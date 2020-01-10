@@ -13,7 +13,7 @@ class AppState {
 
 AppState appReducer(AppState state, action) {
   return AppState(
-    playControllerState: PlayControllerReducer(state.playControllerState, action),
-    commonState: CommonReducer(state.commonState, action)
+    playControllerState: playControllerReducer(state.playControllerState, action),
+    commonState: commonReducer(state.commonState, action)
   );
 }

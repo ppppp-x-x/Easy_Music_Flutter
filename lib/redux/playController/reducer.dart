@@ -23,7 +23,7 @@ List<dynamic> combinLyric (String source) {
   return outputLyric;
 }
 
-PlayController PlayControllerReducer(PlayController state, action) {
+PlayController playControllerReducer(PlayController state, action) {
   if(action != null) {
     if (action['type'] == Actions.play) {
       state.audioPlayer.play(state.songUrl);

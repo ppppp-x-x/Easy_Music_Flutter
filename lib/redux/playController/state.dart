@@ -18,9 +18,7 @@ class PlayController {
   set songIndex(val) => _songIndex = val;
 
   // 当前所播放的歌单（只包含歌曲Id）
-  dynamic _songList;
-  get songList => _songList;
-  set songList(val) => _songList = val;
+  dynamic songList;
 
   // 当前用户喜欢歌曲
   List<dynamic> _collectSongs;
@@ -96,10 +94,10 @@ class PlayController {
       当前播放歌曲长度等于当前播放进度
       精确度：秒
       */
-      if (stringDurationToDouble(songPosition.toString().substring(2, 7)) == stringDurationToDouble(_audioPlayer.duration.toString().substring(2, 7)) && _songList != null && _songList.length > 1) {
+      if (stringDurationToDouble(songPosition.toString().substring(2, 7)) == stringDurationToDouble(_audioPlayer.duration.toString().substring(2, 7)) && songList != null && songList.length > 1) {
         _audioPlayer.stop();
         _playing = false;
-        goNextSong(_songIndex == _songList.length - 1 ? _songList[0] : _songList[_songIndex + 1]);
+        goNextSong(_songIndex == songList.length - 1 ? songList[0] : songList[_songIndex + 1]);
         }  
     });
   } 
