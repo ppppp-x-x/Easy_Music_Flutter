@@ -110,8 +110,8 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                             ? Container(
                                 width: MediaQuery.of(context).size.width,
                                 height: MediaQuery.of(context).size.height,
-                                color: Color.fromRGBO(0, 0, 0, 0.3),
-                                child: SpinKitDualRing(
+                                color: Color.fromRGBO(0, 0, 0, 0.1),
+                                child: SpinKitDoubleBounce(
                                   color: Colors.red[300],
                                 ),
                               )

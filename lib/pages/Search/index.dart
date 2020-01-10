@@ -9,7 +9,6 @@ import './../../utils//api.dart';
 import './../../utils//tools.dart';
 
 import './../../redux/playController/action.dart' as playControllerActions;
-import './../../components/customBottomNavigationBar.dart';
 
 class Search extends StatefulWidget {
   @override
@@ -83,8 +82,8 @@ class SearchState extends State<Search> {
             this.submit(this.searchController.text);
           },
           child: Container(
-            padding: EdgeInsets.fromLTRB(8, 3, 8, 3),
-            height: 22,
+            padding: EdgeInsets.fromLTRB(18, 13, 18, 13),
+            height: 42,
             decoration: BoxDecoration(
               color: randomColor(),
               borderRadius: BorderRadius.circular(8)
@@ -94,7 +93,7 @@ class SearchState extends State<Search> {
               maxLines: 1,
               style: TextStyle(
                 color: Colors.black87,
-                fontSize: 10
+                fontSize: 12
               ),
             ),
           )
@@ -116,7 +115,14 @@ class SearchState extends State<Search> {
               Icons.arrow_back
             ),
             onPressed: () {
-              Navigator.pop(context);
+              if (searched) {
+                this.setState(() {
+                  searched = false;
+                  searchList = [];
+                });
+              } else {
+                Navigator.pop(context);
+              }
             },
           ),
           title: TextField(
@@ -131,18 +137,24 @@ class SearchState extends State<Search> {
               hintText: '歌名/歌手/歌单',
               hintStyle: TextStyle(
                 color: Colors.black,
-                fontSize: 12
+                fontSize: 16
               ),
               fillColor: Colors.black,
-              contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 8),
+              contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 4),
             ),
-            onSubmitted: this.submit,
+            onSubmitted: submit,
           ),
           actions: <Widget>[
             Container(
-              margin: EdgeInsets.fromLTRB(0, 5, 10, 0),
-              child: Icon(
-                Icons.search
+              margin: EdgeInsets.fromLTRB(0, 5, 5, 0),
+              child: IconButton(
+                color: Colors.black,
+                icon: Icon(
+                  Icons.search,                  
+                ),
+                onPressed: () {
+                  submit(lastSearchStr);
+                },
               )
             )
           ],
@@ -151,7 +163,7 @@ class SearchState extends State<Search> {
         showSpinner
         ?
         Container(
-          child:  SpinKitDualRing(
+          child:  SpinKitDoubleBounce(
             color: Colors.red,
           )
         )
@@ -233,6 +245,9 @@ class SearchState extends State<Search> {
                                         searchList[index]['name'],
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500
+                                        ),
                                       ),
                                     ),
                                     Container(

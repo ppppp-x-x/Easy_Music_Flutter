@@ -70,8 +70,8 @@ class PlayListState extends State<PlayList> {
             ?
             Container(
               child: Center(
-                child:  SpinKitCubeGrid(
-                  color: Colors.red,
+                child:  SpinKitDoubleBounce(
+                  color: Colors.red[300],
                 )
               ),
             )
@@ -111,71 +111,73 @@ class PlayListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        CachedNetworkImage(
-          imageUrl: backgroundImageUrl,
-          width: MediaQuery.of(context).size.width,
-          height: 230,
-          fit: BoxFit.fitWidth,
-          placeholder: (context, url) => Container(
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0, 35, 0, 0),
+      child: Stack(
+        children: <Widget>[
+          CachedNetworkImage(
+            imageUrl: backgroundImageUrl,
             width: MediaQuery.of(context).size.width,
             height: 230,
-            color: Colors.grey,
-          ),
-        ),
-        BackdropFilter(
-          filter: ui.ImageFilter.blur(sigmaX: 30.0, sigmaY: 30.0),
-          child: Container(
-            color: Colors.white.withOpacity(0.3),
-            width: MediaQuery.of(context).size.width,
-            height: 305,
-          )
-        ),
-        Container(
-          margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-          child: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(
-              Icons.arrow_back_ios,
-              size: 18,
-              color: Colors.black26,
+            fit: BoxFit.fitWidth,
+            placeholder: (context, url) => Container(
+              width: MediaQuery.of(context).size.width,
+              height: 230,
+              color: Colors.grey,
             ),
           ),
-        ),
-        Container(
-          padding: EdgeInsets.fromLTRB(40, 50, 40, 0),
-          child: Column(
-            children: <Widget>[
-              PlayListCardInfo(
-                this.backgroundImageUrl,
-                this.title,
-                this.creatorName,
-                this.tags
+          BackdropFilter(
+            filter: ui.ImageFilter.blur(sigmaX: 30.0, sigmaY: 30.0),
+            child: Container(
+              color: Colors.white.withOpacity(0.3),
+              width: MediaQuery.of(context).size.width,
+              height: 305,
+            )
+          ),
+          Container(
+            child: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(
+                Icons.arrow_back,
+                size: 26,
+                color: Colors.black87,
               ),
-              Container(
-                width: MediaQuery.of(context).size.width - 60,
-                constraints: BoxConstraints(
-                  minHeight: 50
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.fromLTRB(40, 50, 40, 0),
+            child: Column(
+              children: <Widget>[
+                PlayListCardInfo(
+                  this.backgroundImageUrl,
+                  this.title,
+                  this.creatorName,
+                  this.tags
                 ),
-                margin: EdgeInsets.only(top: 20),
-                child: Text(
-                  this.description,
-                  maxLines: 3,
-                  overflow: TextOverflow.fade,
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontSize: 11
+                Container(
+                  width: MediaQuery.of(context).size.width - 60,
+                  constraints: BoxConstraints(
+                    minHeight: 50
+                  ),
+                  margin: EdgeInsets.only(top: 20),
+                  child: Text(
+                    this.description,
+                    maxLines: 3,
+                    overflow: TextOverflow.fade,
+                    style: TextStyle(
+                      color: Colors.black54,
+                      fontSize: 11
+                    ),
                   ),
                 ),
-              ),
-              PlayListCardButtons()
-            ],
+                PlayListCardButtons()
+              ],
+            )
           )
-        )
-      ],
+        ],
+      )
     );
   }
 }
