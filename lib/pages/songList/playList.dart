@@ -9,6 +9,7 @@ import './../../redux/playController/action.dart' as playControllerActions;
 import './../../redux/commonController/action.dart';
 
 import './../../components/customBottomNavigationBar.dart';
+import './../../components/NavigatorBackBar.dart';
 
 import './../../utils/commonFetch.dart';
 import './../../utils//api.dart';
@@ -106,48 +107,43 @@ class PlayListCard extends StatelessWidget {
   final String creatorName;
   final List<dynamic> tags;
   final String description;
+  final double blurHeight = 300;
 
   PlayListCard(this.backgroundImageUrl, this.title, this.creatorName, this.tags, this.description);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(0, 35, 0, 0),
+      padding: EdgeInsets.only(top: 0),
       child: Stack(
         children: <Widget>[
           CachedNetworkImage(
             imageUrl: backgroundImageUrl,
             width: MediaQuery.of(context).size.width,
-            height: 230,
+            height: blurHeight,
             fit: BoxFit.fitWidth,
             placeholder: (context, url) => Container(
               width: MediaQuery.of(context).size.width,
-              height: 230,
+              height: blurHeight,
               color: Colors.grey,
             ),
           ),
           BackdropFilter(
-            filter: ui.ImageFilter.blur(sigmaX: 30.0, sigmaY: 30.0),
+            filter: ui.ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
             child: Container(
               color: Colors.white.withOpacity(0.3),
               width: MediaQuery.of(context).size.width,
-              height: 305,
+              height: blurHeight,
             )
           ),
           Container(
-            child: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: Icon(
-                Icons.arrow_back,
-                size: 26,
-                color: Colors.black87,
-              ),
-            ),
+            margin: EdgeInsets.only(top: 15),
+            child: NavigatorBackBar(() {
+              Navigator.pop(context);
+            }),
           ),
           Container(
-            padding: EdgeInsets.fromLTRB(40, 50, 40, 0),
+            padding: EdgeInsets.fromLTRB(40, 60, 40, 0),
             child: Column(
               children: <Widget>[
                 PlayListCardInfo(
@@ -167,7 +163,7 @@ class PlayListCard extends StatelessWidget {
                     maxLines: 3,
                     overflow: TextOverflow.fade,
                     style: TextStyle(
-                      color: Colors.black54,
+                      color: Colors.black87,
                       fontSize: 11
                     ),
                   ),
@@ -175,6 +171,18 @@ class PlayListCard extends StatelessWidget {
                 PlayListCardButtons()
               ],
             )
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: 15,
+            margin: EdgeInsets.only(top: blurHeight - 15),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(15),
+                topRight: Radius.circular(15)
+              ),
+              color: Colors.white
+            ),
           )
         ],
       )
@@ -275,7 +283,7 @@ class PlayListCardInfo extends StatelessWidget {
 class PlayListCardButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.fromLTRB(0, 20, 0, 20),
+      margin: EdgeInsets.only(top: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -331,12 +339,11 @@ class PlayListCardButtons extends StatelessWidget {
 }
 
 class PlayListSongs extends StatefulWidget {
-  dynamic playListData;
-  int currentIndex;
-  Function switchIsRequesting;
-  PlayListSongs(this.playListData, this.currentIndex, this.switchIsRequesting);
+  final dynamic playListData;
+  final int currentIndex;
+  final Function switchIsRequesting;
 
-  @override
+  PlayListSongs(this.playListData, this.currentIndex, this.switchIsRequesting);
   PlayListSongsState createState () => PlayListSongsState(playListData, currentIndex, switchIsRequesting);
 }
 
@@ -361,10 +368,7 @@ class PlayListSongsState extends State<PlayListSongs> {
   Widget build(BuildContext context) {
     return playListData == null
     ?
-    Container(
-      width: 0,
-      height: 0,
-    )
+    Container()
     :
     Container(
       color: Colors.white,
@@ -411,74 +415,69 @@ class PlayListSongsState extends State<PlayListSongs> {
                           this.isRequesting = false;
                           callback();
                         },
-                        child:
-                          Column(
+                        child: Container(
+                          margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
+                          child: Row(
                             children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  state.playControllerState.playList.length > 0 && state.playControllerState.playList[state.playControllerState.currentIndex] != null && state.playControllerState.playList[state.playControllerState.currentIndex]['id'] == playListData['tracks'][index]['id']
-                                  ?
-                                  Container(
-                                    margin: EdgeInsets.fromLTRB(15, 0, 15, 0),
-                                    width: 15,
-                                    child: Image.asset('assets/images/playingAudio.png')
-                                  )
-                                  :
-                                  Container(
-                                    margin: EdgeInsets.only(left: 15),
-                                    width: 30,
-                                    child: Text(
-                                      (index + 1).toString(),
+                              state.playControllerState.playList.length > 0 && state.playControllerState.playList[state.playControllerState.currentIndex] != null && state.playControllerState.playList[state.playControllerState.currentIndex]['id'] == playListData['tracks'][index]['id']
+                              ?
+                              Container(
+                                margin: EdgeInsets.only(right: 15),
+                                width: 15,
+                                child: Image.asset('assets/images/playingAudio.png')
+                              )
+                              :
+                              Container(
+                                width: 30,
+                                child: Text(
+                                  (index + 1).toString(),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black54
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                width: MediaQuery.of(context).size.width - 90,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Container(
+                                      child: Text(
+                                        playListData['tracks'][index]['name'],
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      child: Text(
+                                        playListData['tracks'][index]['ar'][0]['name'],
+                                        maxLines: 1,
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.black54
                                       ),
-                                    ),
-                                  ),
-                                  Container(
-                                    width: MediaQuery.of(context).size.width - 110,
-                                    margin: EdgeInsets.only(left: 20),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Container(
-                                          child: Text(
-                                            playListData['tracks'][index]['name'],
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w500
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          child: Text(
-                                            playListData['tracks'][index]['ar'][0]['name'],
-                                            maxLines: 1,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.black54
-                                          ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 20,
-                                    child: Image.asset(
-                                      'assets/images/more_playList.png',
-                                      width: 20,
-                                      height: 20,
-                                    ),
-                                  )
-                                ],
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
-                              Divider()
+                              Container(
+                                width: 20,
+                                child: Image.asset(
+                                  'assets/images/more_playList.png',
+                                  width: 20,
+                                  height: 20,
+                                ),
+                              )
                             ],
                           )
+                        )
                       );
                     }
                   ) 
