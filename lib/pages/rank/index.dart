@@ -115,8 +115,7 @@ class RankState extends State<Rank> with AutomaticKeepAliveClientMixin{
                     )
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 5
-                    ),
+                    margin: EdgeInsets.only(top: 8),
                     child: Text(
                       allRankList[index]['name'],
                       maxLines: 1,

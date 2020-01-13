@@ -10,6 +10,7 @@ import './../../redux/index.dart';
 import './../../redux/playController/action.dart' as playControllerActions;
 
 import './../../components/customBottomNavigationBar.dart';
+import './../../components//navigatorBackBar.dart';
 
 class RankList extends StatefulWidget {
   final int rankListId;
@@ -55,8 +56,8 @@ class RankListState extends State<RankList> {
         body: 
         rankDec == null
         ?
-        SpinKitDualRing(
-          color: Colors.red,
+        SpinKitDoubleBounce(
+          color: Colors.red[300],
         )
         :
         Material(
@@ -126,7 +127,7 @@ class RankListState extends State<RankList> {
                               },
                               child: Container(
                                 width: MediaQuery.of(context).size.width - 100,
-                                margin: EdgeInsets.only(left: 20),
+                                padding: EdgeInsets.fromLTRB(0, 10, 0, 5),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.max,
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -158,6 +159,7 @@ class RankListState extends State<RankList> {
                       ),
                       Container(
                         width: 20,
+                        margin: EdgeInsets.only(right: 10),
                         child: Image.asset(
                           'assets/images/more_playList.png',
                           width: 20,
@@ -180,8 +182,8 @@ class RankListState extends State<RankList> {
 }
 
 class RankDes extends StatelessWidget {
-  Map<String, dynamic> rankDec;
-  RankDes(rankDec);
+  final Map rankDec;
+  RankDes(this.rankDec);
 
   Widget build(BuildContext context) {
     return Container(
@@ -233,7 +235,10 @@ class RankDes extends StatelessWidget {
                 )
               ],
             ),
-          )
+          ),
+          NavigatorBackBar(() {
+            Navigator.pop(context);
+          })
         ],
       )
     );
