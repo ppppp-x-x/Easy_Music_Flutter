@@ -19,7 +19,7 @@ class HomeBanner extends StatelessWidget {
     Container(
       width: MediaQuery.of(context).size.width,
       height: 160,
-      margin: EdgeInsets.only(top: 20),
+      margin: EdgeInsets.only(top:8),
       child: Swiper(
         itemBuilder: (BuildContext context, int index) {
           return Container(
@@ -29,11 +29,11 @@ class HomeBanner extends StatelessWidget {
               child: CachedNetworkImage(
                 imageUrl: bannerList[index]['imageUrl'],
                 width: MediaQuery.of(context).size.width * 0.9,
-                height: 160,
+                height: MediaQuery.of(context).size.width / 3,
                 fit: BoxFit.cover,
                 placeholder: (context, url) => Container(
                   width: MediaQuery.of(context).size.width * 0.9,
-                  height: 160,
+                  height: MediaQuery.of(context).size.width / 3,
                   color: Colors.grey,
                 ),
               ),

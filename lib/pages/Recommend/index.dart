@@ -6,7 +6,7 @@ import './../../redux/index.dart';
 
 import './../../utils//api.dart';
 
-import './../../components/banners.dart';
+import './../../components/HomeBanner.dart';
 
 import './recommendListRow.dart';
 
@@ -20,6 +20,9 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
   List<dynamic> hotSongList;
   List<dynamic> recommendSongList;
   // var recommendVideos;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -104,7 +107,7 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Banners(bannerList),
+          HomeBanner(bannerList),
           Menu(),
           Divider(),
           RecommendList(hotSongList, '最热歌单'),
@@ -113,12 +116,49 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
       )
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
 
 class Menu extends StatelessWidget {
+  Widget createMenu (String title, String iconUrl) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          width: 40,
+          height: 40,
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(50),
+            color: Colors.red[600],
+            boxShadow: <BoxShadow> [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 1,
+                spreadRadius: 1,
+                offset: Offset(0, 3)
+              )
+            ]
+          ),
+          child: Image.asset(
+            iconUrl,
+            fit: BoxFit.cover,
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.only(top: 8),
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: 13,
+              color: Colors.black87
+            ),
+          )
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -128,117 +168,10 @@ class Menu extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                width: 50,
-                height: 50,
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color: Color(0XFFFFD700),
-                  border: Border.all(
-                    width: 1,
-                    color: Color(0XFFFFD900)
-                  ),
-                  boxShadow: <BoxShadow> [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 1,
-                      spreadRadius: 1,
-                      offset: Offset(0, 3)
-                    )
-                  ]
-                ),
-                child: Image.asset(
-                  'assets/images/musicBox.png',
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 8),
-                child: Text(
-                  '私人FM'
-                )
-              )
-            ],
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                width: 50,
-                height: 50,
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color: Colors.blue[300],
-                  border: Border.all(
-                    width: 1,
-                    color: Colors.blue[400]
-                  ),
-                  boxShadow: <BoxShadow> [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 1,
-                      spreadRadius: 1,
-                      offset: Offset(0, 3)
-                    )
-                  ]
-                ),
-                child: Image.asset(
-                  'assets/images/date.png',
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 8),
-                child: Text(
-                  '每日推荐'
-                )
-              )
-            ],
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                width: 50,
-                height: 50,
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color: Colors.red,
-                  border: Border.all(
-                    width: 1,
-                    color: Colors.red[400],
-                  ),
-                  boxShadow: <BoxShadow> [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 1,
-                      spreadRadius: 1,
-                      offset: Offset(0, 3)
-                    )
-                  ]
-                ),
-                child: Image.asset(
-                  'assets/images/rank.png',
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 8),
-                child: Text(
-                  '排行榜'
-                )
-              )
-            ],
-          )
+          createMenu('歌单', 'assets/images/playList.png'),
+          createMenu('私人FM', 'assets/images/musicBox.png'),
+          createMenu('每日推荐', 'assets/images/date.png'),
+          createMenu('排行榜', 'assets/images/rank.png')
         ],
       )
     );
