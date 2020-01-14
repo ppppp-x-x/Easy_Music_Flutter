@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class recommendVideoRow extends StatelessWidget {
+class RecommendVideoRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: <Widget>[

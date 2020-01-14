@@ -4,12 +4,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import './../SongList/playList.dart';
 
 class RecommendList extends StatelessWidget {
-  List recommendList;
-  String listTitle;
+  final List recommendList;
+  final String listTitle;
+  final String des;
 
-  RecommendList(this.recommendList, this.listTitle);
+  RecommendList(this.recommendList, this.listTitle, this.des);
 
-  Widget createRowList (List<Map<String, dynamic>> rowData, String rowCount) {
+  Widget createSongListRow (List<Map<String, dynamic>> rowData) {
     return SizedBox(
       height: 170,
       child: ListView.builder(
@@ -35,26 +36,23 @@ class RecommendList extends StatelessWidget {
                       Container(
                         child: ClipRRect(
                         borderRadius: BorderRadius.circular(5),
-                        child: Hero(
-                          tag: rowCount + index.toString() + this.listTitle,
-                          child: CachedNetworkImage(
-                            imageUrl: rowData[index]['coverImgUrl'] ?? rowData[index]['picUrl'],
+                        child: CachedNetworkImage(
+                          imageUrl: rowData[index]['coverImgUrl'] ?? rowData[index]['picUrl'],
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => Container(
                             width: 100,
                             height: 100,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => Container(
-                              width: 100,
-                              height: 100,
-                              color: Colors.grey,
-                            ),
+                            color: Colors.grey,
                           ),
-                        )
+                        ),
                       ),
                       ),
                       Container(
                         width: 100,
                         height: 100,
-                        padding: EdgeInsets.fromLTRB(0, 5, 5, 5),
+                        padding: EdgeInsets.fromLTRB(0, 3, 5, 5),
                         alignment: Alignment.topRight,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
@@ -68,7 +66,8 @@ class RecommendList extends StatelessWidget {
                           (rowData[index]['playCount'] / 10000).toStringAsFixed(0) + '万',
                           textAlign: TextAlign.right,
                           style: TextStyle(
-                            color: Colors.grey[200]
+                            color: Colors.grey[200],
+                            fontSize: 11
                           ),
                         ),
                       )
@@ -82,7 +81,7 @@ class RecommendList extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                       style: TextStyle(
-                        fontSize: 12
+                        fontSize: 11
                       ),
                     ),
                   )
@@ -95,58 +94,67 @@ class RecommendList extends StatelessWidget {
     );
   }
 
-  List<Widget> createRow () {
-    int count = 0;
-    int rowCount = 0;
+  List<Widget> createRecommendSongListRow () {
     List<Map<String, dynamic>> rowData = [];
-    List<Widget> allRowData = [];
-    allRowData.add(
-      Container(
-        padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Container(
-                  width: 5,
-                  height: 20,
-                  color: Colors.red,
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 5),
-                  child: Text(
-                    this.listTitle,
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black87
-                    ),
+    List<Widget> allRowData = [Container(
+      padding: EdgeInsets.fromLTRB(20, 0, 15, 0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                child: Text(
+                  listTitle,
+                  style: TextStyle(
+                    color: Colors.black45,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w100
                   ),
-                )
-              ],
-            ),
-            Text(
-              '更多',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.red
+                ),
               ),
-            )
-          ],
-        ),
+              Container(
+                child: Text(
+                  des,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Container(
+            padding: EdgeInsets.fromLTRB(5, 1, 5, 1),
+            child: Text(
+              '查看更多',
+              style: TextStyle(
+                fontSize: 10,
+                color: Colors.black54,
+                fontWeight: FontWeight.w100
+              ),
+            ),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.black12,
+                width: 1,
+                style: BorderStyle.solid
+              ),
+              borderRadius: BorderRadius.circular(7)
+            ),
+          )
+        ],
       ),
-    );
+    )];
     for(int i = 0;i < this.recommendList.length; i++) {
-      count ++;
       rowData.add(this.recommendList[i]);
-      if (this.recommendList.length <= i || count == 9) {
-        rowCount ++;
-        count = 0;
-        allRowData.add(createRowList(rowData, rowCount.toString()));
-        rowData = [];
+      if (this.recommendList.length <= i || i == 4) {
+        allRowData.add(createSongListRow(rowData));
+        return allRowData;
       }
     }
-    return allRowData;
   }
 
   @override
@@ -156,7 +164,7 @@ class RecommendList extends StatelessWidget {
     Container()
     :
     Column(
-      children: createRow()
+      children: createRecommendSongListRow()
     );
   }
 }

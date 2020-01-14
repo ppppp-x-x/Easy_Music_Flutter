@@ -109,9 +109,15 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
         children: <Widget>[
           HomeBanner(bannerList),
           Menu(),
-          Divider(),
-          RecommendList(hotSongList, '最热歌单'),
-          RecommendList(recommendSongList, '推荐歌单')
+          Container(
+            margin: EdgeInsets.only(top: 20),
+            child: Column(
+              children: <Widget>[
+                RecommendList(hotSongList, '最热歌单', '最新流行歌单'),
+                RecommendList(recommendSongList, '推荐歌单', '为您精挑细选')
+              ],
+            ),
+          )
         ],
       )
     );
