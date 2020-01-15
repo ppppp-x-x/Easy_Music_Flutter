@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class NavigatorBackBar extends StatelessWidget {
   final Function callback;
-  NavigatorBackBar(this.callback);
+  final Color iconColor;
+  NavigatorBackBar(this.callback, this.iconColor);
 
   Widget build(BuildContext context) {
     return Row(
@@ -15,7 +16,7 @@ class NavigatorBackBar extends StatelessWidget {
             icon: Icon(
               Icons.arrow_back,
               size: 26,
-              color: Colors.black87
+              color: iconColor??Colors.white
             ),
           ),
         ),

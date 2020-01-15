@@ -25,6 +25,9 @@ List<dynamic> combinLyric (String source) {
 
 PlayController playControllerReducer(PlayController state, action) {
   if(action != null) {
+    if (action['type'] == Actions.nextSong || action['type'] == Actions.addPlayList) {
+      state.coverMainColor = action['payload']['coverMainColor'];
+    }
     if (action['type'] == Actions.play) {
       state.audioPlayer.play(state.songUrl);
       state.playing = true;
@@ -37,14 +40,14 @@ PlayController playControllerReducer(PlayController state, action) {
       if (state.playing) {
         state.audioPlayer.stop();
       }
-      if (action['payLoad']['songDetail']['songLyr']['lrc'] != null && action['payLoad']['songDetail']['songLyr']['lrc']['lyric'] != null) {
-        action['payLoad']['songDetail']['lyric'] = combinLyric(action['payLoad']['songDetail']['songLyr']['lrc']['lyric']);
+      if (action['payload']['songDetail']['songLyr']['lrc'] != null && action['payload']['songDetail']['songLyr']['lrc']['lyric'] != null) {
+        action['payload']['songDetail']['lyric'] = combinLyric(action['payload']['songDetail']['songLyr']['lrc']['lyric']);
       }
       state.playing = false;
-      state.songIndex = action['payLoad']['songIndex'];
-      state.playList.add(action['payLoad']['songDetail']);
+      state.songIndex = action['payload']['songIndex'];
+      state.playList.add(action['payload']['songDetail']);
       state.currentIndex = state.currentIndex + 1;
-      state.songUrl = action['payLoad']['songUrl'];
+      state.songUrl = action['payload']['songUrl'];
       state.audioPlayer.play(state.songUrl);
       state.playing = true;
     }
@@ -53,22 +56,23 @@ PlayController playControllerReducer(PlayController state, action) {
         state.audioPlayer.stop();
         state.playing = false;
       }
-      if (action['payLoad']['songList'] != null) {
-        state.songList = action['payLoad']['songList'];
+      if (action['payload']['songList'] != null) {
+        state.songList = action['payload']['songList'];
       }
-      if (action['payLoad']['songDetail']['songLyr']['lrc'] != null && action['payLoad']['songDetail']['songLyr']['lrc']['lyric'] != null) {
-        action['payLoad']['songDetail']['lyric'] = combinLyric(action['payLoad']['songDetail']['songLyr']['lrc']['lyric']);
+      if (action['payload']['songDetail']['songLyr']['lrc'] != null && action['payload']['songDetail']['songLyr']['lrc']['lyric'] != null) {
+        action['payload']['songDetail']['lyric'] = combinLyric(action['payload']['songDetail']['songLyr']['lrc']['lyric']);
       }
-      state.songIndex = action['payLoad']['songIndex'];
-      state.playList.add(action['payLoad']['songDetail']);
+      state.songIndex = action['payload']['songIndex'];
+      state.playList.add(action['payload']['songDetail']);
       state.currentIndex = state.currentIndex + 1;
-      state.songUrl = action['payLoad']['songUrl'];
+      state.songUrl = action['payload']['songUrl'];
       state.audioPlayer.play(state.songUrl);
       state.playing = true;
     }
     if (action['type'] == Actions.playSeek) {
-      if(action['payLoad'] > 0) {
-        state.audioPlayer.seek(action['payLoad']);
+      if(action['payload'] != null) {
+        print(action['payload']);
+        state.audioPlayer.seek(action['payload']);
       }
     }
     if (action['type'] == Actions.switchSongComments) {

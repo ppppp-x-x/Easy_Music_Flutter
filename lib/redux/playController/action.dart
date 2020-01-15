@@ -1,7 +1,8 @@
 import 'package:redux/redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
-import './../index.dart';
+import 'package:color_thief_flutter/color_thief_flutter.dart';
 
+import './../index.dart';
 import './../../utils/commonFetch.dart';
 import './../../utils//api.dart';
 
@@ -19,7 +20,7 @@ enum Actions {
 }
 
 ThunkAction<AppState> playeNextSong = (Store<AppState> store) async {
-  Map _songListActionPayLoad = new Map();
+  Map _songListActionPayload = new Map();
   dynamic state = store.state.playControllerState;
   Map songDetail = {};
   dynamic _songListAction = new Map();
@@ -28,16 +29,26 @@ ThunkAction<AppState> playeNextSong = (Store<AppState> store) async {
   });
   if (state.songList.length == state.songIndex + 1) {
     songDetail = await getSongDetail(int.parse(state.songList[0]));
-    _songListActionPayLoad['songIndex'] = 0;
-    _songListActionPayLoad['songUrl'] = 'http://music.163.com/song/media/outer/url?id=' + state.songList[0] + '.mp3';
+    _songListActionPayload['songIndex'] = 0;
+    _songListActionPayload['songUrl'] = 'http://music.163.com/song/media/outer/url?id=' + state.songList[0] + '.mp3';
   } else {
     songDetail = await getSongDetail(int.parse(state.songList[state.songIndex + 1]));
-    _songListActionPayLoad['songIndex'] = state.songIndex + 1;
-    _songListActionPayLoad['songUrl'] = 'http://music.163.com/song/media/outer/url?id=' + state.songList[state.songIndex + 1] + '.mp3';
+    _songListActionPayload['songIndex'] = state.songIndex + 1;
+    _songListActionPayload['songUrl'] = 'http://music.163.com/song/media/outer/url?id=' + state.songList[state.songIndex + 1] + '.mp3';
   }
   songDetail['songLyr'] = songLyr;
-  _songListActionPayLoad['songDetail'] = songDetail;
-  _songListAction['payLoad'] = _songListActionPayLoad;
+  _songListActionPayload['songDetail'] = songDetail;
+  List<int> coverMainColor = await getColorFromUrl(songDetail['al']['picUrl']);
+  _songListActionPayload['coverMainColor'] = coverMainColor;
+  _songListAction['payload'] = _songListActionPayload;
   _songListAction['type'] = Actions.nextSong;
   store.dispatch(_songListAction);
 };
+
+ThunkAction<AppState> addPlayList (action) {
+  return (Store<AppState> store) async {
+    List<int> coverMainColor = await getColorFromUrl(action['payload']['songDetail']['al']['picUrl']);
+    action['payload']['coverMainColor'] = coverMainColor;
+    store.dispatch(action);
+  };
+}

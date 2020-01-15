@@ -8,7 +8,7 @@ Map api = {
   'banner': 'banner',
   'hotPlaylist': 'top/playlist',
   'recommendList': 'personalized',
-  'hotSearch': 'search/hot',
+  'hotSearch': 'search/hot/detail',
   'search': 'search',
   'playlistDetail': 'playlist/detail',
   'songDetail': 'song/detail',

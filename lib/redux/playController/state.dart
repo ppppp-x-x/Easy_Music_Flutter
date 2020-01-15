@@ -1,4 +1,4 @@
-import 'package:audioplayer/audioplayer.dart';
+import 'package:audioplayers/audioplayers.dart';
 import './../../utils/commonFetch.dart';
 import './../../utils//api.dart';
 
@@ -11,6 +11,16 @@ class PlayController {
   // 已经播放过或者正在添加的歌曲数组（包含歌曲详细信息）
   List _playList;
   get playList => _playList;
+
+  // 当前所播放的歌曲封面主色调
+  List<int> _coverMainColor;
+  get coverMainColor => _coverMainColor;
+  set coverMainColor(val) => _coverMainColor = val;
+
+  // 当前所播放的歌曲长度
+  dynamic _duration;
+  get duration => _duration;
+  set duration(val) => _duration = val;
 
   // 当前所播放的歌单位置索引
   int _songIndex;
@@ -83,9 +93,13 @@ class PlayController {
     _playing = false;
     _showSongComments = false;
     songUrl = '';
+    _coverMainColor = [0, 0, 0];
     _audioPlayer = new AudioPlayer();
+    _audioPlayer.onDurationChanged.listen((d) {
+      _duration = d;
+    });
     _audioPlayer.onPlayerStateChanged.listen((d) {
-      print(_audioPlayer.duration);
+      print(_duration);
     });
     _audioPlayer.onAudioPositionChanged.listen((d) {
       songPosition = d;
@@ -94,7 +108,7 @@ class PlayController {
       当前播放歌曲长度等于当前播放进度
       精确度：秒
       */
-      if (stringDurationToDouble(songPosition.toString().substring(2, 7)) == stringDurationToDouble(_audioPlayer.duration.toString().substring(2, 7)) && songList != null && songList.length > 1) {
+      if (stringDurationToDouble(songPosition.toString().substring(2, 7)) == stringDurationToDouble(_duration.toString().substring(2, 7)) && songList != null && songList.length > 1) {
         _audioPlayer.stop();
         _playing = false;
         goNextSong(_songIndex == songList.length - 1 ? songList[0] : songList[_songIndex + 1]);
@@ -102,5 +116,5 @@ class PlayController {
     });
   } 
 
-  PlayController(this._playing, this._playList, this._currentIndex);
+  PlayController(this._playing, this._playList, this._currentIndex, this._coverMainColor);
 }

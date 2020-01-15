@@ -112,16 +112,16 @@ class RankListState extends State<RankList> {
                                 });
                                 songDetail['songLyr'] = songLyr;
                                 playListAction = new Map();
-                                var _playListActionPayLoad = new Map();
+                                var _playListActionPayload = new Map();
                                 dynamic _playList = [];
                                 for(int j = 0;j < rankTracks.length;j ++) {
                                   _playList.add(rankTracks[j]['id'].toString());
                                 }
-                                _playListActionPayLoad['songList'] = _playList;
-                                _playListActionPayLoad['songIndex'] = index;
-                                _playListActionPayLoad['songDetail'] = songDetail;
-                                _playListActionPayLoad['songUrl'] = 'http://music.163.com/song/media/outer/url?id=' + rankTracks[index - 1]['id'].toString() + '.mp3';
-                                playListAction['payLoad'] = _playListActionPayLoad;
+                                _playListActionPayload['songList'] = _playList;
+                                _playListActionPayload['songIndex'] = index;
+                                _playListActionPayload['songDetail'] = songDetail;
+                                _playListActionPayload['songUrl'] = 'http://music.163.com/song/media/outer/url?id=' + rankTracks[index - 1]['id'].toString() + '.mp3';
+                                playListAction['payload'] = _playListActionPayload;
                                 playListAction['type'] = playControllerActions.Actions.addPlayList;
                                 callback();
                               },
@@ -238,7 +238,7 @@ class RankDes extends StatelessWidget {
           ),
           NavigatorBackBar(() {
             Navigator.pop(context);
-          })
+          }, Colors.white)
         ],
       )
     );

@@ -1,11 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'dart:async';
 
 import './../../redux/index.dart';
 import './../../redux/playController/action.dart' as playControllerActions;
-import './../../components/songComments.dart';
 class Play extends StatefulWidget {
   @override
   PlayState createState() => new PlayState();
@@ -42,17 +42,50 @@ class PlayState extends State<Play> with SingleTickerProviderStateMixin {
       converter: (store) => store.state,
       builder: (BuildContext context, state) {
         return Material(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Stack(
             children: <Widget>[
-              ProcessController(state),
-              Column(
-                children: <Widget>[
-                  PlayLyrics(),
-                  PlayController(songId, state, setInitPlay),
-                ],
-              )
-              // SongComments()
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Color.fromRGBO(state.playControllerState.coverMainColor[0], state.playControllerState.coverMainColor[1],
+                state.playControllerState.coverMainColor[2], 1),
+                      Colors.white
+                    ]
+                  )
+                ),
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height,
+                padding: EdgeInsets.only(bottom: 30),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    ProcessController(state),
+                    PlayLyrics(),
+                    PlayController(songId, state, setInitPlay),
+                    // SongComments()
+                  ],
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 50),
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(
+                    Icons.arrow_back,
+                    size: 30,
+                    color: Colors.black87
+                  ),
+                ),
+              ),
             ],
           )
         );
@@ -70,13 +103,12 @@ class ProcessController extends StatefulWidget {
 
 class ProcessControllerState extends State<ProcessController> {
   dynamic state;
+  String coverUrl;
+  Color mainColor;
   ProcessControllerState(this.state);
-
-  Map showSongCommentsAction = {};
 
   @override
   void initState() {
-    this.showSongCommentsAction['type'] = playControllerActions.Actions.switchSongComments;
     super.initState();
   }
 
@@ -90,135 +122,68 @@ class ProcessControllerState extends State<ProcessController> {
     return StoreConnector<AppState, dynamic>(
       converter: (store) => store.state.playControllerState,
       builder: (BuildContext context, playControllerState) {
-        return Stack(
-          children: <Widget>[
-            // 之所以要把封面模块也写在进度条模块内是为了解决自动切换歌曲时不刷新封面视图的问题
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.width,
-              // margin: EdgeInsets.only(top: MediaQuery.of(context).size.width),
-              // child: CachedNetworkImage(
-              //   imageUrl: state.playControllerState.playList[state.playControllerState.currentIndex]['al']['picUrl'],
-              //   placeholder: (context, url) => Container(
-              //     width: MediaQuery.of(context).size.width,
-              //     height: MediaQuery.of(context).size.height,
-              //     color: Colors.grey,
-              //   ),
-              //   fit: BoxFit.cover,
-              // )
-            ),
-            // BackdropFilter(
-            //   filter: ui.ImageFilter.blur(sigmaX: 40.0, sigmaY: 40.0),
-            //   child: Container(
-            //     color: Colors.white.withOpacity(0.1),
-            //     width: MediaQuery.of(context).size.width,
-            //     height: MediaQuery.of(context).size.height,
-            //   )
-            // ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.width,
-              child: CachedNetworkImage(
-                imageUrl: state.playControllerState.playList[state.playControllerState.currentIndex]['al']['picUrl'],
-                placeholder: (context, url) => Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.width,
-                  color: Colors.grey,
-                ),
-              )
-            ),
-            Container(
-              height: 70,
-              margin: EdgeInsets.only(top: MediaQuery.of(context).size.width - 70),
-              padding: EdgeInsets.only(left: 40),
-              alignment: Alignment.centerLeft,
-              decoration: BoxDecoration(
-                color: Colors.black26
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
-                  Container(
-                    width: (MediaQuery.of(context).size.width - 50) * 0.6,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          state.playControllerState.playList[state.playControllerState.currentIndex ]['name'],
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20
-                          ),
-                          textAlign: TextAlign.left,
-                          maxLines: 1,
-                        ),
-                        Text(
-                          state.playControllerState.playList[state.playControllerState.currentIndex ]['ar'][0]['name'],
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15
-                          ),
-                          textAlign: TextAlign.left,
-                        )
-                      ],
+        return Container(
+          child: Stack(
+            children: <Widget>[
+              // 之所以要把封面模块也写在进度条模块内是为了解决自动切换歌曲时不刷新封面视图的问题
+              Container(
+                width: MediaQuery.of(context).size.width * 0.6,
+                height: MediaQuery.of(context).size.width * 0.6,
+                margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width * 0.2,
+                MediaQuery.of(context).size.width * 0.3, 0, 0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: CachedNetworkImage(
+                    imageUrl: state.playControllerState.playList[state.playControllerState.currentIndex]['al']['picUrl'],
+                    placeholder: (context, url) => Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.width,
+                      color: Colors.grey,
                     ),
-                  ),
-                  Container(
-                    width: (MediaQuery.of(context).size.width - 50) * 0.4,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        StoreConnector<AppState, VoidCallback>(
-                          converter: (store) {
-                            return () => store.dispatch(this.showSongCommentsAction);
-                          },
-                          builder: (BuildContext context, callback) {
-                            return InkWell(
-                              child: IconButton(
-                                icon: Icon(Icons.comment),
-                                iconSize: 20,
-                                color: Colors.white,
-                                onPressed: () {
-                                  callback();
-                                },
+                  )
+                )
+              ),
+              Container(
+                height: 70,
+                margin: EdgeInsets.only(top: MediaQuery.of(context).size.width),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            state.playControllerState.playList[state.playControllerState.currentIndex ]['name'],
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold
+                            ),
+                            textAlign: TextAlign.left,
+                            maxLines: 1,
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 10),
+                            child: Text(
+                              state.playControllerState.playList[state.playControllerState.currentIndex ]['ar'][0]['name'],
+                              style: TextStyle(
+                                color: Colors.black54,
+                                fontSize: 14
                               ),
-                            );
-                          }
-                        ),
-                        IconButton(
-                          iconSize: 20,
-                          color: Colors.white,
-                          onPressed: () {
-                            print('未开发');
-                          },
-                          icon: ImageIcon(
-                            AssetImage(
-                              'assets/images/loop.png'
+                              textAlign: TextAlign.left,
                             )
                           )
-                        ),
-                        // IconButton(
-                        //   iconSize: 20,
-                        //   color: Colors.white,
-                        //   onPressed: () {
-                        //     print('未开发');
-                        //   },
-                        //   icon: ImageIcon(
-                        //     AssetImage(
-                        //       'assets/images/random.png'
-                        //     )
-                        //   )
-                        // )
-                      ],
-                    )
-                  )
-                ],
+                        ],
+                      ),
+                    ),
+                  ],
+                )
               )
-            )
-          ],
+            ],
+          )
         );
       },
     );
@@ -242,7 +207,7 @@ class PlayLyricsState extends State<PlayLyrics> {
 
   @override
   void initState() {
-    timer = Timer.periodic(const Duration(milliseconds: 100), (Void) {
+    timer = Timer.periodic(const Duration(milliseconds: 100), (_) {
       setState(() {
        this.refreshView = !this.refreshView; 
       });
@@ -308,154 +273,150 @@ class PlayLyricsState extends State<PlayLyrics> {
     return StoreConnector<AppState, dynamic>(
       converter: (store) => store.state.playControllerState,
       builder: (BuildContext context, playControllerState) {
-        return Container(
-              width: MediaQuery.of(context).size.width,
-              // margin: EdgeInsets.only(top: 600),
-              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Column(
-                children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+        return Expanded(
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      width: MediaQuery.of(context).size.width - 20,
+                      height: 25,
+                      alignment: Alignment.topCenter,
+                      child: Text(
+                        playControllerState.songPosition != null
+                          ? this.getLyricsNow(playControllerState.playList[playControllerState.currentIndex ]['lyric'], playControllerState.songPosition.toString().substring(2, 7), playControllerState.duration)[0]
+                          : '',
+                        style: TextStyle(
+                          color: Colors.black54
+                        ),
+                        maxLines: 1,
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width - 20,
+                      height: 25,
+                      alignment: Alignment.topCenter,
+                      child: Text(
+                        playControllerState.songPosition != null
+                          ? this.getLyricsNow(playControllerState.playList[playControllerState.currentIndex ]['lyric'], playControllerState.songPosition.toString().substring(2, 7), playControllerState.duration)[1]
+                          : '',
+                        style: TextStyle(
+                          fontSize: 14,
+                        ),
+                        maxLines: 1,
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width - 20,
+                      height: 25,
+                      alignment: Alignment.topCenter,
+                      child: Text(
+                        playControllerState.songPosition != null
+                          ? this.getLyricsNow(playControllerState.playList[playControllerState.currentIndex ]['lyric'], playControllerState.songPosition.toString().substring(2, 7), playControllerState.duration)[2]
+                          : '',style: TextStyle(
+                          color: Colors.black54,
+                        ),
+                        maxLines: 1,
+                      ),
+                    )
+                  ],
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
                       Container(
-                        width: MediaQuery.of(context).size.width - 20,
-                        height: 25,
-                        alignment: Alignment.topCenter,
+                        width: 35,
                         child: Text(
-                          playControllerState.songPosition != null
-                            ? this.getLyricsNow(playControllerState.playList[playControllerState.currentIndex ]['lyric'], playControllerState.songPosition.toString().substring(2, 7), playControllerState.audioPlayer.duration)[0]
-                            : '',
+                          playControllerState.songPosition == null
+                          ?
+                          ''
+                          :
+                          playControllerState.songPosition.toString().substring(2, 7),
                           style: TextStyle(
-                            color: Colors.black54
+                            color: Colors.black87,
+                            fontSize: 11
                           ),
-                          maxLines: 1,
-                        ),
+                        )
                       ),
-                      Container(
-                        width: MediaQuery.of(context).size.width - 20,
-                        height: 25,
-                        alignment: Alignment.topCenter,
-                        child: Text(
-                          playControllerState.songPosition != null
-                            ? this.getLyricsNow(playControllerState.playList[playControllerState.currentIndex ]['lyric'], playControllerState.songPosition.toString().substring(2, 7), playControllerState.audioPlayer.duration)[1]
-                            : '',
-                          style: TextStyle(
-                            fontSize: 14,
-                          ),
-                          maxLines: 1,
-                        ),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width - 20,
-                        height: 25,
-                        alignment: Alignment.topCenter,
-                        child: Text(
-                          playControllerState.songPosition != null
-                            ? this.getLyricsNow(playControllerState.playList[playControllerState.currentIndex ]['lyric'], playControllerState.songPosition.toString().substring(2, 7), playControllerState.audioPlayer.duration)[2]
-                            : '',style: TextStyle(
-                            color: Colors.black54,
-                          ),
-                          maxLines: 1,
-                        ),
-                      )
-                    ],
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(
-                          width: 35,
-                          child: Text(
-                            playControllerState.songPosition == null
-                            ?
-                            ''
-                            :
-                            playControllerState.songPosition.toString().substring(2, 7),
-                            style: TextStyle(
-                              color: Colors.black87
-                            ),
-                          )
-                        ),
-                        Text(
-                          playControllerState.songPosition != null
-                            ?
-                            computeProcessVal(playControllerState.songPosition.toString().substring(2, 7), playControllerState.audioPlayer.duration.toString().substring(2, 7)).toString()
-                            :
-                            '',
-                          style: TextStyle(
-                            fontSize: 0,
-                          ),
-                        ),
-                        StoreConnector<AppState, VoidCallback>(
-                          converter: (store) {
-                            return () => store.dispatch(durationActionMap);
-                          },
-                          builder: (BuildContext context, callback) {
-                            return Container(
-                              width: MediaQuery.of(context).size.width - 95,
-                              child: Slider(
-                                value: this.processVal,
-                                max: 500,
-                                min: 0,
-                                label: ((this.processVal.floor() / 500) * (int.parse(playControllerState.audioPlayer.duration.toString().substring(2, 4)) * 60 +
-                                  int.parse(playControllerState.audioPlayer.duration.toString().substring(5, 7))) / 60).floor().toString() + '：' +
-                                  ((this.processVal.floor() / 500) * (int.parse(playControllerState.audioPlayer.duration.toString().substring(2, 4)) * 60 +
-                                  int.parse(playControllerState.audioPlayer.duration.toString().substring(5, 7))) % 60).floor().toString(),
-                                activeColor: Colors.black,
-                                inactiveColor: Colors.black26,
-                                divisions: 500,
-                                onChangeStart: (double val) {
-                                  this.timer.cancel();
-                                  this.processTouching = true;
-                                },
-                                onChanged: (double val) {
+                      StoreConnector<AppState, VoidCallback>(
+                        converter: (store) {
+                          return () => store.dispatch(durationActionMap);
+                        },
+                        builder: (BuildContext context, callback) {
+                          return Container(
+                            width: MediaQuery.of(context).size.width - 115,
+                            child: Slider(
+                              value: processVal,
+                              max: 500,
+                              min: 0,
+                              label: ((processVal.floor() / 500) * (int.parse(playControllerState.duration.toString().substring(2, 4)) * 60 +
+                                int.parse(playControllerState.duration.toString().substring(5, 7))) / 60).floor().toString() + '：' +
+                                ((processVal.floor() / 500) * (int.parse(playControllerState.duration.toString().substring(2, 4)) * 60 +
+                                int.parse(playControllerState.duration.toString().substring(5, 7))) % 60).floor().toString(),
+                              activeColor: Colors.black,
+                              inactiveColor: Colors.black26,
+                              divisions: 500,
+                              onChangeStart: (double val) {
+                                timer.cancel();
+                                processTouching = true;
+                              },
+                              onChanged: (double val) {
+                                setState(() {
+                                  processVal = val; 
+                                });
+                              },
+                              onChangeEnd: (double val) async{
+                                int _songSecond = int.parse(playControllerState.duration.toString().substring(2, 4)) * 60 +
+                                int.parse(playControllerState.duration.toString().substring(5, 7));
+                                durationActionMap['type'] = playControllerActions.Actions.playSeek;
+                                durationActionMap['payload'] = Duration(milliseconds: (_songSecond * this.processVal.floor() * 2).round());
+                                callback();
+                                await new Future.delayed(const Duration(milliseconds: 500));
+                                processTouching = false;
+                                if (this.mounted) {
                                   setState(() {
-                                    this.processVal = val; 
-                                  });
-                                },
-                                onChangeEnd: (double val) async{
-                                  int _songSecond = int.parse(playControllerState.audioPlayer.duration.toString().substring(2, 4)) * 60 +
-                                  int.parse(playControllerState.audioPlayer.duration.toString().substring(5, 7));
-                                  durationActionMap['type'] = playControllerActions.Actions.playSeek;
-                                  durationActionMap['payLoad'] = _songSecond * this.processVal.floor() / 500;
-                                  callback();
-                                  await new Future.delayed(const Duration(milliseconds: 500));
-                                  this.processTouching = false;
-                                  if (this.mounted) {
-                                    setState(() {
-                                      this.timer = Timer.periodic(const Duration(microseconds: 100), (Void) {
-                                        setState(() {
-                                          this.refreshView = !this.refreshView; 
-                                        });
+                                    timer = Timer.periodic(const Duration(milliseconds: 100), (_) {
+                                      setState(() {
+                                        refreshView = !refreshView; 
                                       });
                                     });
-                                  }
-                                },
-                              ),
-                            );
-                          },
-                        ),
-                        Container(
-                          width: 35,
-                          child: Text(
-                            playControllerState.audioPlayer.duration == null
-                            ?
-                            ''
-                            :
-                            playControllerState.audioPlayer.duration.toString().substring(2, 7),
-                            style: TextStyle(
-                              color: Colors.black87
+                                  });
+                                }
+                              },
                             ),
-                          )
+                          );
+                        },
+                      ),
+                      Container(
+                        width: 35,
+                        child: Text(
+                          playControllerState.duration == null
+                          ?
+                          ''
+                          :
+                          playControllerState.duration.toString().substring(2, 7),
+                          style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 11
+                          ),
                         )
-                      ],
-                    )
+                      )
+                    ],
                   )
-                ],
-              )
-            );
+                )
+              ],
+            )
+          )
+        );
       });             
   }
 }
@@ -473,8 +434,6 @@ class PlayController extends StatelessWidget {
     return Container(
         width: MediaQuery.of(context).size.width,
         height: 50,
-        // margin: EdgeInsets.fromLTRB(30, MediaQuery.of(context).size.height * 0.87, 30, 0),
-        margin: EdgeInsets.only(bottom: 30),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
@@ -519,7 +478,7 @@ class PlayController extends StatelessWidget {
                 return () => store.dispatch(_action);
               },
               builder: (BuildContext context, callback) {
-                return GestureDetector(
+                return InkWell(
                   onTap: () {
                     if(state.playControllerState.playing != true) {
                       this.setInitPlay(true);
@@ -530,6 +489,11 @@ class PlayController extends StatelessWidget {
                     width: 50,
                     height: 50,
                     padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(state.playControllerState.coverMainColor[0], state.playControllerState.coverMainColor[1],
+              state.playControllerState.coverMainColor[2], 0.3),
+                      borderRadius: BorderRadius.circular(25),
+                    ),
                     child: state.playControllerState.playing
                     ?
                     Image.asset(
