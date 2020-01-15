@@ -25,26 +25,44 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   MyAppState(this.store);
   TabController _tabController;
   List<Widget> _body = [new Recommend(), new CollectSongList(), new Rank()];
+  int tabIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    _tabController = new TabController(length: 3, vsync: this);
+    _tabController = new TabController(length: 3, vsync: this)
+      ..addListener(tabIndexChange);
+    _tabController.animation.addListener(tabIndexChange);
+  }
+
+  void tabIndexChange () {
+    if (_tabController.indexIsChanging) {
+      this.setState(() {
+        tabIndex = _tabController.index;
+      });
+    }
+  }
+
+  List<Widget> createTabs (List<String> titles) {
+    List<Widget> tabs = [];
+    for (int i = 0;i < titles.length;i ++) {
+      tabs.add(Text(
+        titles[i],
+        style: TextStyle(
+          color: Colors.black87,
+          fontWeight: tabIndex == i ? FontWeight.bold : FontWeight.normal,
+          fontSize: tabIndex == i ? 14 : 13
+        ),
+        maxLines: 1
+      ));
+    }
+    return tabs;
   }
 
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
-  }
-
-  Widget createTab(String title) {
-    return Tab(
-      child: Text(
-        title,
-        style: TextStyle(color: Colors.black),
-      ),
-    );
   }
 
   Widget build(BuildContext context) {
@@ -59,14 +77,16 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                 child: Text('data'),
               ),
               appBar: PreferredSize(
-                preferredSize: Size.fromHeight(80),
+                preferredSize: Size.fromHeight(50),
                 child: AppBar(
+                  bottomOpacity: 1,
+                  elevation: 0,
                   backgroundColor: Colors.white,
                   leading: Builder(
                     builder: (BuildContext context) {
                       return IconButton(
                         icon: Icon(Icons.menu),
-                        color: Colors.black,
+                        color: Colors.black54,
                         onPressed: () {
                           Scaffold.of(context).openDrawer();
                         },
@@ -75,26 +95,15 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                   ),
                   title: Container(
                     margin: EdgeInsets.only(top: 3),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          '发现音乐',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        SearchButton()
-                      ],
-                    ),
+                    child: TabBar(
+                      controller: _tabController,
+                      indicatorColor: Colors.white,
+                      tabs: createTabs(['发现音乐', '我的音乐', '排行榜'])
+                    )
                   ),
-                  bottom: TabBar(
-                    controller: _tabController,
-                    indicatorColor: Colors.black,
-                    tabs: <Widget>[
-                      createTab('发现音乐'),
-                      createTab('我的音乐'),
-                      createTab('排行榜'),
-                    ],
-                  ),
+                  actions: <Widget>[
+                    SearchButton()
+                  ],
                 ),
               ),
               body: StoreConnector<AppState, dynamic>(
@@ -123,24 +132,26 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
         ));
   }
 
-  // @override
-  // bool get wantKeepAlive => true;
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class SearchButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-        color: Colors.white,
-        child: IconButton(
-            onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Search()));
-            },
-            icon: Icon(
-              Icons.search,
-              size: 22,
-              color: Colors.black,
-            )));
+      color: Colors.white,
+      child: IconButton(
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Search()));
+        },
+        icon: Icon(
+          Icons.search,
+          size: 22,
+          color: Colors.black54,
+        )
+      )
+    );
   }
 }

@@ -25,7 +25,8 @@ dependencies:
   flutter_redux: ^0.5.3
   redux_thunk: ^0.2.1
   flutter_spinkit: "^3.1.0"
-  audioplayer: ^0.5.2
+  audioplayers: ^0.13.7
+  color_thief_flutter: ^1.0.1
 
 dev_dependencies:
   flutter_test: 
@@ -72,6 +73,7 @@ flutter:
    - assets/images/like.png
    - assets/images/unLike.png
    - assets/images/next_play.png
+   - assets/images/playList.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

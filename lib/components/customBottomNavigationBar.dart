@@ -73,18 +73,21 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                       ?
                       Container()
                       :
-                      Container(
-                        child: CachedNetworkImage(
-                          imageUrl: state.playControllerState.playList[state.playControllerState.currentIndex]['al']['picUrl'],
-                          width: 40,
-                          height: 40,
-                          placeholder: (context, url) => Image.asset(
-                            'assets/images/album_avatar_default.png',
-                            width: 40,
-                            height: 40,
-                            fit: BoxFit.fill,
-                          ),
-                        )
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(23),
+                        child: Container(
+                          child: CachedNetworkImage(
+                            imageUrl: state.playControllerState.playList[state.playControllerState.currentIndex]['al']['picUrl'],
+                            width: 46,
+                            height: 46,
+                            placeholder: (context, url) => Image.asset(
+                              'assets/images/album_avatar_default.png',
+                              width: 46,
+                              height: 46,
+                              fit: BoxFit.fill,
+                            ),
+                          )
+                        ),
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width - 220,
