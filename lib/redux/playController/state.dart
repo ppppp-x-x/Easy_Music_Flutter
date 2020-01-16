@@ -18,7 +18,7 @@ class PlayController {
   set coverMainColor(val) => _coverMainColor = val;
 
   // 当前所播放的歌曲长度
-  dynamic _duration;
+  Duration _duration;
   get duration => _duration;
   set duration(val) => _duration = val;
 
@@ -95,12 +95,11 @@ class PlayController {
     songUrl = '';
     _coverMainColor = [0, 0, 0];
     _audioPlayer = new AudioPlayer();
+    // 监听当前歌曲长度
     _audioPlayer.onDurationChanged.listen((d) {
-      _duration = d;
+      duration = d;
     });
-    _audioPlayer.onPlayerStateChanged.listen((d) {
-      print(_duration);
-    });
+    // 监听当前歌曲播放进度
     _audioPlayer.onAudioPositionChanged.listen((d) {
       songPosition = d;
       /*

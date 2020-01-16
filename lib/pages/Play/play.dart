@@ -145,7 +145,7 @@ class ProcessControllerState extends State<ProcessController> {
               ),
               Container(
                 height: 70,
-                margin: EdgeInsets.only(top: MediaQuery.of(context).size.width),
+                margin: EdgeInsets.only(top: MediaQuery.of(context).size.width - 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
@@ -354,47 +354,68 @@ class PlayLyricsState extends State<PlayLyrics> {
                         builder: (BuildContext context, callback) {
                           return Container(
                             width: MediaQuery.of(context).size.width - 115,
-                            child: Slider(
-                              value: processVal,
-                              max: 500,
-                              min: 0,
-                              label: ((processVal.floor() / 500) * (int.parse(playControllerState.duration.toString().substring(2, 4)) * 60 +
-                                int.parse(playControllerState.duration.toString().substring(5, 7))) / 60).floor().toString() + '：' +
-                                ((processVal.floor() / 500) * (int.parse(playControllerState.duration.toString().substring(2, 4)) * 60 +
-                                int.parse(playControllerState.duration.toString().substring(5, 7))) % 60).floor().toString(),
-                              activeColor: Colors.black,
-                              inactiveColor: Colors.black26,
-                              divisions: 500,
-                              onChangeStart: (double val) {
-                                timer.cancel();
-                                processTouching = true;
-                              },
-                              onChanged: (double val) {
-                                setState(() {
-                                  processVal = val; 
-                                });
-                              },
-                              onChangeEnd: (double val) async{
-                                int _songSecond = int.parse(playControllerState.duration.toString().substring(2, 4)) * 60 +
-                                int.parse(playControllerState.duration.toString().substring(5, 7));
-                                durationActionMap['type'] = playControllerActions.Actions.playSeek;
-                                durationActionMap['payload'] = Duration(milliseconds: (_songSecond * this.processVal.floor() * 2).round());
-                                callback();
-                                await new Future.delayed(const Duration(milliseconds: 500));
-                                processTouching = false;
-                                if (this.mounted) {
+                            child: SliderTheme(
+                              data: SliderTheme.of(context).copyWith(
+                                thumbShape: RoundSliderThumbShape(
+                                  enabledThumbRadius: 4
+                                ),
+                                overlayShape: RoundSliderOverlayShape(
+                                  overlayRadius: 8
+                                )
+                              ),
+                              child: Slider(
+                                value: processVal,
+                                max: 500,
+                                min: 0,
+                                label: ((processVal.floor() / 500) * (int.parse(playControllerState.duration.toString().substring(2, 4)) * 60 +
+                                  int.parse(playControllerState.duration.toString().substring(5, 7))) / 60).floor().toString() + '：' +
+                                  ((processVal.floor() / 500) * (int.parse(playControllerState.duration.toString().substring(2, 4)) * 60 +
+                                  int.parse(playControllerState.duration.toString().substring(5, 7))) % 60).floor().toString(),
+                                activeColor: Color.fromRGBO((playControllerState.coverMainColor[0] / 5).round(), (playControllerState.coverMainColor[1] / 5).round(),
+              (playControllerState.coverMainColor[2] / 5).round(), 0.3),
+                                inactiveColor: Colors.black26,
+                                divisions: 500,
+                                onChangeStart: (double val) {
+                                  timer.cancel();
+                                  processTouching = true;
+                                },
+                                onChanged: (double val) {
                                   setState(() {
-                                    timer = Timer.periodic(const Duration(milliseconds: 100), (_) {
-                                      setState(() {
-                                        refreshView = !refreshView; 
+                                    processVal = val; 
+                                  });
+                                },
+                                onChangeEnd: (double val) async{
+                                  int _songSecond = int.parse(playControllerState.duration.toString().substring(2, 4)) * 60 +
+                                  int.parse(playControllerState.duration.toString().substring(5, 7));
+                                  durationActionMap['type'] = playControllerActions.Actions.playSeek;
+                                  durationActionMap['payload'] = Duration(milliseconds: (_songSecond * this.processVal.floor() * 2).round());
+                                  callback();
+                                  await new Future.delayed(const Duration(milliseconds: 500));
+                                  processTouching = false;
+                                  if (this.mounted) {
+                                    setState(() {
+                                      timer = Timer.periodic(const Duration(milliseconds: 100), (_) {
+                                        setState(() {
+                                          refreshView = !refreshView; 
+                                        });
                                       });
                                     });
-                                  });
-                                }
-                              },
-                            ),
+                                  }
+                                },
+                              ),
+                            )
                           );
                         },
+                      ),
+                      Text(
+                        playControllerState.songPosition != null
+                          ?
+                          computeProcessVal(playControllerState.songPosition.toString().substring(2, 7), playControllerState.duration.toString().substring(2, 7)).toString()
+                          :
+                          '',
+                          style: TextStyle(
+                            fontSize: 0
+                          ),
                       ),
                       Container(
                         width: 35,
