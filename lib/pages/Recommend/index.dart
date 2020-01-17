@@ -7,6 +7,7 @@ import './../../redux/index.dart';
 import './../../utils//api.dart';
 
 import './../../components/HomeBanner.dart';
+import '../../components/RecommedSongs.dart';
 
 import './recommendListRow.dart';
 
@@ -19,6 +20,8 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
   List<dynamic> bannerList;
   List<dynamic> hotSongList;
   List<dynamic> recommendSongList;
+  List<dynamic> newSongs;
+  bool newSongsRequestOver = false;
   // var recommendVideos;
 
   @override
@@ -28,10 +31,10 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await fetchBannner();
-      await fetchHotSongList();
-      await fetchRecommedSongList();
-      // fetchRecommendVideos();
+      fetchBannner();
+      fetchHotSongList();
+      fetchRecommedSongList();
+      fetchNewSongs();
     });
   }
 
@@ -84,17 +87,63 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
     }
   }
 
-  // void fetchRecommendVideos() async {
-  //   var _recommendVideos = await fetchData(localBaseUrl + '/personalized/mv');
-  //   if (_recommendVideos == '请求错误') {
-  //     return;
-  //   }
-  //   if(this.mounted && this.recommendVideos == null) {
-  //     setState(() {
-  //       this.recommendVideos =_recommendVideos;
-  //     });
-  //   }
-  // }
+  fetchNewSongs() async {
+    switchIsRequesting();
+    var _newSongs = await getData('newSongs', {});
+    switchIsRequesting();
+    if (_newSongs == '请求错误') {
+      return;
+    }
+    if(this.mounted) {
+      setState(() {
+        newSongs = _newSongs['result']; 
+      });
+    }
+    for (int i = 0;i < 9;i ++) {
+      fetchNewSongHotComments(_newSongs['result'], _newSongs['result'][i]['id'], i);
+    }
+  }
+
+  fetchNewSongHotComments(newSongs, int id, int index) async {
+    Map<String, String> params = {};
+    params['id'] = id.toString();
+    params['type'] = '0';
+    switchIsRequesting();
+    var _hotComment = await getData('hotComments', params);
+    switchIsRequesting();
+    if (_hotComment == '请求错误') {
+      return;
+    }
+    if (_hotComment['hotComments'].length > 0) {
+      newSongs[index]['hotComment'] = _hotComment['hotComments'][0]['content'];
+    } else {
+      newSongs[index]['hotComment'] = '';
+    }
+    setState(() {
+      newSongs = newSongs;
+    });
+    if (index == 8) {
+      splitNewSongs();
+    }
+  }
+
+  splitNewSongs () {
+    List _newSongs = [[]];
+    for (int i = 0;i < 9;i ++) {
+      if (_newSongs[_newSongs.length - 1] == null) {
+        _newSongs[_newSongs.length - 1] = [];
+      } else if (_newSongs[_newSongs.length - 1].length == 3) {
+        _newSongs.add([]);
+      }
+      _newSongs[_newSongs.length - 1].add(newSongs[i]);
+    }
+    if(this.mounted) {
+      setState(() {
+        newSongs = _newSongs;
+        newSongsRequestOver = true;
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -113,8 +162,13 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
             margin: EdgeInsets.only(top: 20),
             child: Column(
               children: <Widget>[
+                newSongsRequestOver
+                ?
+                  RecommedSongs(newSongs, '最新流行歌曲')
+                :
+                  Container(),
                 RecommendList(hotSongList, '最热歌单', '最新流行歌单'),
-                RecommendList(recommendSongList, '推荐歌单', '为您精挑细选')
+                RecommendList(recommendSongList, '推荐歌单', '为您精挑细选'),
               ],
             ),
           )

@@ -3,8 +3,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:color_thief_flutter/color_thief_flutter.dart';
-import 'package:color_thief_flutter/utils.dart';
-import 'dart:ui' as ui;
 
 import './../../redux/index.dart';
 import './../../redux/playController/action.dart' as playControllerActions;
