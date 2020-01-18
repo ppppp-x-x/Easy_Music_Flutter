@@ -8,6 +8,7 @@ import './../../utils//api.dart';
 
 import './../../components/HomeBanner.dart';
 import '../../components/RecommedSongs.dart';
+import '../../components/commonText.dart';
 
 import './recommendListRow.dart';
 
@@ -164,7 +165,22 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
               children: <Widget>[
                 newSongsRequestOver
                 ?
-                  RecommedSongs(newSongs, '最新流行歌曲')
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.fromLTRB(20, 0, 0, 10),
+                        child: CommonText(
+                          '最新流行单曲',
+                          13,
+                          1,
+                          Colors.black,
+                          FontWeight.bold
+                        ),
+                      ),
+                      RecommedSongs(newSongs, '最新流行歌曲')
+                    ],
+                  )
                 :
                   Container(),
                 RecommendList(hotSongList, '最热歌单', '最新流行歌单'),

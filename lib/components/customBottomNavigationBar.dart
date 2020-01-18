@@ -147,22 +147,17 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                           return () => store.dispatch(_action);
                         },
                         builder: (context, callback) {
-                          return GestureDetector(
-                            onTap: callback,
-                            child: Container(
-                              width: 20,
-                              height: 20,
-                              child: state.playControllerState.playing
+                          return IconButton(
+                            onPressed: callback,
+                            icon: state.playControllerState.playing
                               ?
-                              Image.asset(
-                                'assets/images/play_pause.png',
-                                fit: BoxFit.fitHeight,
-                              )
+                                ImageIcon(
+                                  AssetImage('assets/images/play_pause.png')
+                                )
                               :
-                              Image.asset(
-                                'assets/images/play_play.png'
-                              )
-                            ),
+                                ImageIcon(
+                                  AssetImage('assets/images/play_play.png')
+                                )
                           );
                         }
                       ),

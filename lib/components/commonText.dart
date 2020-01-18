@@ -11,7 +11,9 @@ class CommonText extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Text(
-      text,
+      text == null
+        ? ''
+        : text,
       maxLines: maxLines,
       overflow: TextOverflow.ellipsis,
       style: TextStyle(
