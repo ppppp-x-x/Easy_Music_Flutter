@@ -8,6 +8,7 @@ import './../../utils/commonFetch.dart';
 import './../../utils//api.dart';
 
 import './../../redux/playController/action.dart' as playControllerActions;
+import './../../redux/commonController/action.dart';
 
 import '../../components/CustomBottomNavigationBar.dart';
 
@@ -19,6 +20,7 @@ class Search extends StatefulWidget {
 class SearchState extends State<Search> {
   bool searched = false;
   bool showSpinner = false;
+  bool isRequesting = false;
   String lastSearchStr = '';
   List<dynamic> searchList = [];
   Map<String, dynamic> playListAction;
@@ -36,6 +38,10 @@ class SearchState extends State<Search> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void switchIsRequesting() {
+    StoreProvider.of<AppState>(context).dispatch(switchIsRequestingAction);
   }
 
   void submit(String str) {
@@ -236,19 +242,25 @@ class SearchState extends State<Search> {
                     Container(
                       child: StoreConnector<AppState, VoidCallback>(
                         converter: (store) {
-                          return () => store.dispatch(playListAction);
+                          return () => store.dispatch(playControllerActions.addPlayList(playListAction));
                         },
                         builder: (BuildContext context, callback) {
                           return InkWell(
                             onTap: () async {
+                              playListAction = {};
+                              if (isRequesting == true) {
+                                return null;
+                              }
+                              isRequesting = true;
+                              switchIsRequesting();
+                              dynamic songDetail = await getSongDetail(searchList[index]['id']);
                               dynamic songLyr = await getData('lyric', {
                                 'id': searchList[index]['id'].toString()
                               });
-                              Map songDetail = await getSongDetail(searchList[index]['id']);
+                              switchIsRequesting();
                               Map _playListActionPayload = {};
-                              List _playList = [];
+                              List<String> _playList = [];
                               songDetail['songLyr'] = songLyr;
-                              playListAction = {};
                               for(int j = 0;j < searchList.length;j ++) {
                                 _playList.add(searchList[j]['id'].toString());
                               }
@@ -258,6 +270,7 @@ class SearchState extends State<Search> {
                               _playListActionPayload['songUrl'] = 'http://music.163.com/song/media/outer/url?id=' + searchList[index]['id'].toString() + '.mp3';
                               playListAction['payload'] = _playListActionPayload;
                               playListAction['type'] = playControllerActions.Actions.addPlayList;
+                              isRequesting = false;
                               callback();
                             },
                             child: Container(

@@ -25,7 +25,8 @@ List<dynamic> combinLyric (String source) {
 
 PlayController playControllerReducer(PlayController state, action) {
   if(action != null) {
-    if (action['type'] == Actions.nextSong || action['type'] == Actions.addPlayList) {
+    if (action['type'] == Actions.nextSong || action['type'] == Actions.prevSong
+    || action['type'] == Actions.addPlayList) {
       state.coverMainColor = action['payload']['coverMainColor'];
     }
     if (action['type'] == Actions.play) {
@@ -40,13 +41,36 @@ PlayController playControllerReducer(PlayController state, action) {
       if (state.playing) {
         state.audioPlayer.stop();
       }
+      if (action['payload']['songUrl'] == null) {
+        state.playing = false;
+        state.songIndex = state.songIndex + 1;
+        state.currentIndex = state.currentIndex + 1;
+        state.songUrl = 'http://music.163.com/song/media/outer/url?id=' + state.songList[state.songIndex + 1] + '.mp3';
+        state.audioPlayer.play(state.songUrl);
+        state.playing = true;
+      } else {
+        if (action['payload']['songDetail']['songLyr']['lrc'] != null && action['payload']['songDetail']['songLyr']['lrc']['lyric'] != null) {
+          action['payload']['songDetail']['lyric'] = combinLyric(action['payload']['songDetail']['songLyr']['lrc']['lyric']);
+        }
+        state.playing = false;
+        state.songIndex = state.songIndex + 1;
+        state.playList.add(action['payload']['songDetail']);
+        state.currentIndex = state.currentIndex + 1;
+        state.songUrl = action['payload']['songUrl'];
+        state.audioPlayer.play(state.songUrl);
+        state.playing = true;
+      }
+    }
+    if (action['type'] == Actions.prevSong) {
+      if (state.playing) {
+        state.audioPlayer.stop();
+      }
       if (action['payload']['songDetail']['songLyr']['lrc'] != null && action['payload']['songDetail']['songLyr']['lrc']['lyric'] != null) {
         action['payload']['songDetail']['lyric'] = combinLyric(action['payload']['songDetail']['songLyr']['lrc']['lyric']);
       }
       state.playing = false;
-      state.songIndex = action['payload']['songIndex'];
-      state.playList.add(action['payload']['songDetail']);
-      state.currentIndex = state.currentIndex + 1;
+      state.songIndex = state.songIndex - 1;
+      state.currentIndex = state.currentIndex - 1;
       state.songUrl = action['payload']['songUrl'];
       state.audioPlayer.play(state.songUrl);
       state.playing = true;
@@ -64,7 +88,7 @@ PlayController playControllerReducer(PlayController state, action) {
       }
       state.songIndex = action['payload']['songIndex'];
       state.playList.add(action['payload']['songDetail']);
-      state.currentIndex = state.currentIndex + 1;
+      state.currentIndex = state.playList.length - 1;
       state.songUrl = action['payload']['songUrl'];
       state.audioPlayer.play(state.songUrl);
       state.playing = true;

@@ -11,6 +11,7 @@ import './pages/Search/index.dart';
 import './pages/MySong/index.dart';
 
 import './components/customBottomNavigationBar.dart';
+import './components/toast.dart';
 
 class MyApp extends StatefulWidget {
   final Store<AppState> store;
@@ -124,6 +125,9 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                                   color: Colors.red[300],
                                 ),
                               )
+                            : Container(),
+                        state.commonState.toastStatus
+                            ? Toast(state.commonState.toastMessage)
                             : Container()
                       ],
                     );

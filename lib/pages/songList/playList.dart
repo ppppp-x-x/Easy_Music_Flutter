@@ -12,7 +12,7 @@ import './../../components/customBottomNavigationBar.dart';
 import './../../components/NavigatorBackBar.dart';
 
 import './../../utils/commonFetch.dart';
-import './../../utils//api.dart';
+import './../../utils/api.dart';
 
 class PlayList extends StatefulWidget {
   final int id;

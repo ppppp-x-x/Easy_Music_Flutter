@@ -158,7 +158,7 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           HomeBanner(bannerList),
-          Menu(),
+          // Menu(),
           Container(
             margin: EdgeInsets.only(top: 20),
             child: Column(
@@ -206,7 +206,7 @@ class Menu extends StatelessWidget {
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(50),
-            color: Colors.red[600],
+            color: Colors.black87,
             boxShadow: <BoxShadow> [
               BoxShadow(
                 color: Colors.black12,

@@ -1,5 +1,7 @@
 enum CommonActions {
-  switchIsRequesting
+  switchIsRequesting,
+  openToast,
+  closeToast
 }
 
 final Map switchIsRequestingAction = {
