@@ -6,12 +6,16 @@ import './../redux/index.dart';
 import './../pages/Play/play.dart';
 import './../redux/playController/action.dart' as playControllerActions;
 
+import 'commonText.dart';
+
 class CustomBottomNavigationBar extends StatefulWidget {
   @override
   CustomBottomNavigationBarState createState() => new CustomBottomNavigationBarState();
 }
 
 class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
+  bool isRequesting = false;
+
   @override
   void initState() {
     super.initState();
@@ -37,8 +41,10 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         : 
         Container(
           width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Color.fromRGBO((state.playControllerState.coverMainColor[0] / 1.5).round(), (state.playControllerState.coverMainColor[1] / 1.5).round(),
+          (state.playControllerState.coverMainColor[2] / 1.5).round(), 1),
             boxShadow: <BoxShadow> [
               BoxShadow(
                 color: Colors.black12,
@@ -46,17 +52,19 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                 spreadRadius: 1,
                 offset: Offset(0, -1)
               )
-            ]
+            ],
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20)
+            ),
           ),
-          child: Container(
-            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-            width: MediaQuery.of(context).size.width,
-            height: 60,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                InkWell(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                child: InkWell(
                   onTap: () {
                     Navigator.push(
                       context,
@@ -67,7 +75,6 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                   },
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       state.playControllerState.playList[state.playControllerState.currentIndex]['al']['picUrl'] == null
                       ?
@@ -92,27 +99,28 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                         ),
                       ),
                       Container(
-                        width: MediaQuery.of(context).size.width - 220,
-                        height: 70,
+                        height: 60,
                         margin: EdgeInsets.only(left: 10),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text(
+                            CommonText(
                               state.playControllerState.playList[state.playControllerState.currentIndex]['name'],
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
+                              12,
+                              1,
+                              Colors.white,
+                              FontWeight.bold
                             ),
                             Container(
                               margin: EdgeInsets.only(top: 3),
-                              child: Text(
+                              child: 
+                              CommonText(
                                 state.playControllerState.playList[state.playControllerState.currentIndex]['ar'][0]['name'],
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                                style: TextStyle(
-                                  color: Colors.black54
-                                ),
+                                10,
+                                1,
+                                Colors.white70,
+                                FontWeight.normal
                               )
                             )
                           ],
@@ -121,60 +129,81 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                     ],
                   ),
                 ),
-                Container(
-                  width: 120,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Container(
-                        width: 20,
-                        height: 20,
-                        child: Image.asset(
-                          'assets/images/play_prev.png',
-                          fit: BoxFit.fitHeight,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  StoreConnector<AppState, VoidCallback>(
+                    converter: (store) {
+                      return () => store.dispatch(playControllerActions.playePrevSong);
+                    },
+                    builder: (BuildContext context, callback) {
+                      return Material(
+                        color: Colors.transparent,
+                        child: IconButton(
+                          onPressed: () async {
+                            if (isRequesting == true) {
+                              return null;
+                            }
+                            isRequesting = true;
+                            await callback();
+                            isRequesting = false;
+                          },
+                          icon: Icon(Icons.skip_previous, size: 25, color: Colors.white)
                         )
-                      ),
-                      Container(
-                        child: StoreConnector<AppState, VoidCallback>(
-                        converter: (store) {
-                          var _action = new Map();
-                          if (state.playControllerState.playing) {
-                            _action['type'] = playControllerActions.Actions.pause;
-                          } else {
-                            _action['type'] = playControllerActions.Actions.play;
-                          }
-                          return () => store.dispatch(_action);
+                      );
+                    }
+                  ),
+                  StoreConnector<AppState, VoidCallback>(
+                    converter: (store) {
+                      var _action = new Map();
+                      if (state.playControllerState.playing == true) {
+                        _action['type'] = playControllerActions.Actions.pause;
+                      } else {
+                        _action['type'] = playControllerActions.Actions.play;
+                      }
+                      return () => store.dispatch(_action);
+                    },
+                    builder: (BuildContext context, callback) {
+                      return IconButton(
+                        iconSize: 35,
+                        onPressed: () {
+                          callback();
                         },
-                        builder: (context, callback) {
-                          return IconButton(
-                            onPressed: callback,
-                            icon: state.playControllerState.playing
-                              ?
-                                ImageIcon(
-                                  AssetImage('assets/images/play_pause.png')
-                                )
-                              :
-                                ImageIcon(
-                                  AssetImage('assets/images/play_play.png')
-                                )
-                          );
-                        }
-                      ),
-                      ),
-                      Container(
-                        width: 20,
-                        height: 20,
-                        child: Image.asset(
-                          'assets/images/play_next.png',
-                          fit: BoxFit.fitHeight,
+                        icon: 
+                        state.playControllerState.playing
+                        ?
+                          Icon(Icons.pause, size: 35, color: Colors.white)
+                        :
+                          Icon(Icons.play_arrow, size: 35, color: Colors.white)
+                      );
+                    }
+                  ),
+                  StoreConnector<AppState, VoidCallback>(
+                    converter: (store) {
+                      return () => store.dispatch(playControllerActions.playeNextSong);
+                    },
+                    builder: (BuildContext context, callback) {
+                      return Material(
+                        color: Colors.transparent,
+                        child: IconButton(
+                          onPressed: () async {
+                            if (isRequesting == true) {
+                              return null;
+                            }
+                            isRequesting = true;
+                            await callback();
+                            isRequesting = false;
+                          },
+                          icon: Icon(Icons.skip_next, size: 25, color: Colors.white)
                         )
-                      )
-                    ],
-                  )
-                )
-              ],
-            ),
+                      );
+                    }
+                  ),
+                ],
+              )
+            ],
           ),
         );
       },
