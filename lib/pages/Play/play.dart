@@ -131,6 +131,17 @@ class ProcessControllerState extends State<ProcessController> {
                 height: MediaQuery.of(context).size.width * 0.6,
                 margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width * 0.2,
                 MediaQuery.of(context).size.width * 0.3, 0, 0),
+                decoration: BoxDecoration(
+                  boxShadow: <BoxShadow> [
+                    BoxShadow(
+                      color: Color.fromRGBO((playControllerState.coverMainColor[0] / 5).round(), (playControllerState.coverMainColor[1] / 5).round(),
+              (playControllerState.coverMainColor[2] / 5).round(), 0.3),
+                      blurRadius: MediaQuery.of(context).size.width * 0.3,
+                      spreadRadius: 5,
+                      offset: Offset(0, 0)
+                    )
+                  ]
+                ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(15),
                   child: CachedNetworkImage(
@@ -465,28 +476,34 @@ class PlayController extends StatelessWidget {
                 return () => store.dispatch(_action);
               },
               builder: (BuildContext context, callback) {
-                return GestureDetector(
-                  onTap: () {
+                return IconButton(
+                  onPressed: () async {
                     callback();
                   },
-                  child: Container( 
-                    width: 30,
-                    height: 30,
-                    padding: EdgeInsets.all(5),
-                    child: Image.asset(
-                      'assets/images/unLike.png'
-                    )
-                  ),
+                  icon: Icon(Icons.favorite, size: 20)
                 );
               }
             ),
-            Container( 
-              width: 30,
-              height: 30,
-              padding: EdgeInsets.all(5),
-              child: Image.asset(
-                'assets/images/play_prev.png'
-              )
+            StoreConnector<AppState, VoidCallback>(
+              converter: (store) {
+                return () => store.dispatch(playControllerActions.playePrevSong);
+              },
+              builder: (BuildContext context, callback) {
+                return Material(
+                  color: Colors.transparent,
+                  child: IconButton(
+                    onPressed: () async {
+                      if (isRequesting == true) {
+                        return null;
+                      }
+                      isRequesting = true;
+                      await callback();
+                      isRequesting = false;
+                    },
+                    icon: Icon(Icons.skip_previous, size: 30)
+                  )
+                );
+              }
             ),
             StoreConnector<AppState, VoidCallback>(
               converter: (store) {
@@ -499,32 +516,25 @@ class PlayController extends StatelessWidget {
                 return () => store.dispatch(_action);
               },
               builder: (BuildContext context, callback) {
-                return InkWell(
-                  onTap: () {
-                    if(state.playControllerState.playing != true) {
-                      this.setInitPlay(true);
-                    }
-                    callback();
-                  },
-                  child: Container(
-                    width: 50,
-                    height: 50,
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(state.playControllerState.coverMainColor[0], state.playControllerState.coverMainColor[1],
-              state.playControllerState.coverMainColor[2], 0.3),
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    child: state.playControllerState.playing
+                return Material(
+                  color: Color.fromRGBO(state.playControllerState.coverMainColor[0], state.playControllerState.coverMainColor[1],
+          state.playControllerState.coverMainColor[2], 0.3),
+                  borderRadius: BorderRadius.circular(30),
+                  child: IconButton(
+                    iconSize: 35,
+                    onPressed: () {
+                      if(state.playControllerState.playing != true) {
+                        this.setInitPlay(true);
+                      }
+                      callback();
+                    },
+                    icon: 
+                    state.playControllerState.playing
                     ?
-                    Image.asset(
-                      'assets/images/play_pause.png'
-                    )
+                      Icon(Icons.pause, size: 35)
                     :
-                    Image.asset(
-                      'assets/images/play_play.png'
-                    )
-                  ),
+                      Icon(Icons.play_arrow, size: 35)
+                  )
                 );
               }
             ),
@@ -533,34 +543,28 @@ class PlayController extends StatelessWidget {
                 return () => store.dispatch(playControllerActions.playeNextSong);
               },
               builder: (BuildContext context, callback) {
-                if (this.isRequesting == true) {
-                  return null;
-                }
-                this.isRequesting = true;
-                return InkWell(
-                  onTap: () async {
-                    this.isRequesting = false;
-                    callback();
-                  },
-                  child: Container(
-                    width: 30,
-                    height: 30,
-                    padding: EdgeInsets.all(5),
-                    child: Image.asset(
-                      'assets/images/play_next.png',
-                    )
-                  )   
+                return Material(
+                  color: Colors.transparent,
+                  child: IconButton(
+                    onPressed: () async {
+                      if (isRequesting == true) {
+                        return null;
+                      }
+                      isRequesting = true;
+                      await callback();
+                      isRequesting = false;
+                    },
+                    icon: Icon(Icons.skip_next, size: 30)
+                  )
                 );
               }
             ),
-            Container( 
-              width: 30,
-              height: 30,
-              padding: EdgeInsets.all(5),
-              child: Image.asset(
-                'assets/images/next_play.png'
-              )
-            ),
+            IconButton(
+              onPressed: () async {
+                print('暂未开发');
+              },
+              icon: Icon(Icons.loop, size: 20)
+            )
           ],
         )
       );

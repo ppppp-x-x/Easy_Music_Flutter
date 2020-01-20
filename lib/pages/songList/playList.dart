@@ -9,7 +9,7 @@ import './../../redux/playController/action.dart' as playControllerActions;
 import './../../redux/commonController/action.dart';
 
 import './../../components/customBottomNavigationBar.dart';
-import './../../components/NavigatorBackBar.dart';
+import '../../components/commonText.dart';
 
 import './../../utils/commonFetch.dart';
 import './../../utils/api.dart';
@@ -24,8 +24,12 @@ class PlayList extends StatefulWidget {
 
 class PlayListState extends State<PlayList> {
   final int id;
-  List<int> backgroundImageMainColor;
+  Color backgroundImageMainColor;
   Map playListData;
+  int currentIndex;
+  bool isRequesting = false;
+  dynamic playList = [];
+  dynamic playListAction;
 
   PlayListState(this.id);
   @override
@@ -52,7 +56,8 @@ class PlayListState extends State<PlayList> {
     });
     switchIsRequesting();
     await getColorFromUrl(_playListData['playlist']['coverImgUrl']).then((palette) {
-    backgroundImageMainColor = palette;
+    backgroundImageMainColor = Color.fromRGBO(palette[0], palette[1],
+    palette[2], 1);
   });
     if (_playListData == '请求错误') {
       return;
@@ -62,6 +67,121 @@ class PlayListState extends State<PlayList> {
         playListData = _playListData['playlist'];
       });
     }
+  }
+
+  List<Widget> createPlayListSongs (state) {
+    List<Widget> playListSongs = [];
+    for (int index = 0;index < playListData.length; index++) {
+      playListSongs.add(Container(
+        child: StoreConnector<AppState, VoidCallback>(
+          converter: (store) {
+            return () => store.dispatch(playControllerActions.addPlayList(playListAction));
+          },
+          builder: (BuildContext context, callback) {
+            return Material(
+              color: Colors.white,
+              child: Ink(
+                child: InkWell(
+                  onTap: () async {
+                    playListAction = {};
+                    if (this.isRequesting == true) {
+                      return null;
+                    }
+                    this.isRequesting = true;
+                    switchIsRequesting();
+                    dynamic songDetail = await getSongDetail(playListData['tracks'][index]['id']);
+                    dynamic songLyr = await getData('lyric', {
+                      'id': playListData['tracks'][index]['id'].toString()
+                    });
+                    switchIsRequesting();
+                    Map _playListActionPayload = {};
+                    List<String> _playList = [];
+                    songDetail['songLyr'] = songLyr;
+                    for(int j = 0;j < playListData['tracks'].length;j ++) {
+                      _playList.add(playListData['tracks'][j]['id'].toString());
+                    }
+                    _playListActionPayload['songList'] = _playList;
+                    _playListActionPayload['songIndex'] = index;
+                    _playListActionPayload['songDetail'] = songDetail;
+                    _playListActionPayload['songUrl'] = 'http://music.163.com/song/media/outer/url?id=' + playListData['tracks'][index]['id'].toString() + '.mp3';
+                    playListAction['payload'] = _playListActionPayload;
+                    playListAction['type'] = playControllerActions.Actions.addPlayList;
+                    this.isRequesting = false;
+                    callback();
+                  },
+                  child: Container(
+                    margin: EdgeInsets.fromLTRB(20, 8, 20, 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        state.playControllerState.playList.length > 0 && state.playControllerState.playList[state.playControllerState.currentIndex] != null && state.playControllerState.playList[state.playControllerState.currentIndex]['id'] == playListData['tracks'][index]['id']
+                        ?
+                        Container(
+                          margin: EdgeInsets.only(right: 10),
+                          width: 20,
+                          child: Image.asset('assets/images/playingAudio.png')
+                        )
+                        :
+                        Container(
+                          width: 30,
+                          child: Text(
+                            (index + 1).toString(),
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black54
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width - 120,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Container(
+                                child: Text(
+                                  playListData['tracks'][index]['name'],
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(top: 5),
+                                child: Text(
+                                  playListData['tracks'][index]['ar'][0]['name'],
+                                  maxLines: 1,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black54
+                                ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        Container(
+                          width: 20,
+                          child: Image.asset(
+                            'assets/images/more_playList.png',
+                            width: 20,
+                            height: 20,
+                          ),
+                        )
+                      ],
+                    )
+                  )
+                )
+              )
+            );
+          }
+        ) 
+      ));
+    }
+    return playListSongs;
   }
 
   @override
@@ -82,21 +202,30 @@ class PlayListState extends State<PlayList> {
             )
             :
             Material(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    PlayListCard(
-                      playListData == null ? null : playListData['coverImgUrl'],
-                      playListData == null ? null : playListData['name'],
-                      playListData == null ? null : playListData['creator']['nickname'],
-                      playListData == null ? null : playListData['tags'],
-                      playListData == null ? null : playListData['description'],
-                      backgroundImageMainColor
+              child: CustomScrollView(
+                slivers: <Widget>[
+                  SliverAppBar(
+                    expandedHeight: 270,
+                      flexibleSpace: FlexibleSpaceBar(
+                        background: PlayListCard(
+                        playListData == null ? null : playListData['coverImgUrl'],
+                        playListData == null ? null : playListData['name'],
+                        playListData == null ? null : playListData['creator']['nickname'],
+                        playListData == null ? null : playListData['tags'],
+                        playListData == null ? null : playListData['description'],
+                        backgroundImageMainColor
+                      ),
                     ),
-                    PlayListSongs(playListData, state.playControllerState.currentIndex, switchIsRequesting)
-                  ],
-                ),
+                    pinned: true,
+                    backgroundColor: backgroundImageMainColor,
+                  ),
+                  SliverFixedExtentList(
+                    itemExtent: 65,
+                    delegate: SliverChildListDelegate(
+                      createPlayListSongs(state)
+                    ),
+                  )
+                ],
               )
             ),
             bottomNavigationBar: CustomBottomNavigationBar()
@@ -112,60 +241,44 @@ class PlayListCard extends StatelessWidget {
   final String creatorName;
   final List<dynamic> tags;
   final String description;
-  List<int> backgroundImageMainColor;
+  Color backgroundImageMainColor;
   final double blurHeight = 300;
 
   PlayListCard(this.backgroundImageUrl, this.title, this.creatorName, this.tags, this.description, this.backgroundImageMainColor);
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: 0),
-      child: Stack(
-        children: <Widget>[
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: blurHeight,
-            color: Color.fromRGBO(backgroundImageMainColor[0], backgroundImageMainColor[1],
-            backgroundImageMainColor[2], 1)
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 35),
-            child: NavigatorBackBar(() {
-              Navigator.pop(context);
-            }, Colors.white),
-          ),
-          Container(
-            padding: EdgeInsets.fromLTRB(40, 80, 40, 0),
-            child: Column(
-              children: <Widget>[
-                PlayListCardInfo(
-                  this.backgroundImageUrl,
-                  this.title,
-                  this.creatorName,
-                  this.tags,
-                  this.description
-                ),
-                // PlayListCardButtons()
-              ],
+    return Stack(
+      children: <Widget>[
+        Container(
+          width: MediaQuery.of(context).size.width,
+          height: blurHeight,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                backgroundImageMainColor,
+                Colors.white
+              ]
             )
           ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: 15,
-            margin: EdgeInsets.only(top: blurHeight - 15),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                topRight: Radius.circular(15)
+        ),
+        Container(
+          padding: EdgeInsets.fromLTRB(40, 80, 40, 0),
+          child: Column(
+            children: <Widget>[
+              PlayListCardInfo(
+                this.backgroundImageUrl,
+                this.title,
+                this.creatorName,
+                this.tags,
+                this.description
               ),
-              border: Border.all(
-                color: Colors.white
-              ),
-              color: Colors.white
-            ),
+              // PlayListCardButtons()
+            ],
           )
-        ],
-      )
+        )
+      ],
     );
   }
 }
@@ -220,38 +333,31 @@ class PlayListCardInfo extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
+                    CommonText(
                       this.title,
-                      maxLines: 2,
-                      overflow: TextOverflow.fade,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 14
-                      ),
+                      14,
+                      2,
+                      Colors.black87,
+                      FontWeight.bold
                     ),
                     Container(
                       margin: EdgeInsets.only(top: 5),
-                      child: Text(
+                      child: CommonText(
                         this.creatorName,
-                        maxLines: 1,
-                        overflow: TextOverflow.fade,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12
-                        ),
+                        12,
+                        1,
+                        Colors.black87,
+                        FontWeight.normal
                       ),
                     ),
                     Container(
                       margin: EdgeInsets.only(top: 10),
-                      child: Text(
+                      child: CommonText(
                         composeTags(this.tags),
-                        maxLines: 1,
-                        overflow: TextOverflow.fade,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12
-                        ),
+                        12,
+                        1,
+                        Colors.black87,
+                        FontWeight.normal
                       )
                     )
                   ],
@@ -265,179 +371,15 @@ class PlayListCardInfo extends StatelessWidget {
               minHeight: 50
             ),
             margin: EdgeInsets.only(top: 20),
-            child: Text(
+            child: CommonText(
               description??'',
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: Colors.white70,
-                fontSize: 11
-              ),
+              11,
+              3,
+              Colors.black87,
+              FontWeight.normal
             ),
           ),
         ],
-      )
-    );
-  }
-}
-
-class PlayListSongs extends StatefulWidget {
-  final dynamic playListData;
-  final int currentIndex;
-  final Function switchIsRequesting;
-
-  PlayListSongs(this.playListData, this.currentIndex, this.switchIsRequesting);
-  PlayListSongsState createState () => PlayListSongsState(playListData, currentIndex, switchIsRequesting);
-}
-
-class PlayListSongsState extends State<PlayListSongs> {
-  int currentIndex;
-  bool isRequesting = false;
-  dynamic playListData;
-  dynamic playList = [];
-  dynamic playListAction;
-  Function switchIsRequesting;
-
-  @override
-  void initState() {
-    this.playList = [];
-    super.initState();
-  }
-
-  @override
-  PlayListSongsState(this.playListData, this.currentIndex, this.switchIsRequesting);
-
-  @override
-  Widget build(BuildContext context) {
-    return playListData == null
-    ?
-    Container()
-    :
-    Container(
-      color: Colors.white,
-      child: StoreConnector<AppState, dynamic>(
-        converter: (store) => store.state,
-        builder: (BuildContext context, state) {
-          return MediaQuery.removeViewPadding(
-            context: context,
-            removeTop: true,
-            child: ListView.builder(
-              physics: new NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: playListData['tracks'].length,
-              itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  child: StoreConnector<AppState, VoidCallback>(
-                    converter: (store) {
-                      return () => store.dispatch(playControllerActions.addPlayList(playListAction));
-                    },
-                    builder: (BuildContext context, callback) {
-                      return Material(
-                        color: Colors.white,
-                        child: Ink(
-                          child: InkWell(
-                            onTap: () async {
-                              playListAction = {};
-                              if (this.isRequesting == true) {
-                                return null;
-                              }
-                              this.isRequesting = true;
-                              switchIsRequesting();
-                              dynamic songDetail = await getSongDetail(playListData['tracks'][index]['id']);
-                              dynamic songLyr = await getData('lyric', {
-                                'id': playListData['tracks'][index]['id'].toString()
-                              });
-                              switchIsRequesting();
-                              Map _playListActionPayload = {};
-                              List<String> _playList = [];
-                              songDetail['songLyr'] = songLyr;
-                              for(int j = 0;j < playListData['tracks'].length;j ++) {
-                                _playList.add(playListData['tracks'][j]['id'].toString());
-                              }
-                              _playListActionPayload['songList'] = _playList;
-                              _playListActionPayload['songIndex'] = index;
-                              _playListActionPayload['songDetail'] = songDetail;
-                              _playListActionPayload['songUrl'] = 'http://music.163.com/song/media/outer/url?id=' + playListData['tracks'][index]['id'].toString() + '.mp3';
-                              playListAction['payload'] = _playListActionPayload;
-                              playListAction['type'] = playControllerActions.Actions.addPlayList;
-                              this.isRequesting = false;
-                              callback();
-                            },
-                            child: Container(
-                              margin: EdgeInsets.fromLTRB(20, 8, 20, 8),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: <Widget>[
-                                  state.playControllerState.playList.length > 0 && state.playControllerState.playList[state.playControllerState.currentIndex] != null && state.playControllerState.playList[state.playControllerState.currentIndex]['id'] == playListData['tracks'][index]['id']
-                                  ?
-                                  Container(
-                                    margin: EdgeInsets.only(right: 10),
-                                    width: 20,
-                                    child: Image.asset('assets/images/playingAudio.png')
-                                  )
-                                  :
-                                  Container(
-                                    width: 30,
-                                    child: Text(
-                                      (index + 1).toString(),
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.black54
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    width: MediaQuery.of(context).size.width - 120,
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Container(
-                                          child: Text(
-                                            playListData['tracks'][index]['name'],
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w500
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          margin: EdgeInsets.only(top: 5),
-                                          child: Text(
-                                            playListData['tracks'][index]['ar'][0]['name'],
-                                            maxLines: 1,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.black54
-                                          ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 20,
-                                    child: Image.asset(
-                                      'assets/images/more_playList.png',
-                                      width: 20,
-                                      height: 20,
-                                    ),
-                                  )
-                                ],
-                              )
-                            )
-                          )
-                        )
-                      );
-                    }
-                  ) 
-                );
-              },
-            )
-          );
-        }
       )
     );
   }

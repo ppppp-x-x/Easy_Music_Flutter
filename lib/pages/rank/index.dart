@@ -70,13 +70,14 @@ class RankState extends State<Rank> with AutomaticKeepAliveClientMixin{
       allRankList == null
       ?
       Container(
-        child: SpinKitDualRing(
+        child: SpinKitDoubleBounce(
           color: Colors.red,
         )
       )
       :
       Container(
-        margin: EdgeInsets.only(top: 20),
+        color: Colors.white,
+        padding: EdgeInsets.only(top: 20),
         child: GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
