@@ -98,32 +98,34 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                           )
                         ),
                       ),
-                      Container(
-                        height: 60,
-                        margin: EdgeInsets.only(left: 10),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            CommonText(
-                              state.playControllerState.playList[state.playControllerState.currentIndex]['name'],
-                              12,
-                              1,
-                              Colors.white,
-                              FontWeight.bold
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(top: 3),
-                              child: 
+                      Expanded(
+                        child: Container(
+                          height: 60,
+                          margin: EdgeInsets.only(left: 10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
                               CommonText(
-                                state.playControllerState.playList[state.playControllerState.currentIndex]['ar'][0]['name'],
-                                10,
+                                state.playControllerState.playList[state.playControllerState.currentIndex]['name'],
+                                12,
                                 1,
-                                Colors.white70,
-                                FontWeight.normal
+                                Colors.white,
+                                FontWeight.bold
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(top: 3),
+                                child: 
+                                CommonText(
+                                  state.playControllerState.playList[state.playControllerState.currentIndex]['ar'][0]['name'],
+                                  10,
+                                  1,
+                                  Colors.white70,
+                                  FontWeight.normal
+                                )
                               )
-                            )
-                          ],
+                            ],
+                          )
                         )
                       )
                     ],

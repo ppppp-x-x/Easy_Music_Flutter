@@ -162,6 +162,7 @@ class ProcessControllerState extends State<ProcessController> {
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
                     Container(
+                      width: MediaQuery.of(context).size.width - 40,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -173,8 +174,9 @@ class ProcessControllerState extends State<ProcessController> {
                               fontSize: 20,
                               fontWeight: FontWeight.bold
                             ),
-                            textAlign: TextAlign.left,
+                            textAlign: TextAlign.center,
                             maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                           Container(
                             margin: EdgeInsets.only(top: 10),
