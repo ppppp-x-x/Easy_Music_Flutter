@@ -16,12 +16,12 @@
 
 ## 项目截图
 <div align="center"><img src="https://s1.ax1x.com/2020/03/12/8ZgCqS.md.jpg" /><div>首页</div></div>
-  <div align="center"><img src="https://user-gold-cdn.xitu.io/2019/7/28/16c37cc72445e70c?w=348&h=652&f=gif&s=987554" />
+  <div align="center"><img src="https://s1.ax1x.com/2020/03/12/8ZgTWn.jpg" />
   <div>歌单</div></div>
- <div align="center"><img src="https://user-gold-cdn.xitu.io/2019/7/28/16c37cc63d70c232?w=348&h=652&f=gif&s=1274275" />
+ <div align="center"><img src="https://s1.ax1x.com/2020/03/12/8ZgbQ0.jpg" />
+ <div>歌单</div></div>
+ <div align="center"><img src="https://s1.ax1x.com/2020/03/12/8ZgqyV.md.jpg" />
  <div>播放</div></div>
- <div align="center"><img src="https://user-gold-cdn.xitu.io/2019/7/28/16c37cc6fab7c8f2?w=348&h=652&f=gif&s=997551" />
- <div>排行榜</div></div>
- <div align="center"><img src="https://user-gold-cdn.xitu.io/2019/7/28/16c37cc63dff8127?w=348&h=652&f=gif&s=357985" />
+ <div align="center"><img src="hthttps://imgchr.com/i/8Zg7zq" />
  <div>搜索</div>
  </div>
