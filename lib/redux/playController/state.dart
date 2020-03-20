@@ -1,6 +1,11 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:color_thief_flutter/color_thief_flutter.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+
 import './../../utils/commonFetch.dart';
-import './../../utils//api.dart';
+import './../../utils/api.dart';
+import './../index.dart';
+import './action.dart' as playControllerActions;
 
 class PlayController {
   // 已经播放过或者正要播放的歌曲索引
@@ -60,32 +65,6 @@ class PlayController {
   get songPosition => _songPosition;
   set songPosition(val) => _songPosition = val;
 
-  List<dynamic> combinLyric (String source) {
-    List<dynamic> outputLyric = [];
-    source.split('[').forEach((item) {
-      outputLyric.add(item.split(']'));
-    });
-    return outputLyric;
-  }
-
-  double stringDurationToDouble (String duration) {
-    return double.parse(duration.substring(0, 2)) * 60 + double.parse(duration.substring(3, 5));
-  }
-
-  void goNextSong (String id) async {
-    dynamic songDetail = await getSongDetail(int.parse(id));
-    dynamic songLyr = await getData('lyric', {
-      'id': id
-    });
-    _songIndex = _songIndex + 1;
-    _currentIndex = _currentIndex + 1;
-    songDetail['lyric'] = combinLyric(songLyr['lrc']['lyric']);
-    _playList.add(songDetail);
-    _songUrl = 'http://music.163.com/song/media/outer/url?id=' + id + '.mp3';
-    _audioPlayer.play(_songUrl);
-    _playing = true;
-  }
-
   PlayController.initState() {
     _playList = [];
     _collectSongs = [];
@@ -99,21 +78,7 @@ class PlayController {
     _audioPlayer.onDurationChanged.listen((d) {
       duration = d;
     });
-    // 监听当前歌曲播放进度
-    _audioPlayer.onAudioPositionChanged.listen((d) {
-      songPosition = d;
-      /*
-      自动切换下一曲功能
-      当前播放歌曲长度等于当前播放进度
-      精确度：秒
-      */
-      if (stringDurationToDouble(songPosition.toString().substring(2, 7)) == stringDurationToDouble(_duration.toString().substring(2, 7)) && songList != null && songList.length > 1) {
-        _audioPlayer.stop();
-        _playing = false;
-        goNextSong(_songIndex == songList.length - 1 ? songList[0] : songList[_songIndex + 1]);
-        }  
-    });
   } 
 
-  PlayController(this._playing, this._playList, this._currentIndex, this._coverMainColor);
+  PlayController(this._playing, this._playList, this._currentIndex, this._coverMainColor, this._audioPlayer);
 }

@@ -4,6 +4,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import './redux/index.dart';
+import './redux/playController/action.dart' as playController;
 
 import './pages/Recommend/index.dart';
 import './pages/Rank/index.dart';
@@ -12,6 +13,7 @@ import './pages/MySong/index.dart';
 
 import './components/customBottomNavigationBar.dart';
 import './components/toast.dart';
+import './utils/tools.dart';
 
 class MyApp extends StatefulWidget {
   final Store<AppState> store;
@@ -34,6 +36,22 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
     _tabController = new TabController(length: 3, vsync: this)
       ..addListener(tabIndexChange);
     _tabController.animation.addListener(tabIndexChange);
+    var playControllerState = this.store.state.playControllerState;
+    playControllerState.audioPlayer.onAudioPositionChanged.listen((d) {
+      Map progressMap = {};
+      progressMap['type'] = playController.Actions.changeProgress;
+      progressMap['payload'] = d;
+      this.store.dispatch(progressMap);
+      /*
+      自动切换下一曲功能
+      当前播放歌曲长度等于当前播放进度
+      精确度：秒
+      */
+      if (stringDurationToDouble(d.toString().substring(2, 7)) == 
+      stringDurationToDouble(playControllerState.duration.toString().substring(2, 7))) {
+          this.store.dispatch(playController.playeNextSong);
+        }  
+    });
   }
 
   void tabIndexChange () {
@@ -147,8 +165,7 @@ class SearchButton extends StatelessWidget {
       color: Colors.white,
       child: IconButton(
         onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Search()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => Search()));
         },
         icon: Icon(
           Icons.search,

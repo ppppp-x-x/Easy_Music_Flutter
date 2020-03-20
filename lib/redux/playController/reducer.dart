@@ -29,6 +29,9 @@ PlayController playControllerReducer(PlayController state, action) {
     || action['type'] == Actions.addPlayList) {
       state.coverMainColor = action['payload']['coverMainColor'];
     }
+    if (action['type'] == Actions.changeProgress) {
+      state.songPosition = action['payload'];
+    }
     if (action['type'] == Actions.play) {
       state.audioPlayer.play(state.songUrl);
       state.playing = true;

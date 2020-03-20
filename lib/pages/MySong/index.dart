@@ -5,7 +5,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import './../../redux/index.dart';
 class CollectSongList extends StatefulWidget {
-  @override CollectSongListState createState() => CollectSongListState();
+  @override
+  CollectSongListState createState() => CollectSongListState();
 }
 
 class CollectSongListState extends State<CollectSongList> {
