@@ -61,9 +61,9 @@ class PlayController {
   get audioPlayer => _audioPlayer;
 
   // 当前歌曲播放进度Duration
-  Duration _songPosition;
-  get songPosition => _songPosition;
-  set songPosition(val) => _songPosition = val;
+  Duration _songProgress;
+  get songProgress => _songProgress;
+  set songProgress(val) => _songProgress = val;
 
   PlayController.initState() {
     _playList = [];

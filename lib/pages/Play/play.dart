@@ -303,8 +303,8 @@ class PlayLyricsState extends State<PlayLyrics> {
                       height: 25,
                       alignment: Alignment.topCenter,
                       child: Text(
-                        playControllerState.songPosition != null
-                          ? this.getLyricsNow(playControllerState.playList[playControllerState.currentIndex ]['lyric'], playControllerState.songPosition.toString().substring(2, 7), playControllerState.duration)[0]
+                        playControllerState.songProgress != null
+                          ? this.getLyricsNow(playControllerState.playList[playControllerState.currentIndex ]['lyric'], playControllerState.songProgress.toString().substring(2, 7), playControllerState.duration)[0]
                           : '',
                         style: TextStyle(
                           color: Colors.black54
@@ -317,8 +317,8 @@ class PlayLyricsState extends State<PlayLyrics> {
                       height: 25,
                       alignment: Alignment.topCenter,
                       child: Text(
-                        playControllerState.songPosition != null
-                          ? this.getLyricsNow(playControllerState.playList[playControllerState.currentIndex ]['lyric'], playControllerState.songPosition.toString().substring(2, 7), playControllerState.duration)[1]
+                        playControllerState.songProgress != null
+                          ? this.getLyricsNow(playControllerState.playList[playControllerState.currentIndex ]['lyric'], playControllerState.songProgress.toString().substring(2, 7), playControllerState.duration)[1]
                           : '',
                         style: TextStyle(
                           fontSize: 14,
@@ -331,8 +331,8 @@ class PlayLyricsState extends State<PlayLyrics> {
                       height: 25,
                       alignment: Alignment.topCenter,
                       child: Text(
-                        playControllerState.songPosition != null
-                          ? this.getLyricsNow(playControllerState.playList[playControllerState.currentIndex ]['lyric'], playControllerState.songPosition.toString().substring(2, 7), playControllerState.duration)[2]
+                        playControllerState.songProgress != null
+                          ? this.getLyricsNow(playControllerState.playList[playControllerState.currentIndex ]['lyric'], playControllerState.songProgress.toString().substring(2, 7), playControllerState.duration)[2]
                           : '',style: TextStyle(
                           color: Colors.black54,
                         ),
@@ -349,11 +349,11 @@ class PlayLyricsState extends State<PlayLyrics> {
                       Container(
                         width: 35,
                         child: Text(
-                          playControllerState.songPosition == null
+                          playControllerState.songProgress == null
                           ?
                           ''
                           :
-                          playControllerState.songPosition.toString().substring(2, 7),
+                          playControllerState.songProgress.toString().substring(2, 7),
                           style: TextStyle(
                             color: Colors.black87,
                             fontSize: 11
@@ -421,9 +421,9 @@ class PlayLyricsState extends State<PlayLyrics> {
                         },
                       ),
                       Text(
-                        playControllerState.songPosition != null
+                        playControllerState.songProgress != null
                           ?
-                          computeProcessVal(playControllerState.songPosition.toString().substring(2, 7), playControllerState.duration.toString().substring(2, 7)).toString()
+                          computeProcessVal(playControllerState.songProgress.toString().substring(2, 7), playControllerState.duration.toString().substring(2, 7)).toString()
                           :
                           '',
                           style: TextStyle(

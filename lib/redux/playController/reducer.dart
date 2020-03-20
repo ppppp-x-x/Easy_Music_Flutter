@@ -30,7 +30,7 @@ PlayController playControllerReducer(PlayController state, action) {
       state.coverMainColor = action['payload']['coverMainColor'];
     }
     if (action['type'] == Actions.changeProgress) {
-      state.songPosition = action['payload'];
+      state.songProgress = action['payload'];
     }
     if (action['type'] == Actions.play) {
       state.audioPlayer.play(state.songUrl);
