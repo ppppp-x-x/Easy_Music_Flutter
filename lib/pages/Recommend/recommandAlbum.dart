@@ -3,14 +3,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import './../SongList/playList.dart';
 
-class RecommendList extends StatelessWidget {
+class RecommandAlbum extends StatelessWidget {
   final List recommendList;
   final String listTitle;
   final String des;
 
-  RecommendList(this.recommendList, this.listTitle, this.des);
+  RecommandAlbum(this.recommendList, this.listTitle, this.des);
 
-  Widget createSongListRow (List<Map<String, dynamic>> rowData) {
+  Widget createAlbumListRow (List<Map<String, dynamic>> rowData) {
     return SizedBox(
       height: 170,
       child: ListView.builder(
@@ -61,17 +61,22 @@ class RecommendList extends StatelessWidget {
                             colors: [Colors.black26, Colors.white24]
                           ),
                           borderRadius: BorderRadius.circular(10)
-                        ),
-                        child: rowData[index]['playCount'] != null ? Text(
-                          (rowData[index]['playCount'] / 10000).toStringAsFixed(0) + '万',
-                          textAlign: TextAlign.right,
-                          style: TextStyle(
-                            color: Colors.grey[200],
-                            fontSize: 11
-                          ),
-                        ) : null,
+                        )
                       )
                     ],
+                  ),
+                  Container(
+                    width: 100,
+                    margin: EdgeInsets.only(top: 5),
+                    child: Text(
+                      rowData[index]['artist']['name'],
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
                   ),
                   Container(
                     width: 100,
@@ -84,7 +89,7 @@ class RecommendList extends StatelessWidget {
                         fontSize: 11
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             )
@@ -94,7 +99,7 @@ class RecommendList extends StatelessWidget {
     );
   }
 
-  List<Widget> createRecommendSongListRow () {
+  List<Widget> createNewAlbumList() {
     List<Map<String, dynamic>> rowData = [];
     List<Widget> allRowData = [Container(
       padding: EdgeInsets.fromLTRB(20, 0, 15, 0),
@@ -151,7 +156,7 @@ class RecommendList extends StatelessWidget {
     for(int i = 0;i < this.recommendList.length; i++) {
       rowData.add(this.recommendList[i]);
       if (this.recommendList.length <= i || i == 4) {
-        allRowData.add(createSongListRow(rowData));
+        allRowData.add(createAlbumListRow(rowData));
         return allRowData;
       }
     }
@@ -164,7 +169,7 @@ class RecommendList extends StatelessWidget {
     Container()
     :
     Column(
-      children: createRecommendSongListRow()
+      children: createNewAlbumList()
     );
   }
 }

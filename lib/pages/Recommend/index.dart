@@ -11,6 +11,7 @@ import '../../components/RecommedSongs.dart';
 import '../../components/commonText.dart';
 
 import './recommendListRow.dart';
+import './recommandAlbum.dart';
 
 class Recommend extends StatefulWidget {
   @override
@@ -22,6 +23,7 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
   List<dynamic> hotSongList;
   List<dynamic> recommendSongList;
   List<dynamic> newSongs;
+  dynamic newAlbums;
   bool newSongsRequestOver = false;
   // var recommendVideos;
 
@@ -36,6 +38,7 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
       fetchHotSongList();
       fetchRecommedSongList();
       fetchNewSongs();
+      fetchNewAlbum();
     });
   }
 
@@ -105,6 +108,20 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
     }
   }
 
+  fetchNewAlbum() async {
+    switchIsRequesting();
+    var _newAlbums = await getData('newAlbums', {});
+    switchIsRequesting();
+    if (_newAlbums == '请求错误') {
+      return;
+    }
+    if(this.mounted) {
+      setState(() {
+        newAlbums = _newAlbums['albums'].take(5).toList();
+      });
+    }
+  }
+
   fetchNewSongHotComments(newSongs, int id, int index) async {
     Map<String, String> params = {};
     params['id'] = id.toString();
@@ -128,7 +145,7 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
     }
   }
 
-  splitNewSongs () {
+  splitNewSongs() {
     List _newSongs = [[]];
     for (int i = 0;i < 9;i ++) {
       if (_newSongs[_newSongs.length - 1] == null) {
@@ -183,6 +200,7 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
                   )
                 :
                   Container(),
+                RecommandAlbum(newAlbums, '最热专辑', '最新热门专辑'),
                 RecommendList(hotSongList, '最热歌单', '最新流行歌单'),
                 RecommendList(recommendSongList, '推荐歌单', '为您精挑细选'),
               ],

@@ -13,7 +13,8 @@ Map api = {
   'playlistDetail': 'playlist/detail',
   'songDetail': 'song/detail',
   'newSongs': 'personalized/newsong',
-  'hotComments': 'comment/hot'
+  'hotComments': 'comment/hot',
+  'newAlbums': 'album/newest'
 };
 
 String createFetchUrl (Map<String, String> params) {
