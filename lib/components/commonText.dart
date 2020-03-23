@@ -6,8 +6,9 @@ class CommonText extends StatelessWidget {
   final int maxLines;
   final Color color;
   final FontWeight fontWeight;
+  final TextAlign textAlign;
 
-  CommonText(this.text, this.fontSize, this.maxLines, this.color, this.fontWeight);
+  CommonText(this.text, this.fontSize, this.maxLines, this.color, this.fontWeight, this.textAlign);
 
   Widget build(BuildContext context) {
     return Text(
@@ -15,6 +16,7 @@ class CommonText extends StatelessWidget {
         ? ''
         : text,
       maxLines: maxLines,
+      textAlign: textAlign,
       overflow: TextOverflow.ellipsis,
       style: TextStyle(
         color: color,

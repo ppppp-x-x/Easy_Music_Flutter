@@ -25,7 +25,8 @@ class Toast extends StatelessWidget {
           12, 
           1, 
           Colors.black87,
-          FontWeight.normal
+          FontWeight.normal,
+          TextAlign.start
         )
       )
     );

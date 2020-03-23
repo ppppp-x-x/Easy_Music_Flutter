@@ -111,7 +111,8 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                                 12,
                                 1,
                                 Colors.white,
-                                FontWeight.bold
+                                FontWeight.bold,
+                                TextAlign.start
                               ),
                               Container(
                                 margin: EdgeInsets.only(top: 3),
@@ -121,7 +122,8 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                                   10,
                                   1,
                                   Colors.white70,
-                                  FontWeight.normal
+                                  FontWeight.normal,
+                                  TextAlign.start
                                 )
                               )
                             ],

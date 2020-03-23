@@ -192,7 +192,8 @@ class RecommendState extends State<Recommend> with AutomaticKeepAliveClientMixin
                           13,
                           1,
                           Colors.black,
-                          FontWeight.bold
+                          FontWeight.bold,
+                          TextAlign.start
                         ),
                       ),
                       RecommedSongs(newSongs, '最新流行歌曲')

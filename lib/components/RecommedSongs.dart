@@ -110,7 +110,8 @@ class RecommemdSongsColumn extends StatelessWidget {
                                   13,
                                   1,
                                   Colors.black87,
-                                  FontWeight.bold
+                                  FontWeight.bold,
+                                  TextAlign.start
                                 )
                               ),
                               Container(
@@ -120,7 +121,8 @@ class RecommemdSongsColumn extends StatelessWidget {
                                   11,
                                   1,
                                   Colors.black54,
-                                  FontWeight.normal
+                                  FontWeight.normal,
+                                  TextAlign.start
                                 )
                               ),
                             ],
@@ -132,7 +134,8 @@ class RecommemdSongsColumn extends StatelessWidget {
                               11,
                               1,
                               Colors.black54,
-                              FontWeight.normal
+                              FontWeight.normal,
+                              TextAlign.start
                               ),
                           )
                         ],

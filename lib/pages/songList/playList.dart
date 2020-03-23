@@ -338,7 +338,8 @@ class PlayListCardInfo extends StatelessWidget {
                       14,
                       2,
                       Colors.black87,
-                      FontWeight.bold
+                      FontWeight.bold,
+                      TextAlign.start
                     ),
                     Container(
                       margin: EdgeInsets.only(top: 5),
@@ -347,7 +348,8 @@ class PlayListCardInfo extends StatelessWidget {
                         12,
                         1,
                         Colors.black87,
-                        FontWeight.normal
+                        FontWeight.normal,
+                        TextAlign.start
                       ),
                     ),
                     Container(
@@ -357,7 +359,8 @@ class PlayListCardInfo extends StatelessWidget {
                         12,
                         1,
                         Colors.black87,
-                        FontWeight.normal
+                        FontWeight.normal,
+                        TextAlign.start
                       )
                     )
                   ],
@@ -376,7 +379,8 @@ class PlayListCardInfo extends StatelessWidget {
               11,
               3,
               Colors.black87,
-              FontWeight.normal
+              FontWeight.normal,
+              TextAlign.start
             ),
           ),
         ],
