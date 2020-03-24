@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import './../SongList/playList.dart';
+import './../Album/albumDetail.dart';
 
 class RecommandAlbum extends StatelessWidget {
   final List recommendList;
@@ -23,7 +23,9 @@ class RecommandAlbum extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => PlayList(rowData[index]['id'])
+                  builder: (context) {
+                    return AlbumDetail(rowData[index]['id']);
+                  }
                 )
               );
             },
